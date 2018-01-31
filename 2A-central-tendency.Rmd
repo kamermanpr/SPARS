@@ -51,7 +51,7 @@ Each measure has strengths and limitations. The _arithmetic mean_ is best suited
 
 [^1]: Weisberg, H. F. (1992). Central Tendency and Variability. Sage University. ISBN 0-8039-4007-6
 
-[^2]: Because the calculation of geometric mean requires values $\geq 0$, `rating_positive` data (FEST rating + 50) were used to calculate all measures of central tendency.  
+[^2]: Because the calculation of geometric mean requires values $\geq 0$, `rating_positive` data (SPARS rating + 50) were used to calculate all measures of central tendency.  
 
 Judging the suitability of the four measures of central tendency was done by visually inspecting modified 'Raw, Descriptive, Inference (RDI)' plots [^3]. The plots included individual data points, smoothed densities, and the four measures of central tendency, but dropping the 'inference' component. 
 
@@ -174,7 +174,7 @@ p_1to6 <- data %>%
   scale_x_continuous(limits = c(-5, 105), 
                      breaks = seq(from = 0, to = 100, by = 20),
                      expand = c(0,0)) +
-  labs(title = 'Participant-level density distribution of FEST ratings at each stimulus intensity',
+  labs(title = 'Participant-level density distribution of SPARS ratings at each stimulus intensity',
        subtitle = 'White points: individual data points | Coloured points: measures of centrality',
        y = 'Stimulus intensity (J)') +
   facet_wrap(~PID, ncol = 3) +
@@ -242,7 +242,7 @@ p_13to18 <- data %>%
   scale_x_continuous(limits = c(-5, 105), 
                      breaks = seq(from = 0, to = 100, by = 20),
                      expand = c(0,0)) +
-  labs(x = 'FEST rating [0-100, positive-corrected scale]',
+  labs(x = 'SPARS rating [0-100, positive-corrected scale]',
        y = 'Stimulus intensity (J)') +
   facet_wrap(~PID, ncol = 3) +
   theme_bw() +
