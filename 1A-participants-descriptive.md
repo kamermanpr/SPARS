@@ -18,7 +18,7 @@ output:
 
 ----
 
-This script generates descriptive statistics of the FEST 2015 cohort, and includes assessments of:
+This script generates descriptive statistics of the SPARS (trial A) cohort, and includes assessments of:
 
 - Age  
 - Sex  
