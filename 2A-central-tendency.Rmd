@@ -1,5 +1,5 @@
 ---
-title: "FEST 2015"
+title: "SPARS trial A"
 subtitle: "Measures of central tendency"
 author: "Peter Kamerman"
 date: "`r format(Sys.Date(), '%d %b %Y')`"
@@ -27,7 +27,7 @@ knitr::opts_chunk$set(warning = FALSE,
                       fig.height = 8,
                       fig.width = 9,
                       fig.align = 'center',
-                      fig.path = './figures/02-central-measure/')
+                      fig.path = './figures/2A-central-measure/')
 ```
 
 ----
@@ -98,7 +98,7 @@ tri.mean <- function(x) {
 
 ```{r import}
 # Import
-data <- read_rds('./data/FEST_2015.rds')
+data <- read_rds('./data/SPARS_A.rds')
 
 # Inspect
 glimpse(data)
