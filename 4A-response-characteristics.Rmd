@@ -1,0 +1,390 @@
+---
+title: "FEST 2015"
+subtitle: "Stimulus-response characteristics of the FEST scale"
+author: "Peter Kamerman"
+date: "`r format(Sys.Date(), '%d %b %Y')`"
+output: 
+  html_document:
+    keep_md: true
+    theme: yeti
+    hightlight: pygments
+    toc: true
+    toc_depth: 5
+    toc_float: true
+    code_folding: show
+---
+
+```{r setup, include = FALSE}
+# Load packages
+library(magrittr)
+library(tidyverse)
+library(lme4)
+library(lqmm)
+library(sjPlot)
+library(HLMdiag)
+
+# knitr setup
+knitr::opts_chunk$set(warning = FALSE,
+                      message = FALSE,
+                      cache = TRUE,
+                      fig.retina = 2,
+                      fig.height = 7,
+                      fig.width = 7,
+                      fig.align = 'center',
+                      fig.path = './figures/04-response-characteristics/')
+```
+
+----
+
+The response characateristics of FEST were examined at the level of each participant. Within each participant, we examined:
+
+1. The stability of the variance in ratings at each stumulus intensity across the scale (i.e., is there a relationship between stimulus intensity and rating precision)  
+2. Whether response charateristics of the lower half (innoccuous sensation: -50 to 0)he upper half of the scale (noxious sensation: 0 to 50).
+
+----
+
+# Import and inspect data
+```{r import}
+# Import
+data <- read_rds('./data/FEST_2015.rds')
+
+# Inspect
+glimpse(data)
+```
+
+----
+
+# Clean and process data
+
+Basic clean-up of the data, then calculate _Tukey trimean_ at each stimulus intensity for each participant (participant average), and finally the _median_ of the trimeans at each stimulus intensity across participants (group average). 
+
+```{r clean}
+############################################################
+#                                                          #
+#                          Clean                           #
+#                                                          #
+############################################################
+data %<>%
+  # Select required columns
+  select(PID, block, block_order, trial_number, intensity, intensity_char, rating) 
+
+############################################################
+#                                                          #
+#                Calculate 'Tukey trimean'                 #
+#                                                          #
+############################################################
+# Define tri.mean function
+tri.mean <- function(x) {
+  # Calculate quantiles
+  q1 <- quantile(x, probs = 0.25, na.rm = TRUE)[[1]]
+  q2 <- median(x, na.rm = TRUE)
+  q3 <- quantile(x, probs = 0.75, na.rm = TRUE)[[1]]
+  # Calculate trimean
+  tm <- (q2 + ((q1 + q3) / 2)) / 2
+  # Convert to integer
+  tm <- as.integer(round(tm))
+  return(tm)
+}
+
+# Calculate the participant average 
+data_tm <- data %>% 
+  group_by(PID, intensity) %>%
+  summarise(tri_mean = tri.mean(rating)) %>%
+  ungroup()
+
+# Calculate the group average
+data_group <- data_tm %>%
+  group_by(intensity) %>%
+  summarise(median = median(tri_mean)) %>%
+  ungroup()
+``` 
+
+----
+
+# Exploratory plots
+
+### Group-level stimulus response curve
+
+```{r sr_group}
+# Plot
+data_tm %>%
+  ggplot(data = .) +
+  aes(x = intensity,
+      y = tri_mean) +
+  geom_point(position = position_jitter(width = 0.05)) +
+  geom_smooth(method = 'loess',
+              se = FALSE,
+              colour = '#666666', 
+              size = 0.6) +
+  geom_point(data = data_group,
+             aes(y = median),
+             shape = 21,
+             size = 4,
+             fill = '#D55E00') +
+  labs(title = 'Group-level stimulus-response plots',
+       subtitle = 'Black circles: participant-level Tukey trimeans | Orange circles: group-level median | Grey line: loess curve',
+       x = 'Stimulus intensity (J)',
+       y = 'FEST rating [-50 to 50]') +
+  scale_y_continuous(limits = c(-50, 50)) +
+  scale_x_continuous(breaks = seq(from = 1, to = 4, by = 0.5)) +
+  theme_bw()
+```
+
+### Participant-level stimulus response curves
+
+#### All trials
+
+```{r sr_participants, fig.width = 9, fig.height= 9}
+# Plot
+data %>%
+  ggplot(data = .) +
+  aes(x = intensity,
+      y = rating) +
+  geom_point() +
+  geom_smooth(method = 'loess',
+              se = FALSE,
+              colour = '#666666',
+              size = 0.6) +
+  geom_point(data = data_tm,
+             aes(y = tri_mean),
+             shape = 21,
+             size = 3,
+             fill = '#D55E00') +
+  labs(title = 'Participant-level stimulus-response plot',
+       subtitle = 'Black circles: individual experimental blocks | Orange circles: Tukey trimean | Grey line: loess curve',
+       x = 'Stimulus intensity (J)',
+       y = 'FEST rating [-50 to 50]') +
+  scale_y_continuous(limits = c(-50, 50)) +
+  facet_wrap(~ PID, ncol = 4) +
+  theme_bw()
+```
+
+#### Trials by experimental block
+
+```{r sr_participants2, fig.width = 8}
+# Process data
+data_block <- data %>%
+  # Rename blocks
+  mutate(block = sprintf('Block: %s (order: %i)', block, block_order)) %>%
+  # Nest by PID
+  group_by(PID) %>%
+  nest() %>%
+  # Generate plots
+  mutate(plots = map2(.x = data,
+                      .y = unique(PID),
+                      ~ ggplot(data = .x) +
+                        aes(x = intensity,
+                            y = rating) +
+                        geom_point() +
+                        geom_smooth(method = 'loess',
+                                    se = FALSE,
+                                    colour = '#666666',
+                                    size = 0.6) +
+                        labs(title = paste(.y, ': Participant-level stimulus-response plots conditioned on experimental block'),
+                             subtitle = 'Black circles: individual data points | Grey line: loess curve',
+                             x = 'Stimulus intensity (J)',
+                             y = 'FEST rating [-50 to 50]') +
+                        scale_y_continuous(limits = c(-50, 50)) +
+                        facet_wrap(~ block, ncol = 2) +
+                        theme_bw()))
+
+# Print plots
+walk(.x = data_block$plots, ~ print(.x))
+```
+
+----
+
+# Linear mixed model regression
+
+For each participant, stimuli were applied in four experimental blocks. Although there does not appear to be an order effect for trial or experimental block at a given stimulus intenisty (see: 03-order-effects.*), the blocks should be treated as observational units, and included as a random effect when analysing the data. 
+
+#### Linear mixed model regression
+
+To allow for a curvilinear relationship between stimulus intensity and rating, we modelled the data using polynomial regression, using 1^st^ (linear), 2^nd^ (quadratic), and 3^rd^ (cubic) order orthogonal polynomials. For each polynomial expression, we modelled the random effects as random intercept only, and as random intercept and slope. 
+
+The random intercept only and random intercept and slope models were compared using logliklihood test, and the better model taken foward. Regression diagnostics were only run on the three best models (one from each of the polynomial expressions). Diagnostics examined level 1 (conditional / fixed effects), and level 2 (random effects) residuals and outliers, based on the approaches recommended by Loy and Hofmann [^1].
+
+[^1]: Loy A, Hofmann H. HLMdiag: A suite of diagnostics for hierarchical linear models in R. J. Stat. Softw. 2014;56:1–28. [Available](https://www.jstatsoft.org/article/view/v056i05/v56i05.pdf)
+
+**First order polynomial**
+
+```{r lmm_1}
+# Model 1 (linear)
+## Intercept
+lmm1 <- lmerTest::lmer(tri_mean ~ intensity + (1 | PID),
+                       data = data_tm,
+                       REML = FALSE)
+
+## Intercept and slope
+lmm1b <- lmerTest::lmer(tri_mean ~ intensity + (intensity | PID),
+                       data = data_tm,
+                       REML = FALSE)
+
+## Better model?
+anova(lmm1, lmm1b)
+summary(lmm1b)
+
+## Diagnostics on lmm1b
+### Level 1
+
+
+```
+
+# Model 2 (quadratic)
+## Intercept
+lmm2 <- lmerTest::lmer(tri_mean ~ poly(intensity, 2) + (1 | PID),
+                       data = data_tm,
+                       REML = FALSE)
+
+## Intercept and slope
+lmm2b <- lmerTest::lmer(tri_mean ~ poly(intensity, 2) + (intensity | PID),
+                       data = data_tm,
+                       REML = FALSE)
+
+## Better model?
+anova(lmm2, lmm2b)
+summary(lmm2b)
+
+# Model 3 (cubic)
+## Intercept
+lmm3 <- lmerTest::lmer(tri_mean ~ poly(intensity, 3) + (1 | PID),
+                       data = data_tm,
+                       REML = FALSE)
+
+## Intercept and slope
+lmm3b <- lmerTest::lmer(tri_mean ~ poly(intensity, 3) + (intensity | PID),
+                       data = data_tm,
+                       REML = FALSE)
+
+## Better model?
+anova(lmm3, lmm3b)
+summary(lmm3b)
+
+# Compare models
+## Linear vs quadratic
+anova(lmm1b, lmm2b) 
+
+## Linear vs cubic
+anova(lmm1b, lmm3b)
+
+## Quadratic vs cubic
+anova(lmm2b, lmm3b)
+
+# Plot the final model
+library(sjPlot)
+set_theme(base = theme_bw())
+
+## Plot random effects
+sjp.lmer(fit = lmm3b,
+         type = 're',
+         y.offset = 0.4,  
+         title = 'Random effects for the cubic model (lmm3b)')
+
+## Plot fixed effects
+sjp.lmer(fit = lmm3b,
+         type = 'fe',
+         title = 'Fixed effects coefficients for the cubic model (lmm3b)')
+
+## Plot fixed effect slopes
+sjp.lmer(fit = lmm3b,
+         type = 'poly',
+         poly.term = 'intensity',
+         vars = 'intensity',
+         title = 'Fixed effect curve for the cubic model (lmm3b)')
+```
+
+
+
+Best model is a cubic model with random slope and intercept. 
+
+# Quantile mixed model regression
+
+```{r quantile}
+# Quantile model with 2.5, 25, 50, 75, and 97.5% quantiles
+(qmm <- lqmm(fixed = tri_mean ~ poly(intensity, 3),
+            random = ~ intensity,
+            group = PID,
+            data = data_tm,
+            tau = c(0.025, 0.25, 0.5, 0.75, 0.975)))
+
+# Summary 
+summary(qmm)
+
+# Get predicted values
+## Level 0 (population)
+quant_predict <- as.data.frame(predict(qmm, level = 0))
+names(quant_predict) <- paste0('Q', c(2.5, 25, 50, 75, 97.5))
+
+# Join with 'central_lmm'
+data_lqmm <- data_tm %>%
+  bind_cols(quant_predict)
+
+# Trim prediction to upper and lower limits of the scale
+data_lqmm %<>%
+  mutate_if(is.numeric,
+            funs(ifelse(. > 50,
+                        yes = 50,
+                        no = ifelse(. < -50,
+                                    yes = -50,
+                                    no = .))))
+
+# Plot
+ggplot(data = data_lqmm) +
+  aes(x = intensity,
+      y = Q50) +
+  geom_ribbon(aes(ymin = `Q2.5`,
+                  ymax = `Q97.5`),
+              fill = '#E69F00') +
+  geom_ribbon(aes(ymin = `Q25`,
+                  ymax = `Q75`),
+              fill = '#56B4E9') +
+  geom_point(size = 3,
+             shape = 21,
+             fill = '#FFFFFF',
+             colour = '#000000') +
+  geom_hline(yintercept = 0,
+             linetype = 2) +
+  labs(title = paste('Quantile regression'),
+       subtitle = 'Open circles: 50th percentile (median) | Blue band: interquartile range | Orange band: 95% prediction interval',
+       x = 'Stimulus intensity (J)',
+       y = 'FEST rating [-50 to 50]') +
+  scale_y_continuous(limits = c(-50, 50)) +
+  scale_x_continuous(breaks = unique(data_lqmm$intensity)) +
+  theme_bw()
+
+## With original data
+ggplot(data = data_lqmm) +
+  aes(x = intensity,
+      y = Q50) +
+  geom_ribbon(aes(ymin = `Q2.5`,
+                  ymax = `Q97.5`),
+              fill = '#E69F00') +
+  geom_ribbon(aes(ymin = `Q25`,
+                  ymax = `Q75`),
+              fill = '#56B4E9') +
+  geom_point(data = data_tm,
+             aes(y = tri_mean),
+             position = position_jitter(width = 0.03)) +
+  geom_point(size = 3,
+             shape = 21,
+             fill = '#FFFFFF',
+             colour = '#000000') +
+  geom_hline(yintercept = 0,
+             linetype = 2) +
+  labs(title = paste('Quantile regression (with original Tukey trimean data)'),
+       subtitle = 'Open circles: 50th percentile (median) | Blue band: interquartile range | Orange band: 95% prediction interval',
+       x = 'Stimulus intensity (J)',
+       y = 'FEST rating [-50 to 50]') +
+  scale_y_continuous(limits = c(-50, 50)) +
+  scale_x_continuous(breaks = unique(data_lqmm$intensity)) +
+  theme_bw()
+```
+
+Good stability across the quantiles.
+
+----
+
+# Session information
+```{r session_info}
+sessionInfo()
+```
