@@ -1,6 +1,6 @@
 ---
-title: "FEST 2015"
-subtitle: "Effect of stimulus order and blocking on FEST rating"
+title: "SPARS trial A"
+subtitle: "Effect of stimulus order and blocking on SPARS rating"
 author: "Peter Kamerman"
 date: "`r format(Sys.Date(), '%d %b %Y')`"
 output: 
@@ -28,7 +28,7 @@ knitr::opts_chunk$set(warning = FALSE,
                       fig.height = 7,
                       fig.width = 7,
                       fig.align = 'center',
-                      fig.path = './figures/03-order-effects/')
+                      fig.path = './figures/3A-order-effects/')
 ```
 
 ----
@@ -45,7 +45,7 @@ Despite using a randomized block approach, we still wanted to assess whether the
 # Import and inspect data
 ```{r import}
 # Import
-data <- read_rds('./data/FEST_2015.rds')
+data <- read_rds('./data/SPARS_A.rds')
 
 # Inspect
 glimpse(data)
@@ -125,7 +125,7 @@ Participants _ID05_, _ID06_, _ID12_, and _ID15_ did not complete the trial per p
 
 # Trial order effects
 
-**Question:** Is the FEST rating for a given stimulus intensity dependent on the intensity of the preceding stimulus? 
+**Question:** Is the SPARS rating for a given stimulus intensity dependent on the intensity of the preceding stimulus? 
 
 The analysis includes data from experimental trials, ignoring experimental blocks. Because each stimulus intensity is repeated multiple times in each participant, a hierarchical analysis by study participant and stimulus intensity was conducted. 
 
@@ -150,7 +150,7 @@ tri.mean <- function(x) {
 
 ### Participant-level exploratory plots
 
-Participant-level plots of FEST rating against the intensity of the preceding stimulus, across the range of stimuli used (1.00J to 4.00J). 
+Participant-level plots of SPARS rating against the intensity of the preceding stimulus, across the range of stimuli used (1.00J to 4.00J). 
 
 ```{r plots_trial}
 # Plot data
@@ -180,9 +180,9 @@ plot_trial <- plot_data %>%
                                  colour = 'red',
                                  size = 0.6,
                                  linetype = 2) +
-                      labs(title = paste0(..3, ': FEST rating versus intensity of the previous stimulus, at different stimulus intensities'),
-                           subtitle = 'Red line (dashed): Tukey trimean of FEST rating | Grey line (solid): Loess curve',
-                           y = 'FEST rating [-50 to 50]',
+                      labs(title = paste0(..3, ': SPARS rating versus intensity of the previous stimulus, at different stimulus intensities'),
+                           subtitle = 'Red line (dashed): Tukey trimean of SPARS rating | Grey line (solid): Loess curve',
+                           y = 'SPARS rating [-50 to 50]',
                            x = 'Intensity of previous stimulus (J)') +
                       scale_y_continuous(limits = c(-50, 50)) +
                       scale_x_continuous(limits = c(1, 4)) +
@@ -204,7 +204,7 @@ Visual inspection of the figures shows the loess curve (grey curve) oscillating 
 
 # Block order effects
 
-**Question:** Is the FEST rating for a given stimulus intensity associated with experimental block? 
+**Question:** Is the SPARS rating for a given stimulus intensity associated with experimental block? 
 
 The analysis includes data from experimental blocks, ignoring trials. Because each stimulus intensity is repeated multiple times in each participant, a hierarchical analysis by study participant and stimulus intensity was conducted. 
 
@@ -227,9 +227,9 @@ plot_block <- plot_data %>%
                                  colour = 'red',
                                  size = 0.6,
                                  linetype = 2) +
-                      labs(title = paste0(..3, ': FEST rating versus experimental block number, at different stimulus intensities'),
-                           subtitle = 'Red line (dashed): Tukey trimean of FEST rating | Grey line (solid): Loess curve',
-                           y = 'FEST rating [-50 to 50]',
+                      labs(title = paste0(..3, ': SPARS rating versus experimental block number, at different stimulus intensities'),
+                           subtitle = 'Red line (dashed): Tukey trimean of SPARS rating | Grey line (solid): Loess curve',
+                           y = 'SPARS rating [-50 to 50]',
                            x = 'Block number') +
                       scale_y_continuous(limits = c(-50, 50)) +
                       scale_x_continuous(limits = c(1, 4)) +
