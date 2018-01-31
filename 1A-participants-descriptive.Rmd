@@ -43,7 +43,7 @@ This script generates descriptive statistics of the FEST 2015 cohort, and includ
 # Import and inspect data
 ```{r import}
 # Import
-data <- read_rds('./data/FEST_2015.rds')
+data <- read_rds('./data/SPARS_A.rds')
 
 # Inspect
 dim(data)
