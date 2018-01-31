@@ -63,10 +63,10 @@ glimpse(data)
 ############################################################
 data %<>%
   # Select required columns
-  select(PID, block_number, trial_number, 
+  select(PID, block, block_order, trial_number, 
          intensity, rating, rating_positive) %>%
   # Format block and trial number type
-  mutate(block_number = as.integer(block_number),
+  mutate(block_order = as.integer(block_order),
          trial_number = as.integer(trial_number)) %>%
   # 'Back-up' intensity data as a continuous variable before factorizing
   mutate(intensity_cont = intensity) %>% 
@@ -88,7 +88,7 @@ data %<>%
 #                                                          #
 ############################################################
 data_lag <- data %>%
-  # Drop unneeded columns (block_number and positive_intensity)
+  # Drop unneeded columns (block_order and positive_intensity)
   select(-rating_positive) %>%
   # Get lag-1 stimulus intensity by PID
   group_by(PID) %>%
@@ -108,7 +108,7 @@ The figure below summarises the exposure (number of trials) of each participant 
 data %>%
   ggplot(data = .) +
   aes(x = intensity,
-      fill = factor(block_number)) +
+      fill = factor(block_order)) +
   geom_bar() +
   scale_fill_viridis_d(name = 'Experimental block:') +
   facet_wrap(~PID, ncol = 4) +
@@ -215,7 +215,7 @@ The analysis includes data from experimental blocks, ignoring trials. Because ea
 plot_block <- plot_data %>%
   mutate(plot = pmap(.l = list(data, trimean, unique(PID)),
                     ~ ggplot(data = ..1) +
-                      aes(x = block_number,
+                      aes(x = block_order,
                           y = rating) +
                       geom_point() +
                       geom_smooth(se = FALSE,
