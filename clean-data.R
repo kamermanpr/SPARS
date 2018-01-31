@@ -101,6 +101,7 @@ data %<>%
 
 # Save outputs
 write_rds(x = data,
-          path = 'data/FEST_2015.rds')
+          path = 'data/SPARS_A.rds')
 write_csv(x = data,
-          path = 'data/FEST_2015.csv')
+          path = 'data/SPARS_A.csv')
+
