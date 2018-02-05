@@ -222,7 +222,7 @@ data %>%
   theme(axis.title.x = element_blank())
 ```
 
-<img src="./outputs/figures/1A-participants-descriptive/age-1.png" width="336" style="display: block; margin: auto;" />
+<img src="figures/1A-participants-descriptive/age-1.png" width="336" style="display: block; margin: auto;" />
 
 ----
 
@@ -271,7 +271,7 @@ ggplot(data = sex) +
   theme(axis.title.x = element_blank())
 ```
 
-<img src="./outputs/figures/1A-participants-descriptive/sex-1.png" width="336" style="display: block; margin: auto;" />
+<img src="figures/1A-participants-descriptive/sex-1.png" width="336" style="display: block; margin: auto;" />
 
 ----
 
@@ -395,7 +395,7 @@ helplessness <- pcs %>%
 total + {magnification + rumination + helplessness} + plot_layout(nrow = 2)
 ```
 
-<img src="./outputs/figures/1A-participants-descriptive/pcs-1.png" width="672" style="display: block; margin: auto;" />
+<img src="figures/1A-participants-descriptive/pcs-1.png" width="672" style="display: block; margin: auto;" />
 
 ----
 
@@ -460,7 +460,7 @@ ggplot(data = panas) +
   theme_bw()
 ```
 
-<img src="./outputs/figures/1A-participants-descriptive/panas-1.png" width="672" style="display: block; margin: auto;" />
+<img src="figures/1A-participants-descriptive/panas-1.png" width="672" style="display: block; margin: auto;" />
 
 ----
 
@@ -572,7 +572,7 @@ stress <- data %>%
 depression + anxiety + stress + plot_layout(ncol = 3)
 ```
 
-<img src="./outputs/figures/1A-participants-descriptive/dass-1.png" width="672" style="display: block; margin: auto;" />
+<img src="figures/1A-participants-descriptive/dass-1.png" width="672" style="display: block; margin: auto;" />
 
 ----
 

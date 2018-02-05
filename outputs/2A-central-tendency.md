@@ -270,7 +270,7 @@ p_13to18 <- data %>%
 p_1to6; p_7to12; p_13to18
 ```
 
-<img src="./outputs/figures/2A-central-measure/plots_1b-1.png" width="864" style="display: block; margin: auto;" /><img src="./outputs/figures/2A-central-measure/plots_1b-2.png" width="864" style="display: block; margin: auto;" /><img src="./outputs/figures/2A-central-measure/plots_1b-3.png" width="864" style="display: block; margin: auto;" />
+<img src="figures/2A-central-tendency/plots_1b-1.png" width="864" style="display: block; margin: auto;" /><img src="figures/2A-central-tendency/plots_1b-2.png" width="864" style="display: block; margin: auto;" /><img src="figures/2A-central-tendency/plots_1b-3.png" width="864" style="display: block; margin: auto;" />
 
 ### Conclusion
 
