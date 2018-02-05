@@ -101,7 +101,7 @@ data %<>%
 
 # Save outputs
 write_rds(x = data,
-          path = 'data/SPARS_A.rds')
+          path = 'data-cleaned/SPARS_A.rds')
 write_csv(x = data,
-          path = 'data/SPARS_A.csv')
+          path = 'data-cleaned/SPARS_A.csv')
 
