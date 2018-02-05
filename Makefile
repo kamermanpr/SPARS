@@ -1,5 +1,5 @@
 # Create directories if required
-$(shell mkdir -p data-cleaned outputs)
+$(shell mkdir -p data-cleaned outputs outputs/figures/)
 
 # Dummy outputs
 .PHONY: all
@@ -27,11 +27,15 @@ clean-data.R data/raw-data-18112016-deidentified.xlsx
 outputs/1A-participants-descriptive.html outputs/1A-participants-descriptive.md: \
 1A-participants-descriptive.Rmd data-cleaned/SPARS_A.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
+	mv figures/1A-participants-descriptive outputs/figures/
 
 outputs/2A-central-tendency.html outputs/2A-central-tendency.md: \
 2A-central-tendency.Rmd data-cleaned/SPARS_A.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
+	mv figures/2A-central-tendency outputs/figures/
 
 outputs/3A-order-effects.html outputs/3A-order-effects.md: \
 3A-order-effects.Rmd data-cleaned/SPARS_A.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
+	mv figures/3A-order-effects outputs/figures/
+	rm -r figures/
