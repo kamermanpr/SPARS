@@ -98,7 +98,7 @@ tri.mean <- function(x) {
 
 ```{r import}
 # Import
-data <- read_rds('./data/SPARS_A.rds')
+data <- read_rds('./data-cleaned/SPARS_A.rds')
 
 # Inspect
 glimpse(data)
