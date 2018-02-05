@@ -2,8 +2,6 @@
 $(shell mkdir -p data-cleaned outputs outputs/figures/)
 
 # Dummy outputs
-.PHONY: all
-
 DATA = 	data-cleaned/SPARS_A.csv \
 		data-cleaned/SPARS_A.rds
 
@@ -16,7 +14,13 @@ DATA = 	data-cleaned/SPARS_A.csv \
 3A = 	outputs/3A-order-effects.md \
 		outputs/3A-order-effects.html
 
+.PHONY: all
+
 all: $(DATA) $(1A) $(2A) $(3A)
+
+# Clean
+clean:
+	rm -r ./outputs ./data-cleaned
 
 # Generate data
 data-cleaned/SPARS_A.csv data-cleaned/SPARS_A.rds: \
