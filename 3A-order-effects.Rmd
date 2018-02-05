@@ -45,7 +45,7 @@ Despite using a randomized block approach, we still wanted to assess whether the
 # Import and inspect data
 ```{r import}
 # Import
-data <- read_rds('./data/SPARS_A.rds')
+data <- read_rds('./data-cleaned/SPARS_A.rds')
 
 # Inspect
 glimpse(data)
