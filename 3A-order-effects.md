@@ -2,7 +2,7 @@
 title: "SPARS trial A"
 subtitle: "Effect of stimulus order and blocking on SPARS rating"
 author: "Peter Kamerman"
-date: "31 Jan 2018"
+date: "05 Feb 2018"
 output: 
   html_document:
     keep_md: true
@@ -31,7 +31,7 @@ Despite using a randomized block approach, we still wanted to assess whether the
 
 ```r
 # Import
-data <- read_rds('./data/SPARS_A.rds')
+data <- read_rds('./data-cleaned/SPARS_A.rds')
 
 # Inspect
 glimpse(data)
@@ -127,13 +127,15 @@ data %>%
   labs(title = 'Number of trials per participant at each stimulus intensity, stratified by experimental block',
        y = 'Number of trials',
        x = 'Stimulus intensity (J)') +
+  scale_x_discrete(labels = sprintf('%.2f', seq(from = 1, to = 4, by = 0.25))) +
   theme_bw() +
-  theme(legend.position = 'top')
+  theme(legend.position = 'top',
+        axis.text.x = element_text(angle = -90))
 ```
 
 <img src="./figures/3A-order-effects/summary-1.png" width="672" style="display: block; margin: auto;" />
 
-Participants _ID05_, _ID06_, _ID12_, and _ID15_ did not complete the trial per protocol.
+Participants _ID05_, _ID06_, and _ID12_ did not complete the trial per protocol.
 
 ----
 

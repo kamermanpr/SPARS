@@ -20,6 +20,9 @@ library(magrittr)
 library(tidyverse)
 library(robustlmm)
 
+# Colour palette
+cb_palette <- c('#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00', '#CC79A7', '#999999', '#000000')
+
 # knitr setup
 knitr::opts_chunk$set(warning = FALSE,
                       message = FALSE,
@@ -115,11 +118,13 @@ data %>%
   labs(title = 'Number of trials per participant at each stimulus intensity, stratified by experimental block',
        y = 'Number of trials',
        x = 'Stimulus intensity (J)') +
+  scale_x_discrete(labels = sprintf('%.2f', seq(from = 1, to = 4, by = 0.25))) +
   theme_bw() +
-  theme(legend.position = 'top')
+  theme(legend.position = 'top',
+        axis.text.x = element_text(angle = -90))
 ```
 
-Participants _ID05_, _ID06_, _ID12_, and _ID15_ did not complete the trial per protocol.
+Participants _ID05_, _ID06_, and _ID12_ did not complete the trial per protocol.
 
 ----
 
