@@ -25,7 +25,7 @@ knitr::opts_chunk$set(warning = FALSE,
                       message = FALSE,
                       fig.retina = 2,
                       fig.align = 'center',
-                      fig.path = './figures/1A-participants-descriptive/')
+                      fig.path = './outputs/figures/1A-participants-descriptive/')
 ```
 
 ----

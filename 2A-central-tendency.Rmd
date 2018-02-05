@@ -27,7 +27,7 @@ knitr::opts_chunk$set(warning = FALSE,
                       fig.height = 8,
                       fig.width = 9,
                       fig.align = 'center',
-                      fig.path = './figures/2A-central-measure/')
+                      fig.path = './outputs/figures/2A-central-measure/')
 ```
 
 ----
