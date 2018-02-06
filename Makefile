@@ -14,9 +14,12 @@ DATA = 	data-cleaned/SPARS_A.csv \
 3A = 	outputs/3A-order-effects.md \
 		outputs/3A-order-effects.html
 
+4A = 	outputs/4A-response-characteristics.md \
+		outputs/4A-response-characteristics.html
+
 .PHONY: all
 
-all: $(DATA) $(1A) $(2A) $(3A)
+all: $(DATA) $(1A) $(2A) $(3A) $(4A)
 
 # Clean
 clean:
@@ -42,4 +45,9 @@ outputs/3A-order-effects.html outputs/3A-order-effects.md: \
 3A-order-effects.Rmd data-cleaned/SPARS_A.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
 	mv figures/3A-order-effects outputs/figures/
+
+outputs/4A-response-characteristics.html outputs/4A-response-characteristics.md: \
+4A-response-characteristics.Rmd data-cleaned/SPARS_A.rds
+	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
+	mv figures/4A-response-characteristics outputs/figures/
 	rm -r figures/
