@@ -1,6 +1,6 @@
 ---
-title: "FEST 2015"
-subtitle: "Stimulus-response characteristics of the FEST scale"
+title: "SPARS trial A"
+subtitle: "Stimulus-response characteristics of the SPARS"
 author: "Peter Kamerman"
 date: "`r format(Sys.Date(), '%d %b %Y')`"
 output: 
@@ -18,10 +18,14 @@ output:
 # Load packages
 library(magrittr)
 library(tidyverse)
+library(patchwork)
 library(lme4)
 library(lqmm)
-library(sjPlot)
 library(HLMdiag)
+library(sjPlot)
+
+# Set ggplot theme (since I've loaded sjPlot)
+set_theme(base = theme_bw())
 
 # knitr setup
 knitr::opts_chunk$set(warning = FALSE,
@@ -31,22 +35,23 @@ knitr::opts_chunk$set(warning = FALSE,
                       fig.height = 7,
                       fig.width = 7,
                       fig.align = 'center',
-                      fig.path = './figures/04-response-characteristics/')
+                      fig.path = 'figures/04-response-characteristics/')
 ```
 
 ----
 
-The response characateristics of FEST were examined at the level of each participant. Within each participant, we examined:
+The response characateristics of the SPARS were examined at the level of each participant. Within each participant, we examined:
 
 1. The stability of the variance in ratings at each stumulus intensity across the scale (i.e., is there a relationship between stimulus intensity and rating precision)  
-2. Whether response charateristics of the lower half (innoccuous sensation: -50 to 0)he upper half of the scale (noxious sensation: 0 to 50).
+
+2. Whether response characteristics of the lower half (innoccuous sensation: -50 to 0)he upper half of the scale (noxious sensation: 0 to 50).
 
 ----
 
 # Import and inspect data
 ```{r import}
 # Import
-data <- read_rds('./data/FEST_2015.rds')
+data <- read_rds('./data-cleaned/SPARS_A.rds')
 
 # Inspect
 glimpse(data)
@@ -56,7 +61,7 @@ glimpse(data)
 
 # Clean and process data
 
-Basic clean-up of the data, then calculate _Tukey trimean_ at each stimulus intensity for each participant (participant average), and finally the _median_ of the trimeans at each stimulus intensity across participants (group average). 
+We performed a basic clean-up of the data, and then calculated _Tukey trimean_ at each stimulus intensity for each participant (participant average), and finally the _median_ of the trimeans at each stimulus intensity across participants (group average). 
 
 ```{r clean}
 ############################################################
@@ -124,10 +129,9 @@ data_tm %>%
   labs(title = 'Group-level stimulus-response plots',
        subtitle = 'Black circles: participant-level Tukey trimeans | Orange circles: group-level median | Grey line: loess curve',
        x = 'Stimulus intensity (J)',
-       y = 'FEST rating [-50 to 50]') +
+       y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
-  scale_x_continuous(breaks = seq(from = 1, to = 4, by = 0.5)) +
-  theme_bw()
+  scale_x_continuous(breaks = seq(from = 1, to = 4, by = 0.5))
 ```
 
 ### Participant-level stimulus response curves
@@ -153,10 +157,9 @@ data %>%
   labs(title = 'Participant-level stimulus-response plot',
        subtitle = 'Black circles: individual experimental blocks | Orange circles: Tukey trimean | Grey line: loess curve',
        x = 'Stimulus intensity (J)',
-       y = 'FEST rating [-50 to 50]') +
+       y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
-  facet_wrap(~ PID, ncol = 4) +
-  theme_bw()
+  facet_wrap(~ PID, ncol = 4)
 ```
 
 #### Trials by experimental block
@@ -183,10 +186,9 @@ data_block <- data %>%
                         labs(title = paste(.y, ': Participant-level stimulus-response plots conditioned on experimental block'),
                              subtitle = 'Black circles: individual data points | Grey line: loess curve',
                              x = 'Stimulus intensity (J)',
-                             y = 'FEST rating [-50 to 50]') +
+                             y = 'SPARS rating [-50 to 50]') +
                         scale_y_continuous(limits = c(-50, 50)) +
-                        facet_wrap(~ block, ncol = 2) +
-                        theme_bw()))
+                        facet_wrap(~ block, ncol = 2)))
 
 # Print plots
 walk(.x = data_block$plots, ~ print(.x))
@@ -196,122 +198,438 @@ walk(.x = data_block$plots, ~ print(.x))
 
 # Linear mixed model regression
 
-For each participant, stimuli were applied in four experimental blocks. Although there does not appear to be an order effect for trial or experimental block at a given stimulus intenisty (see: 03-order-effects.*), the blocks should be treated as observational units, and included as a random effect when analysing the data. 
-
-#### Linear mixed model regression
-
 To allow for a curvilinear relationship between stimulus intensity and rating, we modelled the data using polynomial regression, using 1^st^ (linear), 2^nd^ (quadratic), and 3^rd^ (cubic) order orthogonal polynomials. For each polynomial expression, we modelled the random effects as random intercept only, and as random intercept and slope. 
 
-The random intercept only and random intercept and slope models were compared using logliklihood test, and the better model taken foward. Regression diagnostics were only run on the three best models (one from each of the polynomial expressions). Diagnostics examined level 1 (conditional / fixed effects), and level 2 (random effects) residuals and outliers, based on the approaches recommended by Loy and Hofmann [^1].
+The random intercept only and random intercept and slope models were compared using the logliklihood test, and the better model taken foward. Diagnostics were only run on the final model, and examined level 1 residuals (conditional / fixed effects), and level 2 residuals (random effects) and outliers [^1].
 
 [^1]: Loy A, Hofmann H. HLMdiag: A suite of diagnostics for hierarchical linear models in R. J. Stat. Softw. 2014;56:1–28. [Available](https://www.jstatsoft.org/article/view/v056i05/v56i05.pdf)
 
-**First order polynomial**
+### 1st-order (linear) polynomial
 
 ```{r lmm_1}
-# Model 1 (linear)
-## Intercept
-lmm1 <- lmerTest::lmer(tri_mean ~ intensity + (1 | PID),
-                       data = data_tm,
-                       REML = FALSE)
+# Intercept only
+lmm1 <- lmer(tri_mean ~ intensity + (1 | PID),
+             data = data_tm,
+             REML = FALSE)
 
-## Intercept and slope
-lmm1b <- lmerTest::lmer(tri_mean ~ intensity + (intensity | PID),
-                       data = data_tm,
-                       REML = FALSE)
+# Intercept and slope
+lmm1b <- lmer(tri_mean ~ intensity + (intensity | PID),
+              data = data_tm,
+              REML = FALSE)
 
-## Better model?
+# Better model?
 anova(lmm1, lmm1b)
-summary(lmm1b)
 
-## Diagnostics on lmm1b
-### Level 1
-
-
+# Print better model
+sjt.lmer(lmm1b,
+         show.header = TRUE,
+         string.dv = "Response", 
+         string.pred = "Coefficients",
+         depvar.labels = '',
+         pred.labels = 'intensity',
+         string.est = 'Estimate',
+         string.ci = '95% CI',
+         string.p = 'p-value',
+         show.icc = FALSE,
+         show.r2 = FALSE)
 ```
 
-# Model 2 (quadratic)
-## Intercept
-lmm2 <- lmerTest::lmer(tri_mean ~ poly(intensity, 2) + (1 | PID),
-                       data = data_tm,
-                       REML = FALSE)
+### 2nd-order (quadratic) polynomial
 
-## Intercept and slope
-lmm2b <- lmerTest::lmer(tri_mean ~ poly(intensity, 2) + (intensity | PID),
-                       data = data_tm,
-                       REML = FALSE)
+```{r lmm_2}
+# Intercept only
+lmm2 <- lmer(tri_mean ~ poly(intensity, 2) + (1 | PID),
+             data = data_tm,
+             REML = FALSE)
 
-## Better model?
+# Intercept and slope
+lmm2b <- lmer(tri_mean ~ poly(intensity, 2) + (intensity | PID),
+              data = data_tm,
+              REML = FALSE)
+
+# Better model?
 anova(lmm2, lmm2b)
-summary(lmm2b)
 
-# Model 3 (cubic)
-## Intercept
-lmm3 <- lmerTest::lmer(tri_mean ~ poly(intensity, 3) + (1 | PID),
-                       data = data_tm,
-                       REML = FALSE)
-
-## Intercept and slope
-lmm3b <- lmerTest::lmer(tri_mean ~ poly(intensity, 3) + (intensity | PID),
-                       data = data_tm,
-                       REML = FALSE)
-
-## Better model?
-anova(lmm3, lmm3b)
-summary(lmm3b)
-
-# Compare models
-## Linear vs quadratic
-anova(lmm1b, lmm2b) 
-
-## Linear vs cubic
-anova(lmm1b, lmm3b)
-
-## Quadratic vs cubic
-anova(lmm2b, lmm3b)
-
-# Plot the final model
-library(sjPlot)
-set_theme(base = theme_bw())
-
-## Plot random effects
-sjp.lmer(fit = lmm3b,
-         type = 're',
-         y.offset = 0.4,  
-         title = 'Random effects for the cubic model (lmm3b)')
-
-## Plot fixed effects
-sjp.lmer(fit = lmm3b,
-         type = 'fe',
-         title = 'Fixed effects coefficients for the cubic model (lmm3b)')
-
-## Plot fixed effect slopes
-sjp.lmer(fit = lmm3b,
-         type = 'poly',
-         poly.term = 'intensity',
-         vars = 'intensity',
-         title = 'Fixed effect curve for the cubic model (lmm3b)')
+# Print better model
+sjt.lmer(lmm2b,
+         show.header = TRUE,
+         string.dv = "Response", 
+         string.pred = "Coefficients",
+         depvar.labels = '',
+         pred.labels = 'intensity',
+         string.est = 'Estimate',
+         string.ci = '95% CI',
+         string.p = 'p-value',
+         show.icc = FALSE,
+         show.r2 = FALSE)
 ```
 
+### 3rd-order (cubic) polynomial
 
+```{r lmm_3}
+# Intercept only
+lmm3 <- lmer(tri_mean ~ poly(intensity, 3) + (1 | PID),
+             data = data_tm,
+             REML = FALSE)
 
-Best model is a cubic model with random slope and intercept. 
+# Intercept and slope
+lmm3b <- lmer(tri_mean ~ poly(intensity, 3) + (intensity | PID),
+              data = data_tm,
+              REML = FALSE)
+
+# Better model?
+anova(lmm3, lmm3b)
+
+summary(lmm3b)
+# Print better model
+sjt.lmer(lmm3b,
+         show.header = TRUE,
+         string.dv = "Response", 
+         string.pred = "Coefficients",
+         depvar.labels = '',
+         pred.labels = 'intensity',
+         string.est = 'Estimate',
+         string.ci = '95% CI',
+         string.p = 'p-value',
+         show.icc = FALSE,
+         show.r2 = FALSE)
+```
+
+### Compare models
+
+```{r lmm_compare}
+knitr::kable(broom::tidy(anova(lmm1b, lmm2b, lmm3b)),
+             caption = 'Linear model vs quadratic model and cubic model')
+```
+
+### PLot the model
+```{r lmm_plot}
+predicted <- ggeffects::ggpredict(model = lmm3b,
+                                  terms = 'intensity',
+                                  ci.lvl = 0.95) 
+ggplot() +
+    geom_ribbon(data = predicted,
+                aes(x = x,
+                    ymin = conf.low,
+                    ymax = conf.high),
+                fill = '#cccccc') + 
+    geom_line(data = predicted,
+              aes(x = x,
+                  y = predicted)) +
+    geom_point(data = predicted,
+              aes(x = x,
+                  y = predicted)) +
+    geom_point(data = data_group,
+               aes(x = intensity,
+                   y = median),
+               shape = 21,
+               size = 4,
+               fill = '#D55E00') +
+  labs(title = 'Cubic model (95% CI): Predicted values vs stimulus intensity',
+       subtitle = 'Black circles/line: predicted values | Orange circles: group-level median',
+       x = 'Stimulus intensity (J)',
+       y = 'SPARS rating [-50 to 50]') +
+  scale_y_continuous(limits = c(-50, 50)) +
+  scale_x_continuous(breaks = seq(from = 1, to = 4, by = 0.5))
+```
+
+The cubic model has the best fit. The resulting curvilinear response function is _steepest_ at the extremes and  _flattens out_ in the mid-ranges of stumulus intensity. We performed diagnostics on this model to confirm that the model was properly specified.
+
+### Diagnostics on the cubic model
+
+#### Generate residuals 
+
+```{r lmm_resid}
+# Level 1 residuals
+## Standardized
+lmm_resid1 <- HLMresid(lmm3b,
+                       level = 1,
+                       type = 'LS',
+                       standardize = TRUE)
+
+# Semi-standardized residuals (used for assessing homoscedasticity)
+lmm_ssresid1 <- HLMresid(lmm3b,
+                         level = 1,
+                         type = 'LS',
+                         standardize = 'semi')
+
+# Level 2 residuals
+## Standardized
+lmm_resid2 <- HLMresid(lmm3b,
+                       level = 'PID',
+                       type = 'EB') 
+```
+
+#### Level 1 residuals: linearity
+
+```{r resid1_linearity}
+# Standardized residuals vs intensity
+ggplot(data = lmm_resid1) +
+    aes(x = `poly(intensity, 3)`[, 1],
+        y = std.resid) +
+    geom_point() +
+    geom_smooth(method = 'lm') +
+    geom_hline(yintercept = 0) +
+    geom_hline(yintercept = -2,
+               linetype = 2) +
+    geom_hline(yintercept = 2,
+               linetype = 2) +
+    labs(title = 'Cubic model: Level 1 residuals vs intensity',
+         subtitle = 'Assess linearity of the intensity term | Blue line: linear regression line',
+         caption = 'The regression line should be centered on 0\n~95% of points should be betwen -2 and +2',
+         y = 'Standardized residuals',
+         x = 'Stimulus intensity')
+
+# Standardized residuals vs intensity^2
+ggplot(data = lmm_resid1) +
+    aes(x = `poly(intensity, 3)`[, 2],
+        y = std.resid) +
+    geom_point() +
+    geom_smooth(method = 'lm') +
+    geom_hline(yintercept = 0) +
+    geom_hline(yintercept = -2,
+               linetype = 2) +
+    geom_hline(yintercept = 2,
+               linetype = 2) +
+    labs(title = expression(paste('Cubic model: Level 1 residuals vs ', intensity^2)),
+         subtitle = expression(paste('Assess linearity of the ', intensity^2, ' term | Blue line: linear regression line')),
+         caption = 'The regression line should be centered on 0\n~95% of points should be betwen -2 and +2',
+         y = 'Standardized residuals',
+         x = expression(Stimulus~intensity^2)) 
+
+# Standardized residuals vs intensity^3
+ggplot(data = lmm_resid1) +
+    aes(x = `poly(intensity, 3)`[, 3],
+        y = std.resid) +
+    geom_point() +
+    geom_smooth(method = 'lm') +
+    geom_hline(yintercept = 0) +
+    geom_hline(yintercept = -2,
+               linetype = 2) +
+    geom_hline(yintercept = 2,
+               linetype = 2) +
+    labs(title = expression(paste('Cubic model: Level 1 residuals vs ', intensity^3)),
+         subtitle = expression(paste('Assess linearity of the ', intensity^3, ' term | Blue line: linear regression line')),
+         caption = 'The regression line should be centered on 0\n~95% of points should be betwen -2 and +2',
+         y = 'Standardized residuals',
+         x = expression(Stimulus~intensity^3)) 
+
+```
+
+The regression curve for the quadratic term shows some signs of deviating from a 0 slope, but otherwise the model specification (in terms of linearity) looks okay.
+
+#### Level 1 residuals: homoscedasticity
+
+```{r resid1_variance}
+# Standardized residuals vs intensity
+ggplot(data = lmm_ssresid1) +
+    aes(x = `poly(intensity, 3)`[, 1],
+        y = semi.std.resid) +
+    geom_point() +
+    geom_hline(yintercept = 0) +
+    labs(title = 'Cubic model: Level 1 residuals vs intensity',
+         subtitle = 'Assess homoscedasticity for the intensity term',
+         y = 'Semi-standardized residuals',
+         x = 'Stimulus intensity')
+
+# Standardized residuals vs intensity^2
+ggplot(data = lmm_ssresid1) +
+    aes(x = `poly(intensity, 3)`[, 2],
+        y = semi.std.resid) +
+    geom_point() +
+    geom_hline(yintercept = 0) +
+    labs(title = expression(paste('Cubic model: Level 1 residuals vs ', intensity^2)),
+         subtitle = expression(paste('Assess homoscedasticity for the ', intensity^2, ' term')),
+         y = 'Semi-standardized residuals',
+         x = expression(Stimulus~intensity^2)) 
+
+# Standardized residuals vs intensity^3
+ggplot(data = lmm_ssresid1) +
+    aes(x = `poly(intensity, 3)`[, 3],
+        y = semi.std.resid) +
+    geom_point() +
+    geom_hline(yintercept = 0) +
+    labs(title = expression(paste('Cubic model: Level 1 residuals vs ', intensity^3)),
+         subtitle = expression(paste('Assess homoscedasticity for the ', intensity^3, ' term')),
+         y = 'Semi-standardized residuals',
+         x = expression(Stimulus~intensity^3)) 
+```
+
+No serious obvious pattern to the scatter of residuals across any of the fixed effect terms. 
+
+### Level 1 residuals: residual distribution
+
+```{r resid1_ditribution}
+# Standardized residuals vs intensity
+ggplot_qqnorm(x = lmm_resid1$std.resid, 
+              line = "rlm") +
+    labs(title = 'Cubic model: QQ-plot of level 1 residuals',
+         subtitle = 'Assessing whether residuals follow a normal distribution',
+         x = 'Theoretical quantiles',
+         y = 'Standardized residuals')
+```
+
+Looks like it meets the assumption that residuals are normally distributed.
+
+#### Level 2 residuals: residual distribution
+
+```{r resid2_linearity}
+# Generate QQplots 
+qq1 <- ggplot_qqnorm(x = lmm_resid2$`(Intercept)`, 
+              line = "rlm") +
+    labs(title = 'Cubic model: QQ-plot of level 2 residuals (Intercept)',
+         subtitle = 'Assessing whether residuals follow a normal distribution',
+         x = 'Theoretical quantiles',
+         y = 'Residuals') 
+
+qq2 <- ggplot_qqnorm(x = lmm_resid2$intensity, 
+              line = "rlm") +
+    labs(title = 'Cubic model: QQ-plot of level 2 residuals (slope: intensity)',
+         subtitle = 'Assessing whether residuals follow a normal distribution',
+         x = 'Theoretical quantiles',
+         y = 'Residuals') 
+# Plot
+qq1 + qq2
+```
+
+Looks like level 2 residuals for the intercept and the slope meet the assumption that residuals are normally distributed.
+
+### influence points
+
+```{r influence_prep}
+# Prepare relative variance change (RCV)
+influence_rvc <- rvc(lmm3b, 
+                     group = 'PID')
+
+# Prepare Cook's distance
+influence_cooks <- cooks.distance(lmm3b, 
+                                  group = 'PID')
+
+# Prepare leverage 
+## (Assessed at the level of PID, and not the individual observation)
+influence_leverage <- leverage(lmm3b,
+                               level = 'PID')
+```
+#### Random effects
+
+Estimation of the variance component was undertaken by calculating relative variance change (RCV). RVC is close to zero when $unit_i$ does not have a large infuence on the variance component.
+ 
+```{r influence_random}
+# Plot
+dotplot_diag(x = influence_rvc[ , 1], 
+             cutoff = 'internal',
+             name = 'rvc') + 
+    labs(title = 'Relative variance change for the residual variance',
+         subtitle = 'Cutoffs determined by measures of internal scaling',
+         y = 'Relative variance change',
+         x = 'Participant ID')
+
+dotplot_diag(x = influence_rvc[ , 2], 
+             cutoff = 'internal',
+             name = 'rvc') + 
+    labs(title = 'Relative variance change for the random intercept variance',
+         subtitle = 'Cutoffs determined by measures of internal scaling',
+         y = 'Relative variance change',
+         x = 'Participant ID')
+
+dotplot_diag(x = influence_rvc[ , 3], 
+             cutoff = 'internal',
+             name = 'rvc') + 
+    labs(title = 'Relative variance change for the random slope variance',
+         subtitle = 'Cutoffs determined by measures of internal scaling',
+         y = 'Relative variance change',
+         x = 'Participant ID')
+
+dotplot_diag(x = influence_rvc[ , 4], 
+             cutoff = 'internal',
+             name = 'rvc') + 
+    labs(title = 'Relative variance change for the random slope and intercept covariance',
+         subtitle = 'Cutoffs determined by measures of internal scaling',
+         y = 'Relative variance change',
+         x = 'Participant ID')
+```
+
+One value (PID11) is below the cutoff for the relative variance change for random slope and intercept covariance. The extent of the deviation is minor, and was ignored.
+
+#### Fitted values
+
+Assessing whether observations are unusual with regard to the fitted values
+and explanatory variables using leverage.
+
+```{r influence_leverage}
+dotplot_diag(x = influence_leverage[, 1], 
+             cutoff = "internal",
+             name = "leverage") + 
+    labs(title = 'Leverage: overall',
+         subtitle = 'Cutoffs determined by measures of internal scaling',
+         y = 'Leverage',
+         x = 'Participant ID')
+
+dotplot_diag(x = influence_leverage[, 2], 
+             cutoff = "internal",
+             name = "leverage") + 
+    labs(title = 'Leverage: fixed effects',
+         subtitle = 'Cutoffs determined by measures of internal scaling',
+         y = 'Leverage',
+         x = 'Participant ID')
+
+dotplot_diag(x = influence_leverage[, 3], 
+             cutoff = "internal",
+             name = "leverage") + 
+    labs(title = 'Leverage: random effects',
+         subtitle = 'Cutoffs determined by measures of internal scaling',
+         y = 'Leverage',
+         x = 'Participant ID')
+
+dotplot_diag(x = influence_leverage[, 4], 
+             cutoff = "internal",
+             name = "leverage") + 
+    labs(title = 'Leverage: unconfounded random effects',
+         subtitle = 'Cutoffs determined by measures of internal scaling',
+         y = 'Leverage',
+         x = 'Participant ID')
+
+```
+
+Participants 5 and 12 were identified as having leverage. 
+
+#### Fixed effects
+
+Influence points were assessed by calculating Cook's Distance metrics.
+
+```{r influence_fixed}
+# Plot data
+dotplot_diag(x = influence_cooks, 
+             cutoff = "internal",
+             name = "cooks.distance") + 
+    labs(title = 'Influence: Cooks Distance',
+         subtitle = 'Cutoffs determined by measures of internal scaling',
+         y = 'Cooks Distance',
+         x = 'Participant ID')
+
+```
+
+There are no influential fixed effects.
+
+### Summary
+
+The cubic model is well-specified.
 
 # Quantile mixed model regression
 
 ```{r quantile}
 # Quantile model with 2.5, 25, 50, 75, and 97.5% quantiles
-(qmm <- lqmm(fixed = tri_mean ~ poly(intensity, 3),
+qmm <- lqmm(fixed = tri_mean ~ poly(intensity, 3),
             random = ~ intensity,
             group = PID,
             data = data_tm,
-            tau = c(0.025, 0.25, 0.5, 0.75, 0.975)))
+            tau = c(0.025, 0.25, 0.5, 0.75, 0.975))
 
 # Summary 
 summary(qmm)
 
 # Get predicted values
-## Level 0 (population)
+## Level 0 (conditional, note difference to the lmer diagnostics)
 quant_predict <- as.data.frame(predict(qmm, level = 0))
 names(quant_predict) <- paste0('Q', c(2.5, 25, 50, 75, 97.5))
 
@@ -347,10 +665,9 @@ ggplot(data = data_lqmm) +
   labs(title = paste('Quantile regression'),
        subtitle = 'Open circles: 50th percentile (median) | Blue band: interquartile range | Orange band: 95% prediction interval',
        x = 'Stimulus intensity (J)',
-       y = 'FEST rating [-50 to 50]') +
+       y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
-  scale_x_continuous(breaks = unique(data_lqmm$intensity)) +
-  theme_bw()
+  scale_x_continuous(breaks = unique(data_lqmm$intensity)) 
 
 ## With original data
 ggplot(data = data_lqmm) +
@@ -374,13 +691,12 @@ ggplot(data = data_lqmm) +
   labs(title = paste('Quantile regression (with original Tukey trimean data)'),
        subtitle = 'Open circles: 50th percentile (median) | Blue band: interquartile range | Orange band: 95% prediction interval',
        x = 'Stimulus intensity (J)',
-       y = 'FEST rating [-50 to 50]') +
+       y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
-  scale_x_continuous(breaks = unique(data_lqmm$intensity)) +
-  theme_bw()
+  scale_x_continuous(breaks = unique(data_lqmm$intensity)) 
 ```
 
-Good stability across the quantiles.
+There is good stability in the shape of the response characteristics across the quantiles. For all stimulus intensities, the distribution is left skewed (long tail towards lower ratings). 
 
 ----
 
