@@ -16,7 +16,7 @@ data <- map(.x = 1:19,
                        col_names = TRUE)) %>%
   map_df(~tbl_df(.))
 
-%>% %>% %>% %>% %>% # Clean data
+# Clean data
 ## Rename select columns
 data %<>%
   rename(PID = Subject,
