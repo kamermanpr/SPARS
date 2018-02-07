@@ -16,7 +16,7 @@ data <- map(.x = 1:19,
                        col_names = TRUE)) %>%
   map_df(~tbl_df(.))
 
-# Clean data
+%>% %>% %>% %>% %>% # Clean data
 ## Rename select columns
 data %<>%
   rename(PID = Subject,
@@ -70,11 +70,11 @@ blocks_unique <- unique(blocks$stimulus_order)
 length(blocks_unique)
 blocks_unique
 
-## Merge 'blocks' back into data
+# Merge 'blocks' back into data
 data %<>%
   left_join(blocks)
 
-## Classify similar blocks across participants
+# Classify similar blocks across participants
 data %<>%
   mutate(block = case_when(
     str_detect(stimulus_order, pattern = blocks_unique[[1]]) ~ 'A',
