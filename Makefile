@@ -20,9 +20,12 @@ DATA_B = 	data-cleaned/SPARS_B.csv \
 4A = 	outputs/4A-response-characteristics.md \
 		outputs/4A-response-characteristics.html
 
+4B = 	outputs/4B-response-characteristics.md \
+		outputs/4B-response-characteristics.html
+
 .PHONY: all
 
-all: $(DATA_A) $(DATA_B) $(1A) $(2A) $(3A) $(4A)
+all: $(DATA_A) $(DATA_B) $(1A) $(2A) $(3A) $(4A) $(4B)
 
 # Clean
 clean:
