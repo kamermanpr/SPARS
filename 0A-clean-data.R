@@ -1,6 +1,6 @@
 ############################################################
 #                                                          #
-#                        Clean data                        #
+#                   Clean SPARS A data                     #
 #                                                          #
 ############################################################
 
@@ -11,7 +11,7 @@ library(readxl)
 
 # Import data
 data <- map(.x = 1:19,
-            ~read_xlsx(path = 'data/raw-data-18112016-deidentified.xlsx',
+            ~read_xlsx(path = 'data/SPARSA-18112016-deidentified.xlsx',
                        sheet = .x,
                        col_names = TRUE)) %>%
   map_df(~tbl_df(.))
