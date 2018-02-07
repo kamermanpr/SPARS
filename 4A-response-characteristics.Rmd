@@ -23,6 +23,7 @@ library(lme4)
 library(lqmm)
 library(HLMdiag)
 library(sjPlot)
+library(car)
 
 # Set ggplot theme (since I've loaded sjPlot)
 set_theme(base = theme_bw())
@@ -30,7 +31,6 @@ set_theme(base = theme_bw())
 # knitr setup
 knitr::opts_chunk$set(warning = FALSE,
                       message = FALSE,
-                      cache = TRUE,
                       fig.retina = 2,
                       fig.height = 7,
                       fig.width = 7,
@@ -40,11 +40,7 @@ knitr::opts_chunk$set(warning = FALSE,
 
 ----
 
-The response characateristics of the SPARS were examined at the level of each participant. Within each participant, we examined:
-
-1. The stability of the variance in ratings at each stumulus intensity across the scale (i.e., is there a relationship between stimulus intensity and rating precision)  
-
-2. Whether response characteristics of the lower half (innoccuous sensation: -50 to 0)he upper half of the scale (noxious sensation: 0 to 50).
+This analysis examines the stimulus-response characateristics of the SPARS.
 
 ----
 
@@ -198,9 +194,9 @@ walk(.x = data_block$plots, ~ print(.x))
 
 # Linear mixed model regression
 
-To allow for a curvilinear relationship between stimulus intensity and rating, we modelled the data using polynomial regression, using 1^st^ (linear), 2^nd^ (quadratic), and 3^rd^ (cubic) order orthogonal polynomials. For each polynomial expression, we modelled the random effects as random intercept only, and as random intercept and slope. 
+To allow for a curvilinear relationship between stimulus intensity and rating, we modelled the data using polynomial regression, with 1^st^ (linear), 2^nd^ (quadratic), and 3^rd^ (cubic) order orthogonal polynomials. For each polynomial expression, we modelled the random effects as random intercept only, and as random intercept and slope. 
 
-The random intercept only and random intercept and slope models were compared using the logliklihood test, and the better model taken foward. Diagnostics were only run on the final model, and examined level 1 residuals (conditional / fixed effects), and level 2 residuals (random effects) and outliers [^1].
+The random intercept only and random intercept and slope models were compared using the logliklihood test, and the better model taken foward. Diagnostics were run on the final model only, and we examined level 1 residuals (conditional / fixed effects), and level 2 residuals (random effects) and influence points [^1].
 
 [^1]: Loy A, Hofmann H. HLMdiag: A suite of diagnostics for hierarchical linear models in R. J. Stat. Softw. 2014;56:1–28. [Available](https://www.jstatsoft.org/article/view/v056i05/v56i05.pdf)
 
@@ -210,15 +206,20 @@ The random intercept only and random intercept and slope models were compared us
 # Intercept only
 lmm1 <- lmer(tri_mean ~ intensity + (1 | PID),
              data = data_tm,
-             REML = FALSE)
+             REML = TRUE)
 
 # Intercept and slope
 lmm1b <- lmer(tri_mean ~ intensity + (intensity | PID),
               data = data_tm,
-              REML = FALSE)
+              REML = TRUE)
 
 # Better model?
 anova(lmm1, lmm1b)
+
+# Anova of better model
+Anova(lmm1b,
+      type = 2,
+      test.statistic = 'F')
 
 # Print better model
 sjt.lmer(lmm1b,
@@ -240,15 +241,20 @@ sjt.lmer(lmm1b,
 # Intercept only
 lmm2 <- lmer(tri_mean ~ poly(intensity, 2) + (1 | PID),
              data = data_tm,
-             REML = FALSE)
+             REML = TRUE)
 
 # Intercept and slope
 lmm2b <- lmer(tri_mean ~ poly(intensity, 2) + (intensity | PID),
               data = data_tm,
-              REML = FALSE)
+              REML = TRUE)
 
 # Better model?
 anova(lmm2, lmm2b)
+
+# Anova for better model
+Anova(lmm2b,
+      type = 2,
+      test.statistic = 'F')
 
 # Print better model
 sjt.lmer(lmm2b,
@@ -270,17 +276,21 @@ sjt.lmer(lmm2b,
 # Intercept only
 lmm3 <- lmer(tri_mean ~ poly(intensity, 3) + (1 | PID),
              data = data_tm,
-             REML = FALSE)
+             REML = TRUE)
 
 # Intercept and slope
 lmm3b <- lmer(tri_mean ~ poly(intensity, 3) + (intensity | PID),
               data = data_tm,
-              REML = FALSE)
+              REML = TRUE)
 
 # Better model?
 anova(lmm3, lmm3b)
 
-summary(lmm3b)
+# Anova for better model
+Anova(lmm3b,
+      type = 2,
+      test.statistic = 'F')
+
 # Print better model
 sjt.lmer(lmm3b,
          show.header = TRUE,
@@ -362,6 +372,8 @@ lmm_resid2 <- HLMresid(lmm3b,
 
 #### Level 1 residuals: linearity
 
+The relationship between predictor(s) and outcome for a linear model should be linear. This relationship can be observed by plotting the level 1 standardized residuals against the predictors. The scatter of residuals should show no pattern, and be centered around 0.
+
 ```{r resid1_linearity}
 # Standardized residuals vs intensity
 ggplot(data = lmm_resid1) +
@@ -416,9 +428,11 @@ ggplot(data = lmm_resid1) +
 
 ```
 
-The regression curve for the quadratic term shows some signs of deviating from a 0 slope, but otherwise the model specification (in terms of linearity) looks okay.
+The regression curve for the quadratic term shows some signs of deviating from slope = 0, but otherwise the model specification (in terms of linearity) looks okay. Based on the overall pictire, we accept that the condition of linearity for the cubic model.
 
 #### Level 1 residuals: homoscedasticity
+
+The variance of residuals should be constant across the range of the predictor(s). This relationship can be observed by plotting the level 1 semi-standardized residuals against the predictors. Like the assessment of linearity, the residuals should be centered on 0, and show no pattern in the scatter of points.
 
 ```{r resid1_variance}
 # Standardized residuals vs intensity
@@ -455,9 +469,11 @@ ggplot(data = lmm_ssresid1) +
          x = expression(Stimulus~intensity^3)) 
 ```
 
-No serious obvious pattern to the scatter of residuals across any of the fixed effect terms. 
+There is no obvious pattern to the scatter of residuals across any of the fixed effect terms. So we accept that the residuals are homoscedastic in the cubic model.
 
 ### Level 1 residuals: residual distribution
+
+Residuals should be normally distributed. There are various methods of examining the distribution, and we have chosen the QQ-plot method, which plots the quantiles of the standardized residuals against a theoretical (Gaussian) quantile distribution. Points should line on the line of identity of the two sets of quantiles follow the same distribution. 
 
 ```{r resid1_ditribution}
 # Standardized residuals vs intensity
@@ -469,9 +485,11 @@ ggplot_qqnorm(x = lmm_resid1$std.resid,
          y = 'Standardized residuals')
 ```
 
-Looks like it meets the assumption that residuals are normally distributed.
+There is minor deviation at the extremes, but on the whole, we are satisfied that the cubic model fits the assumption of normally sdistributed residuals. 
 
 #### Level 2 residuals: residual distribution
+
+Level 2 residuals can be used to identify predictors that should be included in the model, but since we are only assessing the effect of stimulus strength on SPARS rating, we have only assessed whether the level 2 residuals (intercept and slope) meet the assumption of being normally distributed (assessed using QQ-plots).
 
 ```{r resid2_linearity}
 # Generate QQplots 
@@ -488,13 +506,24 @@ qq2 <- ggplot_qqnorm(x = lmm_resid2$intensity,
          subtitle = 'Assessing whether residuals follow a normal distribution',
          x = 'Theoretical quantiles',
          y = 'Residuals') 
+
 # Plot
 qq1 + qq2
 ```
 
-Looks like level 2 residuals for the intercept and the slope meet the assumption that residuals are normally distributed.
+Although the data are sparse, we are satisfied that the level 2 residuals for the intercept and the slope of the cubic model fit the assumption of being normally sdistributed.
 
 ### influence points
+
+We assessed three aspects of influence (data that significantly model coefficients):
+
+- The variance component (random effects) was assesed using the relative variance change metric, which calculates the impact of deleting observational units of the variance of the residuals, random intercept, random slope, and covariance of the random slope and random intercept.
+
+- Leverage was used to assess fitted values. The assessment involves assessing the rate of change in the predicted response with respect to the observed response.
+
+- Cook's Distance was used to assess the influence of fixed effects. The metric measures the distance between the fixed effects estimates obtained from the full model to that obtained from the reduced data (observations removed). 
+
+In all cases, we treated the individual (indicated using PID) as the unit of observation, and we used internal scaling to set the diagnostic cutoffs for each metric. The cutoffs were determined as: $3^{rd}~Quartile + (3 \cdot IQR)$.
 
 ```{r influence_prep}
 # Prepare relative variance change (RCV)
@@ -510,9 +539,10 @@ influence_cooks <- cooks.distance(lmm3b,
 influence_leverage <- leverage(lmm3b,
                                level = 'PID')
 ```
+
 #### Random effects
 
-Estimation of the variance component was undertaken by calculating relative variance change (RCV). RVC is close to zero when $unit_i$ does not have a large infuence on the variance component.
+Estimation of the variance component was undertaken by calculating relative variance change (RCV). RVC is close to zero when deletion of observational units from the model does not have a large infuence on the variance component.
  
 ```{r influence_random}
 # Plot
@@ -554,29 +584,13 @@ One value (PID11) is below the cutoff for the relative variance change for rando
 #### Fitted values
 
 Assessing whether observations are unusual with regard to the fitted values
-and explanatory variables using leverage.
+and explanatory variables using leverage. We assessed leverage at two levels: i) fixed effects, and ii) unconfounded (by fixed effects) random effects.
 
 ```{r influence_leverage}
-dotplot_diag(x = influence_leverage[, 1], 
-             cutoff = "internal",
-             name = "leverage") + 
-    labs(title = 'Leverage: overall',
-         subtitle = 'Cutoffs determined by measures of internal scaling',
-         y = 'Leverage',
-         x = 'Participant ID')
-
 dotplot_diag(x = influence_leverage[, 2], 
              cutoff = "internal",
              name = "leverage") + 
     labs(title = 'Leverage: fixed effects',
-         subtitle = 'Cutoffs determined by measures of internal scaling',
-         y = 'Leverage',
-         x = 'Participant ID')
-
-dotplot_diag(x = influence_leverage[, 3], 
-             cutoff = "internal",
-             name = "leverage") + 
-    labs(title = 'Leverage: random effects',
          subtitle = 'Cutoffs determined by measures of internal scaling',
          y = 'Leverage',
          x = 'Participant ID')
@@ -591,7 +605,32 @@ dotplot_diag(x = influence_leverage[, 4],
 
 ```
 
-Participants 5 and 12 were identified as having leverage. 
+Participants 5 and 12 were identified as having high leverage. Their data is highlighted in the plot below. Data look okay. 
+
+```{r leverage plot}
+data_tm %>%
+    mutate(faux_colour = case_when(
+        PID == 'ID05' ~ 'high leverage ID05',
+        PID == 'ID12' ~ 'high leverage ID12',
+        TRUE ~ 'low leverage'
+    )) %>%
+    ggplot(data = .) +
+    aes(x = intensity,
+        y = tri_mean,
+        colour = faux_colour) +
+    geom_point(position = position_jitter(width = 0.05)) +
+    geom_smooth(aes(colour = faux_colour), 
+                method = 'loess',
+                se = FALSE, 
+                size = 0.6) +
+    scale_colour_manual(name = 'Leverage points',
+                        values = c('#0072B2', '#D55E00', '#999999')) +
+    labs(title = 'Inspection of high-leverage participants',
+        x = 'Stimulus intensity (J)',
+        y = 'SPARS rating [-50 to 50]') +
+    scale_y_continuous(limits = c(-50, 50)) +
+    scale_x_continuous(breaks = seq(from = 1, to = 4, by = 0.5))
+    ```
 
 #### Fixed effects
 
@@ -606,10 +645,9 @@ dotplot_diag(x = influence_cooks,
          subtitle = 'Cutoffs determined by measures of internal scaling',
          y = 'Cooks Distance',
          x = 'Participant ID')
-
 ```
 
-There are no influential fixed effects.
+Based on There are no influential fixed effects.
 
 ### Summary
 
