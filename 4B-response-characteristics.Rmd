@@ -388,7 +388,7 @@ The relationship between predictor(s) and outcome for a linear model should be l
 ```{r resid1_linearity}
 # Standardized residuals vs intensity
 ggplot(data = lmm_resid1) +
-    aes(x = `poly(intensity, 3)`[, 1],
+    aes(x = intensity,
         y = std.resid) +
     geom_point() +
     geom_smooth(method = 'lm') +
@@ -402,41 +402,6 @@ ggplot(data = lmm_resid1) +
          caption = 'The regression line should be centered on 0\n~95% of points should be betwen -2 and +2',
          y = 'Standardized residuals',
          x = 'Stimulus intensity')
-
-# Standardized residuals vs intensity^2
-ggplot(data = lmm_resid1) +
-    aes(x = `poly(intensity, 3)`[, 2],
-        y = std.resid) +
-    geom_point() +
-    geom_smooth(method = 'lm') +
-    geom_hline(yintercept = 0) +
-    geom_hline(yintercept = -2,
-               linetype = 2) +
-    geom_hline(yintercept = 2,
-               linetype = 2) +
-    labs(title = expression(paste('Linear model: Level 1 residuals vs ', intensity^2)),
-         subtitle = expression(paste('Assess linearity of the ', intensity^2, ' term | Blue line: linear regression line')),
-         caption = 'The regression line should be centered on 0\n~95% of points should be betwen -2 and +2',
-         y = 'Standardized residuals',
-         x = expression(Stimulus~intensity^2)) 
-
-# Standardized residuals vs intensity^3
-ggplot(data = lmm_resid1) +
-    aes(x = `poly(intensity, 3)`[, 3],
-        y = std.resid) +
-    geom_point() +
-    geom_smooth(method = 'lm') +
-    geom_hline(yintercept = 0) +
-    geom_hline(yintercept = -2,
-               linetype = 2) +
-    geom_hline(yintercept = 2,
-               linetype = 2) +
-    labs(title = expression(paste('Linear model: Level 1 residuals vs ', intensity^3)),
-         subtitle = expression(paste('Assess linearity of the ', intensity^3, ' term | Blue line: linear regression line')),
-         caption = 'The regression line should be centered on 0\n~95% of points should be betwen -2 and +2',
-         y = 'Standardized residuals',
-         x = expression(Stimulus~intensity^3)) 
-
 ```
 
 The regression curve for the quadratic term shows some signs of deviating from slope = 0, but otherwise the model specification (in terms of linearity) looks okay. Based on the overall pictire, we accept that the condition of linearity for the cubic model.
@@ -448,7 +413,7 @@ The variance of residuals should be constant across the range of the predictor(s
 ```{r resid1_variance}
 # Standardized residuals vs intensity
 ggplot(data = lmm_ssresid1) +
-    aes(x = `poly(intensity, 3)`[, 1],
+    aes(x = intensity,
         y = semi.std.resid) +
     geom_point() +
     geom_hline(yintercept = 0) +
@@ -456,28 +421,6 @@ ggplot(data = lmm_ssresid1) +
          subtitle = 'Assess homoscedasticity for the intensity term',
          y = 'Semi-standardized residuals',
          x = 'Stimulus intensity')
-
-# Standardized residuals vs intensity^2
-ggplot(data = lmm_ssresid1) +
-    aes(x = `poly(intensity, 3)`[, 2],
-        y = semi.std.resid) +
-    geom_point() +
-    geom_hline(yintercept = 0) +
-    labs(title = expression(paste('Linear model: Level 1 residuals vs ', intensity^2)),
-         subtitle = expression(paste('Assess homoscedasticity for the ', intensity^2, ' term')),
-         y = 'Semi-standardized residuals',
-         x = expression(Stimulus~intensity^2)) 
-
-# Standardized residuals vs intensity^3
-ggplot(data = lmm_ssresid1) +
-    aes(x = `poly(intensity, 3)`[, 3],
-        y = semi.std.resid) +
-    geom_point() +
-    geom_hline(yintercept = 0) +
-    labs(title = expression(paste('Linear model: Level 1 residuals vs ', intensity^3)),
-         subtitle = expression(paste('Assess homoscedasticity for the ', intensity^3, ' term')),
-         y = 'Semi-standardized residuals',
-         x = expression(Stimulus~intensity^3)) 
 ```
 
 There is no obvious pattern to the scatter of residuals across any of the fixed effect terms. So we accept that the residuals are homoscedastic in the cubic model.
@@ -641,7 +584,7 @@ The linear is well-specified.
 
 ```{r quantile}
 # Quantile model with 2.5, 25, 50, 75, and 97.5% quantiles
-qmm <- lqmm(fixed = tri_mean ~ poly(intensity, 3),
+qmm <- lqmm(fixed = tri_mean ~ intensity,
             random = ~ intensity,
             group = PID,
             data = data_tm,
@@ -718,7 +661,7 @@ ggplot(data = data_lqmm) +
   scale_x_continuous(breaks = unique(data_lqmm$intensity)) 
 ```
 
-The response clearly varies across the quantiles. 
+The response clearly varies across the quantiles, becoming wider as the intensity increases. 
 
 ----
 
