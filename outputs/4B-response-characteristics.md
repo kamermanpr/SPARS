@@ -2,7 +2,7 @@
 title: "SPARS trial B"
 subtitle: "Stimulus-response characteristics of the SPARS"
 author: "Peter Kamerman"
-date: "07 Feb 2018"
+date: "08 Feb 2018"
 output: 
   html_document:
     keep_md: true
@@ -20,6 +20,12 @@ output:
 
 This analysis examines the stimulus-response characateristics of the SPARS.
 
+Unlike Trial A, where participants were exposed to a prescribed range of stimulus intensities (1 to 4J, at 0.25J intervals), in Trial B, all participants were exposed to 9 stimulus intensities (0.25J interval), but the range of stimuli intensities were calibrated against the sensitivity of each participant. For example, a more sensitive participant may have been exposed to 9 stimuli from 1.75J to 3.75J, another participant may be exposed to stimuli from 2.5J to 4.5J.
+
+This design makes performing group-level analyses difficult (the extremes will have fewer observations), and so we transformed the exposure intensities into an  relative scale by ranking (1 to 9) an ordered list of 9 stimulus intensities for each participant. This brought everyone onto the same 1 to 9 scale. 
+
+For transparency, we have performed exploratory plots using the raw stimulus intensity data and the relative intensity data. However, the regression analysis was performed using the relative intenisty data only.   
+
 ----
 
 # Import and inspect data
@@ -33,16 +39,17 @@ glimpse(data)
 ```
 
 ```
-## Observations: 2,268
-## Variables: 8
-## $ PID             <chr> "ID01", "ID01", "ID01", "ID01", "ID01", "ID01"...
+## Observations: 2,256
+## Variables: 9
+## $ PID             <chr> "ID06", "ID06", "ID06", "ID06", "ID06", "ID06"...
 ## $ scale           <chr> "SPARS", "SPARS", "SPARS", "SPARS", "SPARS", "...
-## $ block_number    <int> 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2...
-## $ trial_number    <int> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,...
-## $ intensity       <dbl> 3.75, 4.00, 3.00, 2.50, 2.50, 3.25, 4.25, 3.00...
-## $ intensity_char  <chr> "3.75", "4.00", "3.00", "2.50", "2.50", "3.25"...
-## $ rating          <int> 3, 4, -16, -16, -2, 0, 15, -1, -31, 5, 8, 2, 1...
-## $ rating_positive <dbl> 53, 54, 34, 34, 48, 50, 65, 49, 19, 55, 58, 52...
+## $ block_number    <int> 2, 2, 2, 4, 4, 4, 6, 6, 6, 8, 8, 8, 11, 11, 11...
+## $ trial_number    <int> 4, 6, 27, 9, 13, 20, 20, 24, 27, 4, 18, 22, 2,...
+## $ intensity       <dbl> 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75...
+## $ intensity_char  <chr> "1.75", "1.75", "1.75", "1.75", "1.75", "1.75"...
+## $ intensity_rank  <int> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1...
+## $ rating          <int> -49, 2, -6, 3, -20, -2, -31, 2, -5, -8, -23, 1...
+## $ rating_positive <dbl> 1, 52, 44, 53, 30, 48, 19, 52, 45, 42, 27, 64,...
 ```
 
 ----
@@ -59,34 +66,13 @@ We performed a basic clean-up of the data, and then calculated _Tukey trimean_ a
 #                                                          #
 ############################################################
 data %<>%
-    # Select required columns
-    select(PID, scale, block_number, trial_number, 
-           intensity, intensity_char, rating) %>% 
     # Rename block_number
     rename(block = block_number) %>% 
     # Select SPARS scale
-    filter(scale == 'SPARS') %>%
-    # Remove incomplete cases
-    filter(complete.cases(.)) 
+    filter(scale == 'SPARS') %>% 
+    ungroup() %>%
+    arrange(PID)
 
-# Xtabulate readings per individuals per stimulus intensity
-xtabs(~ PID + intensity, 
-      data = data)
-```
-
-```
-##       intensity
-## PID    1.75  2 2.25 2.5 2.75  3 3.25 3.5 3.75  4 4.25 4.5
-##   ID01    0  0   12  12   12 12   12  12   12 12   12   0
-##   ID02    0  0   12  12   12 12   12  11   12 12   12   0
-##   ID03    0  0    0  12   12 12   12  12   12 12   12  11
-##   ID04    0  0    0  11   12 12   12  12   12 12   12  12
-##   ID05    0  0    0  12   12 12   12  12   12 12   12  12
-##   ID06   12 12   12  12   12 12   12  12   12  0    0   0
-##   ID07    0  0   12  12   12 12   12  11   12 12   12   0
-```
-
-```r
 ############################################################
 #                                                          #
 #                Calculate 'Tukey trimean'                 #
@@ -105,20 +91,57 @@ tri.mean <- function(x) {
   return(tm)
 }
 
-# Calculate the participant average 
+# Calculate the participant average based on 'raw' intensity
 data_tm <- data %>% 
   group_by(PID, intensity) %>%
-  summarise(tri_mean = tri.mean(rating)) %>%
+  summarise(tri_mean = tri.mean(rating)) %>% 
   ungroup()
 
-# Calculate the group average
+# Calculate the group average based on 'raw' intensity
 data_group <- data_tm %>%
   group_by(intensity) %>%
   summarise(median = median(tri_mean)) %>%
+  ungroup() 
+
+# Calculate the participant average based on 'relative' intensity
+data_tmR <- data %>% 
+  group_by(PID, intensity_rank) %>%
+  summarise(tri_mean = tri.mean(rating)) %>%
   ungroup()
+
+# Calculate the group average based on 'relative' intensity
+data_groupR <- data_tmR %>%
+  group_by(intensity_rank) %>%
+  summarise(median = median(tri_mean)) %>%
+  ungroup() 
 ```
 
 ----
+
+# Stimulus exposure ranges
+
+
+```r
+knitr::kable(data %>% 
+                 group_by(PID) %>% 
+                 summarise(`Minimum stimulus intensity` = min(intensity),
+                           `Maximum stimulus intensity` = max(intensity)),
+             caption = 'Range of stimulus intensities covered in each participant')
+```
+
+
+
+Table: Range of stimulus intensities covered in each participant
+
+PID     Minimum stimulus intensity   Maximum stimulus intensity
+-----  ---------------------------  ---------------------------
+ID01                          2.25                         4.25
+ID02                          2.25                         4.25
+ID03                          2.50                         4.50
+ID04                          2.50                         4.50
+ID05                          2.50                         4.50
+ID06                          1.75                         3.75
+ID07                          2.25                         4.25
 
 # Exploratory plots
 
@@ -126,7 +149,7 @@ data_group <- data_tm %>%
 
 
 ```r
-# Plot
+# Plot (y.axis = raw stimulus intensity)
 data_tm %>%
   ggplot(data = .) +
   aes(x = intensity,
@@ -141,7 +164,7 @@ data_tm %>%
              shape = 21,
              size = 4,
              fill = '#D55E00') +
-  labs(title = 'Group-level stimulus-response plots',
+  labs(title = 'Group-level stimulus-response plots (raw intensity)',
        subtitle = 'Black circles: participant-level Tukey trimeans | Orange circles: group-level median | Grey line: loess curve',
        x = 'Stimulus intensity (J)',
        y = 'SPARS rating [-50 to 50]') +
@@ -151,13 +174,39 @@ data_tm %>%
 
 <img src="figures/4B-response-characteristics/sr_group-1.png" width="672" style="display: block; margin: auto;" />
 
+```r
+# Plot (y.axis = relative stimulus intensity)
+data_tmR %>%
+  ggplot(data = .) +
+  aes(x = intensity_rank,
+      y = tri_mean) +
+  geom_point(position = position_jitter(width = 0.05)) +
+  geom_smooth(method = 'loess',
+              se = FALSE,
+              colour = '#666666', 
+              size = 0.6) +
+  geom_point(data = data_groupR,
+             aes(y = median),
+             shape = 21,
+             size = 4,
+             fill = '#D55E00') +
+  labs(title = 'Group-level stimulus-response plots (relative intensity)',
+       subtitle = 'Black circles: participant-level Tukey trimeans | Orange circles: group-level median | Grey line: loess curve\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
+       x = 'Relative stimulus intensity',
+       y = 'SPARS rating [-50 to 50]') +
+  scale_y_continuous(limits = c(-50, 50)) +
+  scale_x_continuous(breaks = seq(from = 1, to = 9, by = 1))
+```
+
+<img src="figures/4B-response-characteristics/sr_group-2.png" width="672" style="display: block; margin: auto;" />
+
 ### Participant-level stimulus response curves
 
 #### All trials
 
 
 ```r
-# Plot
+# Plot (y.axis = raw stimulus intensity)
 data %>%
   ggplot(data = .) +
   aes(x = intensity,
@@ -172,7 +221,7 @@ data %>%
              shape = 21,
              size = 3,
              fill = '#D55E00') +
-  labs(title = 'Participant-level stimulus-response plot',
+  labs(title = 'Participant-level stimulus-response plot (raw intensity)',
        subtitle = 'Black circles: individual experimental blocks | Orange circles: Tukey trimean | Grey line: loess curve',
        x = 'Stimulus intensity (J)',
        y = 'SPARS rating [-50 to 50]') +
@@ -182,11 +231,37 @@ data %>%
 
 <img src="figures/4B-response-characteristics/sr_participants-1.png" width="864" style="display: block; margin: auto;" />
 
+```r
+# Plot (y.axis = rank stimulus intensity)
+data %>%
+  ggplot(data = .) +
+  aes(x = intensity_rank,
+      y = rating) +
+  geom_point() +
+  geom_smooth(method = 'loess',
+              se = FALSE,
+              colour = '#666666',
+              size = 0.6) +
+  geom_point(data = data_tmR,
+             aes(y = tri_mean),
+             shape = 21,
+             size = 3,
+             fill = '#D55E00') +
+  labs(title = 'Participant-level stimulus-response plot (relative intensity)',
+       subtitle = 'Black circles: individual experimental blocks | Orange circles: Tukey trimean | Grey line: loess curve\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
+       x = 'Relative stimulus intensity',
+       y = 'SPARS rating [-50 to 50]') +
+  scale_y_continuous(limits = c(-50, 50)) +
+  facet_wrap(~ PID, ncol = 4)
+```
+
+<img src="figures/4B-response-characteristics/sr_participants-2.png" width="864" style="display: block; margin: auto;" />
+
 #### Trials by experimental block
 
 
 ```r
-# Process data
+# Process data (raw stimulus intensity)
 data_block <- data %>%
   # Rename blocks
   #mutate(block = sprintf('Block: %s (order: %i)', block, block_order)) %>%
@@ -204,7 +279,7 @@ data_block <- data %>%
                                     se = FALSE,
                                     colour = '#666666',
                                     size = 0.6) +
-                        labs(title = paste(.y, ': Participant-level stimulus-response plots conditioned on experimental block'),
+                        labs(title = paste(.y, ': Participant-level stimulus-response plots conditioned on experimental block (raw intensity'),
                              subtitle = 'Black circles: individual data points | Grey line: loess curve',
                              x = 'Stimulus intensity (J)',
                              y = 'SPARS rating [-50 to 50]') +
@@ -216,6 +291,38 @@ walk(.x = data_block$plots, ~ print(.x))
 ```
 
 <img src="figures/4B-response-characteristics/sr_participants2-1.png" width="768" style="display: block; margin: auto;" /><img src="figures/4B-response-characteristics/sr_participants2-2.png" width="768" style="display: block; margin: auto;" /><img src="figures/4B-response-characteristics/sr_participants2-3.png" width="768" style="display: block; margin: auto;" /><img src="figures/4B-response-characteristics/sr_participants2-4.png" width="768" style="display: block; margin: auto;" /><img src="figures/4B-response-characteristics/sr_participants2-5.png" width="768" style="display: block; margin: auto;" /><img src="figures/4B-response-characteristics/sr_participants2-6.png" width="768" style="display: block; margin: auto;" /><img src="figures/4B-response-characteristics/sr_participants2-7.png" width="768" style="display: block; margin: auto;" />
+
+```r
+# Process data (relative stimulus intensity)
+data_blockR <- data %>%
+  # Rename blocks
+  #mutate(block = sprintf('Block: %s (order: %i)', block, block_order)) %>%
+  # Nest by PID
+  group_by(PID) %>%
+  nest() %>%
+  # Generate plots
+  mutate(plots = map2(.x = data,
+                      .y = unique(PID),
+                      ~ ggplot(data = .x) +
+                        aes(x = intensity_rank,
+                            y = rating) +
+                        geom_point() +
+                        geom_smooth(method = 'loess',
+                                    se = FALSE,
+                                    colour = '#666666',
+                                    size = 0.6) +
+                        labs(title = paste(.y, ': Participant-level stimulus-response plots conditioned on experimental block (relative intensity'),
+                             subtitle = 'Black circles: individual data points | Grey line: loess curve\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
+                             x = 'Relative stimulus intensity',
+                             y = 'SPARS rating [-50 to 50]') +
+                        scale_y_continuous(limits = c(-50, 50)) +
+                        facet_wrap(~ block, ncol = 2)))
+
+# Print plots
+walk(.x = data_blockR$plots, ~ print(.x))
+```
+
+<img src="figures/4B-response-characteristics/sr_participants2-8.png" width="768" style="display: block; margin: auto;" /><img src="figures/4B-response-characteristics/sr_participants2-9.png" width="768" style="display: block; margin: auto;" /><img src="figures/4B-response-characteristics/sr_participants2-10.png" width="768" style="display: block; margin: auto;" /><img src="figures/4B-response-characteristics/sr_participants2-11.png" width="768" style="display: block; margin: auto;" /><img src="figures/4B-response-characteristics/sr_participants2-12.png" width="768" style="display: block; margin: auto;" /><img src="figures/4B-response-characteristics/sr_participants2-13.png" width="768" style="display: block; margin: auto;" /><img src="figures/4B-response-characteristics/sr_participants2-14.png" width="768" style="display: block; margin: auto;" />
 
 ----
 
@@ -232,13 +339,13 @@ The random intercept only and random intercept and slope models were compared us
 
 ```r
 # Intercept only
-lmm1 <- lmer(tri_mean ~ intensity + (1 | PID),
-             data = data_tm,
+lmm1 <- lmer(tri_mean ~ intensity_rank + (1 | PID),
+             data = data_tmR,
              REML = TRUE)
 
 # Intercept and slope
-lmm1b <- lmer(tri_mean ~ intensity + (intensity | PID),
-              data = data_tm,
+lmm1b <- lmer(tri_mean ~ intensity_rank + (intensity_rank | PID),
+              data = data_tmR,
               REML = TRUE)
 
 # Better model?
@@ -246,13 +353,13 @@ anova(lmm1, lmm1b)
 ```
 
 ```
-## Data: data_tm
+## Data: data_tmR
 ## Models:
-## lmm1: tri_mean ~ intensity + (1 | PID)
-## lmm1b: tri_mean ~ intensity + (intensity | PID)
-##       Df    AIC    BIC  logLik deviance  Chisq Chi Df Pr(>Chisq)    
-## lmm1   4 500.92 509.49 -246.46   492.92                             
-## lmm1b  6 478.61 491.47 -233.31   466.61 26.309      2  1.936e-06 ***
+## lmm1: tri_mean ~ intensity_rank + (1 | PID)
+## lmm1b: tri_mean ~ intensity_rank + (intensity_rank | PID)
+##       Df    AIC    BIC  logLik deviance Chisq Chi Df Pr(>Chisq)    
+## lmm1   4 495.89 504.46 -243.94   487.89                            
+## lmm1b  6 475.23 488.08 -231.61   463.23 24.66      2  4.418e-06 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
@@ -268,8 +375,8 @@ Anova(lmm1b,
 ## Analysis of Deviance Table (Type II Wald F tests with Kenward-Roger df)
 ## 
 ## Response: tri_mean
-##                F Df Df.res   Pr(>F)   
-## intensity 27.193  1 5.9981 0.001988 **
+##                     F Df Df.res   Pr(>F)   
+## intensity_rank 28.612  1      6 0.001746 **
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
@@ -281,7 +388,7 @@ sjt.lmer(lmm1b,
          string.dv = "Response", 
          string.pred = "Coefficients",
          depvar.labels = '',
-         pred.labels = 'intensity',
+         pred.labels = 'intensity_rank',
          string.est = 'Estimate',
          string.ci = '95% CI',
          string.p = 'p-value',
@@ -311,15 +418,15 @@ sjt.lmer(lmm1b,
 <tr>
 <td style="padding:0.2cm; text-align:left;">(Intercept)</td>
 <td style="padding-left:0.5em; padding-right:0.5em; ">&nbsp;</td>
-<td style="padding:0.2cm; text-align:center; ">&#45;88.37</td>
-<td style="padding:0.2cm; text-align:center; ">&#45;126.22&nbsp;&ndash;&nbsp;&#45;50.52</td>
+<td style="padding:0.2cm; text-align:center; ">&#45;38.87</td>
+<td style="padding:0.2cm; text-align:center; ">&#45;56.10&nbsp;&ndash;&nbsp;&#45;21.65</td>
 <td style="padding:0.2cm; text-align:center; ">.004</td>
 </tr>
 <tr>
-<td style="padding:0.2cm; text-align:left;">intensity</td>
+<td style="padding:0.2cm; text-align:left;">intensity_rank</td>
 <td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td>
-<td style="padding:0.2cm; text-align:center; ">23.82</td>
-<td style="padding:0.2cm; text-align:center; ">14.87&nbsp;&ndash;&nbsp;32.77</td>
+<td style="padding:0.2cm; text-align:center; ">6.01</td>
+<td style="padding:0.2cm; text-align:center; ">3.81&nbsp;&ndash;&nbsp;8.21</td>
 <td style="padding:0.2cm; text-align:center; ">.002</td>
 </tr><tr>
 <td colspan="5" style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; font-weight:bold; text-align:left; padding-top:0.5em;">Random Parts</td>
@@ -327,17 +434,17 @@ sjt.lmer(lmm1b,
 
 <tr>
 <td style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;">&sigma;<sup>2</sup></td>
-<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">57.994</td>
+<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">58.333</td>
 </tr>
 
 <tr>
 <td style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;">&tau;<sub>00, PID</sub></td>
-<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">2436.976</td>
+<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">509.896</td>
 </tr>
 
 <tr>
 <td style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;">&rho;<sub>01</sub></td>
-<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">&#45;0.986</td>
+<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">&#45;0.958</td>
 </tr>
 
 <tr>
@@ -356,13 +463,13 @@ sjt.lmer(lmm1b,
 
 ```r
 # Intercept only
-lmm2 <- lmer(tri_mean ~ poly(intensity, 2) + (1 | PID),
-             data = data_tm,
+lmm2 <- lmer(tri_mean ~ poly(intensity_rank, 2) + (1 | PID),
+             data = data_tmR,
              REML = TRUE)
 
 # Intercept and slope
-lmm2b <- lmer(tri_mean ~ poly(intensity, 2) + (intensity | PID),
-              data = data_tm,
+lmm2b <- lmer(tri_mean ~ poly(intensity_rank, 2) + (intensity_rank | PID),
+              data = data_tmR,
               REML = TRUE)
 
 # Better model?
@@ -370,13 +477,13 @@ anova(lmm2, lmm2b)
 ```
 
 ```
-## Data: data_tm
+## Data: data_tmR
 ## Models:
-## lmm2: tri_mean ~ poly(intensity, 2) + (1 | PID)
-## lmm2b: tri_mean ~ poly(intensity, 2) + (intensity | PID)
-##       Df    AIC    BIC  logLik deviance Chisq Chi Df Pr(>Chisq)    
-## lmm2   5 494.68 505.40 -242.34   484.68                            
-## lmm2b  7 477.28 492.28 -231.64   463.28  21.4      2  2.254e-05 ***
+## lmm2: tri_mean ~ poly(intensity_rank, 2) + (1 | PID)
+## lmm2b: tri_mean ~ poly(intensity_rank, 2) + (intensity_rank | PID)
+##       Df    AIC    BIC  logLik deviance  Chisq Chi Df Pr(>Chisq)    
+## lmm2   5 495.50 506.22 -242.75   485.50                             
+## lmm2b  7 472.71 487.71 -229.35   458.71 26.793      2  1.521e-06 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
@@ -392,8 +499,8 @@ Anova(lmm2b,
 ## Analysis of Deviance Table (Type II Wald F tests with Kenward-Roger df)
 ## 
 ## Response: tri_mean
-##                         F Df Df.res   Pr(>F)    
-## poly(intensity, 2) 16.729  2 12.929 0.000259 ***
+##                             F Df Df.res    Pr(>F)    
+## poly(intensity_rank, 2) 15.85  2 13.527 0.0002848 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
@@ -405,7 +512,7 @@ sjt.lmer(lmm2b,
          string.dv = "Response", 
          string.pred = "Coefficients",
          depvar.labels = '',
-         pred.labels = 'intensity',
+         pred.labels = 'intensity_rank',
          string.est = 'Estimate',
          string.ci = '95% CI',
          string.p = 'p-value',
@@ -435,40 +542,40 @@ sjt.lmer(lmm2b,
 <tr>
 <td style="padding:0.2cm; text-align:left;">(Intercept)</td>
 <td style="padding-left:0.5em; padding-right:0.5em; ">&nbsp;</td>
-<td style="padding:0.2cm; text-align:center; ">&#45;9.60</td>
-<td style="padding:0.2cm; text-align:center; ">&#45;20.20&nbsp;&ndash;&nbsp;1.01</td>
-<td style="padding:0.2cm; text-align:center; ">.128</td>
+<td style="padding:0.2cm; text-align:center; ">&#45;8.83</td>
+<td style="padding:0.2cm; text-align:center; ">&#45;16.47&nbsp;&ndash;&nbsp;&#45;1.18</td>
+<td style="padding:0.2cm; text-align:center; ">.064</td>
 </tr>
 <tr>
-<td style="padding:0.2cm; text-align:left;">poly(intensity, 2)1</td>
+<td style="padding:0.2cm; text-align:left;">poly(intensity_rank, 2)1</td>
 <td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td>
-<td style="padding:0.2cm; text-align:center; ">129.72</td>
-<td style="padding:0.2cm; text-align:center; ">84.01&nbsp;&ndash;&nbsp;175.44</td>
+<td style="padding:0.2cm; text-align:center; ">123.16</td>
+<td style="padding:0.2cm; text-align:center; ">78.03&nbsp;&ndash;&nbsp;168.29</td>
 <td style="padding:0.2cm; text-align:center; ">.002</td>
 </tr>
 <tr>
-<td style="padding:0.2cm; text-align:left;">poly(intensity, 2)2</td>
+<td style="padding:0.2cm; text-align:left;">poly(intensity_rank, 2)2</td>
 <td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td>
-<td style="padding:0.2cm; text-align:center; ">18.19</td>
-<td style="padding:0.2cm; text-align:center; ">0.10&nbsp;&ndash;&nbsp;36.28</td>
-<td style="padding:0.2cm; text-align:center; ">.097</td>
+<td style="padding:0.2cm; text-align:center; ">15.87</td>
+<td style="padding:0.2cm; text-align:center; ">1.42&nbsp;&ndash;&nbsp;30.31</td>
+<td style="padding:0.2cm; text-align:center; ">.075</td>
 </tr><tr>
 <td colspan="5" style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; font-weight:bold; text-align:left; padding-top:0.5em;">Random Parts</td>
 </tr>
 
 <tr>
 <td style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;">&sigma;<sup>2</sup></td>
-<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">54.199</td>
+<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">54.304</td>
 </tr>
 
 <tr>
 <td style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;">&tau;<sub>00, PID</sub></td>
-<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">2086.049</td>
+<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">512.022</td>
 </tr>
 
 <tr>
 <td style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;">&rho;<sub>01</sub></td>
-<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">&#45;0.975</td>
+<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">&#45;0.957</td>
 </tr>
 
 <tr>
@@ -487,13 +594,13 @@ sjt.lmer(lmm2b,
 
 ```r
 # Intercept only
-lmm3 <- lmer(tri_mean ~ poly(intensity, 3) + (1 | PID),
-             data = data_tm,
+lmm3 <- lmer(tri_mean ~ poly(intensity_rank, 3) + (1 | PID),
+             data = data_tmR,
              REML = TRUE)
 
 # Intercept and slope
-lmm3b <- lmer(tri_mean ~ poly(intensity, 3) + (intensity | PID),
-              data = data_tm,
+lmm3b <- lmer(tri_mean ~ poly(intensity_rank, 3) + (intensity_rank | PID),
+              data = data_tmR,
               REML = TRUE)
 
 # Better model?
@@ -501,13 +608,13 @@ anova(lmm3, lmm3b)
 ```
 
 ```
-## Data: data_tm
+## Data: data_tmR
 ## Models:
-## lmm3: tri_mean ~ poly(intensity, 3) + (1 | PID)
-## lmm3b: tri_mean ~ poly(intensity, 3) + (intensity | PID)
+## lmm3: tri_mean ~ poly(intensity_rank, 3) + (1 | PID)
+## lmm3b: tri_mean ~ poly(intensity_rank, 3) + (intensity_rank | PID)
 ##       Df    AIC    BIC  logLik deviance  Chisq Chi Df Pr(>Chisq)    
-## lmm3   6 496.65 509.51 -242.33   484.65                             
-## lmm3b  8 478.99 496.13 -231.49   462.99 21.668      2  1.971e-05 ***
+## lmm3   6 497.33 510.19 -242.66   485.33                             
+## lmm3b  8 474.37 491.52 -229.19   458.37 26.956      2  1.402e-06 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
@@ -523,8 +630,8 @@ Anova(lmm3b,
 ## Analysis of Deviance Table (Type II Wald F tests with Kenward-Roger df)
 ## 
 ## Response: tri_mean
-##                         F Df Df.res   Pr(>F)    
-## poly(intensity, 3) 10.923  3 20.145 0.000179 ***
+##                              F Df Df.res    Pr(>F)    
+## poly(intensity_rank, 3) 10.617  3 21.094 0.0001842 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
@@ -536,7 +643,7 @@ sjt.lmer(lmm3b,
          string.dv = "Response", 
          string.pred = "Coefficients",
          depvar.labels = '',
-         pred.labels = 'intensity',
+         pred.labels = 'intensity_rank',
          string.est = 'Estimate',
          string.ci = '95% CI',
          string.p = 'p-value',
@@ -566,47 +673,47 @@ sjt.lmer(lmm3b,
 <tr>
 <td style="padding:0.2cm; text-align:left;">(Intercept)</td>
 <td style="padding-left:0.5em; padding-right:0.5em; ">&nbsp;</td>
-<td style="padding:0.2cm; text-align:center; ">&#45;9.66</td>
-<td style="padding:0.2cm; text-align:center; ">&#45;20.31&nbsp;&ndash;&nbsp;0.99</td>
-<td style="padding:0.2cm; text-align:center; ">.127</td>
+<td style="padding:0.2cm; text-align:center; ">&#45;8.83</td>
+<td style="padding:0.2cm; text-align:center; ">&#45;16.47&nbsp;&ndash;&nbsp;&#45;1.18</td>
+<td style="padding:0.2cm; text-align:center; ">.064</td>
 </tr>
 <tr>
-<td style="padding:0.2cm; text-align:left;">poly(intensity, 3)1</td>
+<td style="padding:0.2cm; text-align:left;">poly(intensity_rank, 3)1</td>
 <td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td>
-<td style="padding:0.2cm; text-align:center; ">130.27</td>
-<td style="padding:0.2cm; text-align:center; ">83.93&nbsp;&ndash;&nbsp;176.61</td>
+<td style="padding:0.2cm; text-align:center; ">123.16</td>
+<td style="padding:0.2cm; text-align:center; ">78.03&nbsp;&ndash;&nbsp;168.29</td>
 <td style="padding:0.2cm; text-align:center; ">.002</td>
 </tr>
 <tr>
-<td style="padding:0.2cm; text-align:left;">poly(intensity, 3)2</td>
+<td style="padding:0.2cm; text-align:left;">poly(intensity_rank, 3)2</td>
 <td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td>
-<td style="padding:0.2cm; text-align:center; ">17.09</td>
-<td style="padding:0.2cm; text-align:center; ">&#45;1.44&nbsp;&ndash;&nbsp;35.63</td>
-<td style="padding:0.2cm; text-align:center; ">.122</td>
+<td style="padding:0.2cm; text-align:center; ">15.87</td>
+<td style="padding:0.2cm; text-align:center; ">1.32&nbsp;&ndash;&nbsp;30.41</td>
+<td style="padding:0.2cm; text-align:center; ">.076</td>
 </tr>
 <tr>
-<td style="padding:0.2cm; text-align:left;">poly(intensity, 3)3</td>
+<td style="padding:0.2cm; text-align:left;">poly(intensity_rank, 3)3</td>
 <td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td>
-<td style="padding:0.2cm; text-align:center; ">4.52</td>
-<td style="padding:0.2cm; text-align:center; ">&#45;11.82&nbsp;&ndash;&nbsp;20.86</td>
-<td style="padding:0.2cm; text-align:center; ">.608</td>
+<td style="padding:0.2cm; text-align:center; ">&#45;4.22</td>
+<td style="padding:0.2cm; text-align:center; ">&#45;18.76&nbsp;&ndash;&nbsp;10.33</td>
+<td style="padding:0.2cm; text-align:center; ">.590</td>
 </tr><tr>
 <td colspan="5" style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; font-weight:bold; text-align:left; padding-top:0.5em;">Random Parts</td>
 </tr>
 
 <tr>
 <td style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;">&sigma;<sup>2</sup></td>
-<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">54.908</td>
+<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">55.081</td>
 </tr>
 
 <tr>
 <td style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;">&tau;<sub>00, PID</sub></td>
-<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">2141.360</td>
+<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">511.612</td>
 </tr>
 
 <tr>
 <td style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;">&rho;<sub>01</sub></td>
-<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">&#45;0.976</td>
+<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">&#45;0.957</td>
 </tr>
 
 <tr>
@@ -634,15 +741,15 @@ Table: Linear model vs quadratic model and cubic model
 
 term     df        AIC        BIC      logLik   deviance   statistic   Chi.Df     p.value
 ------  ---  ---------  ---------  ----------  ---------  ----------  -------  ----------
-lmm1b     6   478.6094   491.4682   -233.3047   466.6094          NA       NA          NA
-lmm2b     7   477.2819   492.2839   -231.6410   463.2819   3.3274885        1   0.0681308
-lmm3b     8   478.9857   496.1308   -231.4929   462.9857   0.2961873        1   0.5862826
+lmm1b     6   475.2254   488.0842   -231.6127   463.2254          NA       NA          NA
+lmm2b     7   472.7085   487.7104   -229.3542   458.7085   4.5169285        1   0.0335610
+lmm3b     8   474.3731   491.5182   -229.1866   458.3731   0.3353413        1   0.5625307
 
 ### PLot the model
 
 ```r
-predicted <- ggeffects::ggpredict(model = lmm1b,
-                                  terms = 'intensity',
+predicted <- ggeffects::ggpredict(model = lmm2b,
+                                  terms = 'intensity_rank',
                                   ci.lvl = 0.95) 
 ggplot() +
     geom_ribbon(data = predicted,
@@ -656,23 +763,23 @@ ggplot() +
     geom_point(data = predicted,
               aes(x = x,
                   y = predicted)) +
-    geom_point(data = data_group,
-               aes(x = intensity,
+    geom_point(data = data_groupR,
+               aes(x = intensity_rank,
                    y = median),
                shape = 21,
                size = 4,
                fill = '#D55E00') +
-  labs(title = 'Cubic model (95% CI): Predicted values vs stimulus intensity',
-       subtitle = 'Black circles/line: predicted values | Orange circles: group-level median',
-       x = 'Stimulus intensity (J)',
+  labs(title = 'Quadratic model (95% CI): Predicted values vs stimulus intensity_rank',
+       subtitle = 'Black circles/line: predicted values | Orange circles: group-level median\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
+       x = 'Relative stimulus intensity',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
-  scale_x_continuous(breaks = seq(from = 1, to = 4, by = 0.5))
+  scale_x_continuous(breaks = seq(from = 1, to = 9, by = 1))
 ```
 
 <img src="figures/4B-response-characteristics/lmm_plot-1.png" width="672" style="display: block; margin: auto;" />
 
-The cubic model has the best fit. The resulting curvilinear response function is _steepest_ at the extremes and  _flattens out_ in the mid-ranges of stumulus intensity. We performed diagnostics on this model to confirm that the model was properly specified.
+The quadratic model has the best fit. We performed diagnostics on this model to confirm that the model was properly specified.
 
 ### Diagnostics on the cubic model
 
@@ -682,20 +789,20 @@ The cubic model has the best fit. The resulting curvilinear response function is
 ```r
 # Level 1 residuals
 ## Standardized
-lmm_resid1 <- HLMresid(lmm1b,
+lmm_resid1 <- HLMresid(lmm2b,
                        level = 1,
                        type = 'LS',
                        standardize = TRUE)
 
 # Semi-standardized residuals (used for assessing homoscedasticity)
-lmm_ssresid1 <- HLMresid(lmm1b,
+lmm_ssresid1 <- HLMresid(lmm2b,
                          level = 1,
                          type = 'LS',
                          standardize = 'semi')
 
 # Level 2 residuals
 ## Standardized
-lmm_resid2 <- HLMresid(lmm1b,
+lmm_resid2 <- HLMresid(lmm2b,
                        level = 'PID',
                        type = 'EB') 
 ```
@@ -706,9 +813,9 @@ The relationship between predictor(s) and outcome for a linear model should be l
 
 
 ```r
-# Standardized residuals vs intensity
+# Standardized residuals vs intensity_rank
 ggplot(data = lmm_resid1) +
-    aes(x = intensity,
+    aes(x = `poly(intensity_rank, 2)`[, 1],
         y = std.resid) +
     geom_point() +
     geom_smooth(method = 'lm') +
@@ -717,16 +824,37 @@ ggplot(data = lmm_resid1) +
                linetype = 2) +
     geom_hline(yintercept = 2,
                linetype = 2) +
-    labs(title = 'Linear model: Level 1 residuals vs intensity',
-         subtitle = 'Assess linearity of the intensity term | Blue line: linear regression line',
+    labs(title = 'Quadratic model: Level 1 residuals vs intensity_rank',
+         subtitle = 'Assess linearity of the intensity_rank term | Blue line: linear regression line',
          caption = 'The regression line should be centered on 0\n~95% of points should be betwen -2 and +2',
          y = 'Standardized residuals',
-         x = 'Stimulus intensity')
+         x = 'Stimulus intensity_rank')
 ```
 
 <img src="figures/4B-response-characteristics/resid1_linearity-1.png" width="672" style="display: block; margin: auto;" />
 
-The regression curve for the quadratic term shows some signs of deviating from slope = 0, but otherwise the model specification (in terms of linearity) looks okay. Based on the overall pictire, we accept that the condition of linearity for the cubic model.
+```r
+# Standardized residuals vs intensity^2
+ggplot(data = lmm_resid1) +
+    aes(x = `poly(intensity_rank, 2)`[, 2],
+        y = std.resid) +
+    geom_point() +
+    geom_smooth(method = 'lm') +
+    geom_hline(yintercept = 0) +
+    geom_hline(yintercept = -2,
+               linetype = 2) +
+    geom_hline(yintercept = 2,
+               linetype = 2) +
+    labs(title = expression(paste('Quadratic model: Level 1 residuals vs ', intensity^2)),
+         subtitle = 'Assess linearity of the intensity_rank^2 term | Blue line: linear regression line\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
+         caption = 'The regression line should be centered on 0\n~95% of points should be betwen -2 and +2',
+         y = 'Standardized residuals',
+         x = expression(Relative~stimulus~intensity^2)) 
+```
+
+<img src="figures/4B-response-characteristics/resid1_linearity-2.png" width="672" style="display: block; margin: auto;" />
+
+Based on the plot of the linear and quadratic terms' residuals, we accept that the condition of linearity for the quadratic model.
 
 #### Level 1 residuals: homoscedasticity
 
@@ -734,21 +862,37 @@ The variance of residuals should be constant across the range of the predictor(s
 
 
 ```r
-# Standardized residuals vs intensity
+# Standardized residuals vs intensity_rank
 ggplot(data = lmm_ssresid1) +
-    aes(x = intensity,
+    aes(x = `poly(intensity_rank, 2)`[ ,1],
         y = semi.std.resid) +
     geom_point() +
     geom_hline(yintercept = 0) +
-    labs(title = 'Linear model: Level 1 residuals vs intensity',
-         subtitle = 'Assess homoscedasticity for the intensity term',
+    labs(title = 'Quadratic model: Level 1 residuals vs intensity_rank',
+         subtitle = 'Assess homoscedasticity for the intensity_rank term',
          y = 'Semi-standardized residuals',
-         x = 'Stimulus intensity')
+         x = 'Relative stimulus intensity')
 ```
 
 <img src="figures/4B-response-characteristics/resid1_variance-1.png" width="672" style="display: block; margin: auto;" />
 
-There is no obvious pattern to the scatter of residuals across any of the fixed effect terms. So we accept that the residuals are homoscedastic in the cubic model.
+```r
+# Standardized residuals vs intensity^2
+ggplot(data = lmm_ssresid1) +
+    aes(x = `poly(intensity_rank, 2)`[, 2],
+        y = semi.std.resid) +
+    geom_point() +
+    geom_smooth(method = 'lm') +
+    geom_hline(yintercept = 0) +
+    labs(title = expression(paste('Quadratic model: Level 1 residuals vs ', intensity^2)),
+         subtitle = 'Assess homoscedasticity for the intensity_rank^2 term | Blue line: linear regression line\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
+         y = 'Semi-standardized residuals',
+         x = expression(Relative~stimulus~intensity^2)) 
+```
+
+<img src="figures/4B-response-characteristics/resid1_variance-2.png" width="672" style="display: block; margin: auto;" />
+
+There is no obvious pattern to the scatter of residuals across any of the fixed effect terms. So we accept that the residuals are homoscedastic in the quadratic model.
 
 ### Level 1 residuals: residual distribution
 
@@ -756,10 +900,10 @@ Residuals should be normally distributed. There are various methods of examining
 
 
 ```r
-# Standardized residuals vs intensity
+# Standardized residuals vs intensity_rank
 ggplot_qqnorm(x = lmm_resid1$std.resid, 
               line = "rlm") +
-    labs(title = 'Linear model: QQ-plot of level 1 residuals',
+    labs(title = 'Quadratic model: QQ-plot of level 1 residuals',
          subtitle = 'Assessing whether residuals follow a normal distribution',
          x = 'Theoretical quantiles',
          y = 'Standardized residuals')
@@ -767,7 +911,7 @@ ggplot_qqnorm(x = lmm_resid1$std.resid,
 
 <img src="figures/4B-response-characteristics/resid1_ditribution-1.png" width="672" style="display: block; margin: auto;" />
 
-There is minor deviation at the extremes, but on the whole, we are satisfied that the cubic model fits the assumption of normally sdistributed residuals. 
+There is minor deviation at the extremes (possibly a thin left tail), but on the whole, we are satisfied that the quadratic model fits the assumption of normally distributed residuals. 
 
 #### Level 2 residuals: residual distribution
 
@@ -778,14 +922,14 @@ Level 2 residuals can be used to identify predictors that should be included in 
 # Generate QQplots 
 qq1 <- ggplot_qqnorm(x = lmm_resid2$`(Intercept)`, 
               line = "rlm") +
-    labs(title = 'Linear model: QQ-plot of level 2 residuals (Intercept)',
+    labs(title = 'Quadratic model: QQ-plot of level 2 residuals (Intercept)',
          subtitle = 'Assessing whether residuals follow a normal distribution',
          x = 'Theoretical quantiles',
          y = 'Residuals') 
 
-qq2 <- ggplot_qqnorm(x = lmm_resid2$intensity, 
+qq2 <- ggplot_qqnorm(x = lmm_resid2$intensity_rank, 
               line = "rlm") +
-    labs(title = 'Linear model: QQ-plot of level 2 residuals (slope: intensity)',
+    labs(title = 'Quadratic model: QQ-plot of level 2 residuals (slope: intensity_rank)',
          subtitle = 'Assessing whether residuals follow a normal distribution',
          x = 'Theoretical quantiles',
          y = 'Residuals') 
@@ -796,7 +940,7 @@ qq1 + qq2
 
 <img src="figures/4B-response-characteristics/resid2_linearity-1.png" width="672" style="display: block; margin: auto;" />
 
-Although the data are sparse, we are satisfied that the level 2 residuals for the intercept and the slope of the cubic model fit the assumption of being normally sdistributed.
+Although the data are sparse, we are satisfied that the level 2 residuals for the intercept and the slope of the quadratic model fit the assumption of being normally distributed.
 
 ### influence points
 
@@ -936,15 +1080,17 @@ Based on There are no influential fixed effects.
 
 The linear is well-specified.
 
+----
+
 # Quantile mixed model regression
 
 
 ```r
 # Quantile model with 2.5, 25, 50, 75, and 97.5% quantiles
-qmm <- lqmm(fixed = tri_mean ~ intensity,
-            random = ~ intensity,
+qmm <- lqmm(fixed = tri_mean ~ poly(intensity_rank, 2),
+            random = ~ intensity_rank,
             group = PID,
-            data = data_tm,
+            data = data_tmR,
             tau = c(0.025, 0.25, 0.5, 0.75, 0.975))
 
 # Summary 
@@ -952,60 +1098,85 @@ summary(qmm)
 ```
 
 ```
-## Call: lqmm(fixed = tri_mean ~ intensity, random = ~intensity, group = PID, 
-##     tau = c(0.025, 0.25, 0.5, 0.75, 0.975), data = data_tm)
+## Call: lqmm(fixed = tri_mean ~ poly(intensity_rank, 2), random = ~intensity_rank, 
+##     group = PID, tau = c(0.025, 0.25, 0.5, 0.75, 0.975), data = data_tmR)
 ## 
 ## tau = 0.025
 ## 
 ## Fixed effects:
-##                 Value Std. Error lower bound upper bound Pr(>|t|)   
-## (Intercept)  -73.2187    24.0096   -121.4677     -24.970 0.003691 **
-## intensity      8.6827    25.4745    -42.5103      59.876 0.734684   
+##                             Value Std. Error lower bound upper bound
+## (Intercept)               -69.078     22.134    -113.558     -24.599
+## poly(intensity_rank, 2)1  128.368     18.632      90.924     165.811
+## poly(intensity_rank, 2)2   11.399     14.729     -18.201      40.998
+##                          Pr(>|t|)    
+## (Intercept)               0.00302 ** 
+## poly(intensity_rank, 2)1 9.84e-09 ***
+## poly(intensity_rank, 2)2  0.44272    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## tau = 0.25
 ## 
 ## Fixed effects:
-##                 Value Std. Error lower bound upper bound  Pr(>|t|)    
-## (Intercept)  -73.5633    21.8599   -117.4923     -29.634 0.0014936 ** 
-## intensity     21.4525     5.6575     10.0832      32.822 0.0004108 ***
+##                             Value Std. Error lower bound upper bound
+## (Intercept)              -17.4995     8.6741    -34.9308     -0.0682
+## poly(intensity_rank, 2)1 121.5351    19.2075     82.9361    160.1341
+## poly(intensity_rank, 2)2   5.7801    14.6551    -23.6705     35.2307
+##                           Pr(>|t|)    
+## (Intercept)                0.04914 *  
+## poly(intensity_rank, 2)1 7.305e-08 ***
+## poly(intensity_rank, 2)2   0.69499    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## tau = 0.5
 ## 
 ## Fixed effects:
-##                 Value Std. Error lower bound upper bound Pr(>|t|)   
-## (Intercept)  -69.5025    22.4577   -114.6329     -24.372 0.003251 **
-## intensity     17.8927     5.1781      7.4868      28.299 0.001144 **
+##                             Value Std. Error lower bound upper bound
+## (Intercept)               -4.4901     5.8081    -16.1619      7.1817
+## poly(intensity_rank, 2)1 121.6123    19.9464     81.5285    161.6961
+## poly(intensity_rank, 2)2  13.7000    14.7175    -15.8759     43.2759
+##                           Pr(>|t|)    
+## (Intercept)                 0.4432    
+## poly(intensity_rank, 2)1 1.659e-07 ***
+## poly(intensity_rank, 2)2    0.3565    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## tau = 0.75
 ## 
 ## Fixed effects:
-##                 Value Std. Error lower bound upper bound Pr(>|t|)   
-## (Intercept)  -67.5221    22.6926   -113.1246     -21.919 0.004532 **
-## intensity     20.0009     5.8392      8.2666      31.735 0.001251 **
+##                             Value Std. Error lower bound upper bound
+## (Intercept)                2.4089    12.2317    -22.1717      26.989
+## poly(intensity_rank, 2)1 118.7761    22.3803     73.8013     163.751
+## poly(intensity_rank, 2)2  17.9548    15.5720    -13.3383      49.248
+##                           Pr(>|t|)    
+## (Intercept)                 0.8447    
+## poly(intensity_rank, 2)1 2.676e-06 ***
+## poly(intensity_rank, 2)2    0.2545    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## tau = 0.975
 ## 
 ## Fixed effects:
-##                 Value Std. Error lower bound upper bound Pr(>|t|)   
-## (Intercept)  -63.9822    23.3414   -110.8884     -17.076 0.008521 **
-## intensity     23.5842     7.7880      7.9336      39.235 0.003916 **
+##                            Value Std. Error lower bound upper bound
+## (Intercept)               60.212     20.260      19.497     100.926
+## poly(intensity_rank, 2)1 117.400     19.658      77.897     156.904
+## poly(intensity_rank, 2)2  17.274     14.273     -11.409      45.956
+##                           Pr(>|t|)    
+## (Intercept)               0.004577 ** 
+## poly(intensity_rank, 2)1 2.583e-07 ***
+## poly(intensity_rank, 2)2  0.232001    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## Null model (likelihood ratio):
-## [1] 47.83 (p = 4.641e-12) 78.24 (p = 0.000e+00) 33.09 (p = 8.818e-09)
-## [4] 49.46 (p = 2.025e-12) 39.11 (p = 4.014e-10)
+## [1] 33.963 (p = 4.218e-08) 70.106 (p = 5.551e-16) 25.873 (p = 2.409e-06)
+## [4]  3.623 (p = 1.634e-01) 29.445 (p = 4.037e-07)
 ## AIC:
-## [1] 569.6 (df = 5) 499.6 (df = 5) 516.2 (df = 5) 530.5 (df = 5)
-## [5] 550.5 (df = 5)
+## [1] 585.5 (df = 6) 509.7 (df = 6) 522.3 (df = 6) 524.7 (df = 6)
+## [5] 562.1 (df = 6)
 ```
 
 ```r
@@ -1015,7 +1186,7 @@ quant_predict <- as.data.frame(predict(qmm, level = 0))
 names(quant_predict) <- paste0('Q', c(2.5, 25, 50, 75, 97.5))
 
 # Join with 'central_lmm'
-data_lqmm <- data_tm %>%
+data_lqmm <- data_tmR %>%
   bind_cols(quant_predict)
 
 # Trim prediction to upper and lower limits of the scale
@@ -1029,7 +1200,7 @@ data_lqmm %<>%
 
 # Plot
 ggplot(data = data_lqmm) +
-  aes(x = intensity,
+  aes(x = intensity_rank,
       y = Q50) +
   geom_ribbon(aes(ymin = `Q2.5`,
                   ymax = `Q97.5`),
@@ -1045,10 +1216,10 @@ ggplot(data = data_lqmm) +
              linetype = 2) +
   labs(title = paste('Quantile regression'),
        subtitle = 'Open circles: 50th percentile (median) | Blue band: interquartile range | Orange band: 95% prediction interval',
-       x = 'Stimulus intensity (J)',
+       x = 'Realtive stimulus intensity',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
-  scale_x_continuous(breaks = unique(data_lqmm$intensity)) 
+  scale_x_continuous(breaks = unique(data_lqmm$intensity_rank)) 
 ```
 
 <img src="figures/4B-response-characteristics/quantile-1.png" width="672" style="display: block; margin: auto;" />
@@ -1056,7 +1227,7 @@ ggplot(data = data_lqmm) +
 ```r
 ## With original data
 ggplot(data = data_lqmm) +
-  aes(x = intensity,
+  aes(x = intensity_rank,
       y = Q50) +
   geom_ribbon(aes(ymin = `Q2.5`,
                   ymax = `Q97.5`),
@@ -1064,7 +1235,7 @@ ggplot(data = data_lqmm) +
   geom_ribbon(aes(ymin = `Q25`,
                   ymax = `Q75`),
               fill = '#56B4E9') +
-  geom_point(data = data_tm,
+  geom_point(data = data_tmR,
              aes(y = tri_mean),
              position = position_jitter(width = 0.03)) +
   geom_point(size = 3,
@@ -1075,15 +1246,15 @@ ggplot(data = data_lqmm) +
              linetype = 2) +
   labs(title = paste('Quantile regression (with original Tukey trimean data)'),
        subtitle = 'Open circles: 50th percentile (median) | Blue band: interquartile range | Orange band: 95% prediction interval',
-       x = 'Stimulus intensity (J)',
+       x = 'Stimulus intensity_rank (J)',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
-  scale_x_continuous(breaks = unique(data_lqmm$intensity)) 
+  scale_x_continuous(breaks = unique(data_lqmm$intensity_rank)) 
 ```
 
 <img src="figures/4B-response-characteristics/quantile-2.png" width="672" style="display: block; margin: auto;" />
 
-The response clearly varies across the quantiles, becoming wider as the intensity increases. 
+The response is consistent across the range of stimulus intensities, but the preduction interval is extremely broad. 
 
 ----
 
