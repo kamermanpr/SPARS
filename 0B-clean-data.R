@@ -52,22 +52,14 @@ cols <- c('PID', 'block_number', 'trial_number', 'intensity', 'scale')
 map(.x = files,
     ~ filter(.x[cols], !complete.cases(.x[cols])))
 
-## Remove missing cases
-# files %<>%
-#   map(.x = .,
-#       ~ filter(.x, complete.cases(.x[cols])))
+## Remove missing data
+files %<>%
+    map(.x = .,
+        ~ filter(.x, complete.cases(.x[cols])))
 
-# Check for known issue with np_rt (reaction time) and
-# rating_given_np (stimulus intensity rating).
-# Data entered in wrong columns or not at all
-map(files,
-    ~ select(.data = .x,
-             PID,
-             scale,
-             rating_given_np) %>%
-        filter(scale == 'NRS_NP'))
-
-## Fix ID01 (means that they will not have NRS_NP data)
+# Correct known issue with np_rt (reaction time) and
+# rating_given_np (stimulus intensity rating) for ID01.
+# (Data entered in wrong columns or not at all)
 files$ID01 %<>%
     mutate(rating_given_np = case_when(
         scale == 'NRS_NP' ~ NA,
@@ -93,6 +85,13 @@ data %<>%
 data %<>%
     mutate(intensity_char = sprintf('%.2f', intensity))
 
+# Recalibrate intensities to a relative, rather than absolute scale
+data %<>%
+    group_by(PID) %>%
+    arrange(intensity) %>%
+    mutate(intensity_rank = dense_rank(intensity)) %>%
+    ungroup()
+
 # Converted FEST to a 0-100 positive scale
 data %<>%
     mutate(rating_positive = rating + 50)
@@ -101,7 +100,7 @@ data %<>%
 ## Select required columns
 data %<>%
     select(PID, scale, block_number, trial_number, intensity, intensity_char,
-           rating, rating_positive)
+           intensity_rank, rating, rating_positive)
 
 # Remove any grouping
 data %<>%
