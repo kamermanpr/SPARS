@@ -102,9 +102,12 @@ data %<>%
     select(PID, scale, block_number, trial_number, intensity, intensity_char,
            intensity_rank, rating, rating_positive)
 
-# Remove any grouping
+# Final tweaks
 data %<>%
-    ungroup()
+    # Remove any grouping
+    ungroup() %>%
+    # Arrange by PID
+    arrange(PID)
 
 # Save outputs
 write_rds(x = data,
