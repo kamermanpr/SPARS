@@ -2,7 +2,7 @@
 title: "SPARS trial A"
 subtitle: "Participants: Descriptive statistics"
 author: "Peter Kamerman"
-date: "05 Feb 2018"
+date: "10 Feb 2018"
 output: 
   html_document:
     keep_md: true
@@ -615,7 +615,7 @@ sessionInfo()
 ## [25] knitr_1.19        parallel_3.4.3    highr_0.6        
 ## [28] broom_0.4.3       methods_3.4.3     Rcpp_0.12.15     
 ## [31] scales_0.5.0.9000 backports_1.1.2   jsonlite_1.5     
-## [34] mnormt_1.5-5      hms_0.4.1         digest_0.6.14    
+## [34] mnormt_1.5-5      hms_0.4.1         digest_0.6.15    
 ## [37] stringi_1.1.6     grid_3.4.3        rprojroot_1.3-2  
 ## [40] cli_1.0.0         tools_3.4.3       lazyeval_0.2.1   
 ## [43] crayon_1.3.4      pkgconfig_2.0.1   xml2_1.2.0       

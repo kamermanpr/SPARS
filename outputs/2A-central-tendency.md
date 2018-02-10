@@ -2,7 +2,7 @@
 title: "SPARS trial A"
 subtitle: "Measures of central tendency"
 author: "Peter Kamerman"
-date: "05 Feb 2018"
+date: "10 Feb 2018"
 output: 
   html_document:
     keep_md: true
@@ -308,7 +308,7 @@ sessionInfo()
 ## loaded via a namespace (and not attached):
 ##  [1] Rcpp_0.12.15      cellranger_1.1.0  pillar_1.1.0     
 ##  [4] compiler_3.4.3    plyr_1.8.4        bindr_0.1        
-##  [7] methods_3.4.3     tools_3.4.3       digest_0.6.14    
+##  [7] methods_3.4.3     tools_3.4.3       digest_0.6.15    
 ## [10] lubridate_1.7.1   jsonlite_1.5      evaluate_0.10.1  
 ## [13] nlme_3.1-131      gtable_0.2.0      lattice_0.20-35  
 ## [16] pkgconfig_2.0.1   rlang_0.1.6       psych_1.7.8      

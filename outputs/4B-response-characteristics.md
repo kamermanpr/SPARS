@@ -2,7 +2,7 @@
 title: "SPARS trial B"
 subtitle: "Stimulus-response characteristics of the SPARS"
 author: "Peter Kamerman"
-date: "08 Feb 2018"
+date: "10 Feb 2018"
 output: 
   html_document:
     keep_md: true
@@ -41,15 +41,15 @@ glimpse(data)
 ```
 ## Observations: 2,256
 ## Variables: 9
-## $ PID             <chr> "ID06", "ID06", "ID06", "ID06", "ID06", "ID06"...
+## $ PID             <chr> "ID01", "ID01", "ID01", "ID01", "ID01", "ID01"...
 ## $ scale           <chr> "SPARS", "SPARS", "SPARS", "SPARS", "SPARS", "...
 ## $ block_number    <int> 2, 2, 2, 4, 4, 4, 6, 6, 6, 8, 8, 8, 11, 11, 11...
-## $ trial_number    <int> 4, 6, 27, 9, 13, 20, 20, 24, 27, 4, 18, 22, 2,...
-## $ intensity       <dbl> 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75...
-## $ intensity_char  <chr> "1.75", "1.75", "1.75", "1.75", "1.75", "1.75"...
+## $ trial_number    <int> 9, 15, 23, 7, 20, 25, 9, 18, 22, 3, 17, 23, 3,...
+## $ intensity       <dbl> 2.25, 2.25, 2.25, 2.25, 2.25, 2.25, 2.25, 2.25...
+## $ intensity_char  <chr> "2.25", "2.25", "2.25", "2.25", "2.25", "2.25"...
 ## $ intensity_rank  <int> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1...
-## $ rating          <int> -49, 2, -6, 3, -20, -2, -31, 2, -5, -8, -23, 1...
-## $ rating_positive <dbl> 1, 52, 44, 53, 30, 48, 19, 52, 45, 42, 27, 64,...
+## $ rating          <int> -31, -20, -48, -48, -21, -23, -48, -45, -47, -...
+## $ rating_positive <dbl> 19, 30, 2, 2, 29, 27, 2, 5, 3, 0, 1, 3, 50, 50...
 ```
 
 ----
@@ -1105,13 +1105,13 @@ summary(qmm)
 ## 
 ## Fixed effects:
 ##                             Value Std. Error lower bound upper bound
-## (Intercept)               -69.078     22.134    -113.558     -24.599
-## poly(intensity_rank, 2)1  128.368     18.632      90.924     165.811
-## poly(intensity_rank, 2)2   11.399     14.729     -18.201      40.998
-##                          Pr(>|t|)    
-## (Intercept)               0.00302 ** 
-## poly(intensity_rank, 2)1 9.84e-09 ***
-## poly(intensity_rank, 2)2  0.44272    
+## (Intercept)               -69.078     21.965    -113.218     -24.939
+## poly(intensity_rank, 2)1  128.368     19.497      89.186     167.549
+## poly(intensity_rank, 2)2   11.399     12.257     -13.232      36.029
+##                           Pr(>|t|)    
+## (Intercept)               0.002822 ** 
+## poly(intensity_rank, 2)1 2.929e-08 ***
+## poly(intensity_rank, 2)2  0.356942    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -1119,13 +1119,13 @@ summary(qmm)
 ## 
 ## Fixed effects:
 ##                             Value Std. Error lower bound upper bound
-## (Intercept)              -17.4995     8.6741    -34.9308     -0.0682
-## poly(intensity_rank, 2)1 121.5351    19.2075     82.9361    160.1341
-## poly(intensity_rank, 2)2   5.7801    14.6551    -23.6705     35.2307
+## (Intercept)              -17.4995    10.3126    -38.2234      3.2244
+## poly(intensity_rank, 2)1 121.5351    19.6588     82.0293    161.0409
+## poly(intensity_rank, 2)2   5.7801    13.1728    -20.6917     32.2518
 ##                           Pr(>|t|)    
-## (Intercept)                0.04914 *  
-## poly(intensity_rank, 2)1 7.305e-08 ***
-## poly(intensity_rank, 2)2   0.69499    
+## (Intercept)                0.09606 .  
+## poly(intensity_rank, 2)1 1.225e-07 ***
+## poly(intensity_rank, 2)2   0.66274    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -1133,13 +1133,13 @@ summary(qmm)
 ## 
 ## Fixed effects:
 ##                             Value Std. Error lower bound upper bound
-## (Intercept)               -4.4901     5.8081    -16.1619      7.1817
-## poly(intensity_rank, 2)1 121.6123    19.9464     81.5285    161.6961
-## poly(intensity_rank, 2)2  13.7000    14.7175    -15.8759     43.2759
+## (Intercept)               -4.4901     7.4325    -19.4263      10.446
+## poly(intensity_rank, 2)1 121.6123    20.6197     80.1755     163.049
+## poly(intensity_rank, 2)2  13.7000    12.9690    -12.3622      39.762
 ##                           Pr(>|t|)    
-## (Intercept)                 0.4432    
-## poly(intensity_rank, 2)1 1.659e-07 ***
-## poly(intensity_rank, 2)2    0.3565    
+## (Intercept)                 0.5486    
+## poly(intensity_rank, 2)1 3.361e-07 ***
+## poly(intensity_rank, 2)2    0.2960    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -1147,27 +1147,27 @@ summary(qmm)
 ## 
 ## Fixed effects:
 ##                             Value Std. Error lower bound upper bound
-## (Intercept)                2.4089    12.2317    -22.1717      26.989
-## poly(intensity_rank, 2)1 118.7761    22.3803     73.8013     163.751
-## poly(intensity_rank, 2)2  17.9548    15.5720    -13.3383      49.248
+## (Intercept)                2.4089     8.5938    -14.8609      19.679
+## poly(intensity_rank, 2)1 118.7761    23.1665     72.2213     165.331
+## poly(intensity_rank, 2)2  17.9548    13.8291     -9.8358      45.745
 ##                           Pr(>|t|)    
-## (Intercept)                 0.8447    
-## poly(intensity_rank, 2)1 2.676e-06 ***
-## poly(intensity_rank, 2)2    0.2545    
+## (Intercept)                 0.7804    
+## poly(intensity_rank, 2)1 4.996e-06 ***
+## poly(intensity_rank, 2)2    0.2002    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## tau = 0.975
 ## 
 ## Fixed effects:
-##                            Value Std. Error lower bound upper bound
-## (Intercept)               60.212     20.260      19.497     100.926
-## poly(intensity_rank, 2)1 117.400     19.658      77.897     156.904
-## poly(intensity_rank, 2)2  17.274     14.273     -11.409      45.956
+##                             Value Std. Error lower bound upper bound
+## (Intercept)               60.2116    23.0477     13.8956     106.528
+## poly(intensity_rank, 2)1 117.4004    20.1867     76.8337     157.967
+## poly(intensity_rank, 2)2  17.2735    11.9855     -6.8123      41.359
 ##                           Pr(>|t|)    
-## (Intercept)               0.004577 ** 
-## poly(intensity_rank, 2)1 2.583e-07 ***
-## poly(intensity_rank, 2)2  0.232001    
+## (Intercept)                 0.0119 *  
+## poly(intensity_rank, 2)1 4.494e-07 ***
+## poly(intensity_rank, 2)2    0.1559    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 

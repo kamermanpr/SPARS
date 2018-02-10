@@ -2,7 +2,7 @@
 title: "SPARS trial A"
 subtitle: "Effect of stimulus order and blocking on SPARS rating"
 author: "Peter Kamerman"
-date: "05 Feb 2018"
+date: "10 Feb 2018"
 output: 
   html_document:
     keep_md: true
@@ -299,7 +299,7 @@ Visual inspection of the figures shows the loess curve (grey curve) oscillating 
 ## loaded via a namespace (and not attached):
 ##  [1] tidyselect_0.2.3  reshape2_1.4.3    splines_3.4.3    
 ##  [4] haven_1.1.1       lattice_0.20-35   colorspace_1.3-2 
-##  [7] viridisLite_0.2.0 htmltools_0.3.6   yaml_2.1.16      
+##  [7] viridisLite_0.3.0 htmltools_0.3.6   yaml_2.1.16      
 ## [10] rlang_0.1.6       nloptr_1.0.4      pillar_1.1.0     
 ## [13] foreign_0.8-69    glue_1.2.0        modelr_0.1.1     
 ## [16] readxl_1.0.0      bindr_0.1         plyr_1.8.4       
@@ -309,7 +309,7 @@ Visual inspection of the figures shows the loess curve (grey curve) oscillating 
 ## [28] knitr_1.19        parallel_3.4.3    DEoptimR_1.0-8   
 ## [31] broom_0.4.3       Rcpp_0.12.15      xtable_1.8-2     
 ## [34] scales_0.5.0.9000 backports_1.1.2   jsonlite_1.5     
-## [37] mnormt_1.5-5      hms_0.4.1         digest_0.6.14    
+## [37] mnormt_1.5-5      hms_0.4.1         digest_0.6.15    
 ## [40] stringi_1.1.6     grid_3.4.3        rprojroot_1.3-2  
 ## [43] cli_1.0.0         tools_3.4.3       lazyeval_0.2.1   
 ## [46] crayon_1.3.4      pkgconfig_2.0.1   MASS_7.3-48      
