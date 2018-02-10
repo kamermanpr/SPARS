@@ -23,9 +23,12 @@ DATA_B = 	data-cleaned/SPARS_B.csv \
 4B = 	outputs/4B-response-characteristics.md \
 		outputs/4B-response-characteristics.html
 
+5A = 	outputs/4B-response-stability.md \
+		outputs/4B-response-stability.html
+
 .PHONY: all
 
-all: $(DATA_A) $(DATA_B) $(1A) $(2A) $(3A) $(4A) $(4B)
+all: $(DATA_A) $(DATA_B) $(1A) $(2A) $(3A) $(4A) $(4B) $(5A)
 
 # Clean
 clean:
@@ -33,7 +36,7 @@ clean:
 
 # Generate data
 data-cleaned/SPARS_A.csv data-cleaned/SPARS_A.rds: \
-0A-clean-data.R data/raw-data-18112016-deidentified.xlsx
+0A-clean-data.R data/*.xlsx
 	Rscript "$<"
 
 data-cleaned/SPARS_B.csv data-cleaned/SPARS_B.rds: \
@@ -65,4 +68,9 @@ outputs/4B-response-characteristics.html outputs/4B-response-characteristics.md:
 4B-response-characteristics.Rmd data-cleaned/SPARS_B.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
 	mv figures/4B-response-characteristics outputs/figures/
+
+outputs/5A-response-stability.html outputs/5A-response-stability.md: \
+5A-response-stability.Rmd data-cleaned/SPARS_A.rds
+	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
+	mv figures/5A-response-stability outputs/figures/
 	rm -r figures/
