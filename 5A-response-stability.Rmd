@@ -36,7 +36,11 @@ knitr::opts_chunk$set(warning = FALSE,
 
 ----
 
-This analysis examines the _'stability'_ of the stimulus-response characateristics of the SPARS. It is a descriptive analysis (see plots). We assessed stability by examining the stimulus-response relationship of SPARS under three sample size senarios: n = 6, n = 12, and n = 18 (original sample: n = 19). Under each sample size senario, we generated 20 random samples (with replacement) and examined the stimulus-response relationship for each replicate. 
+This analysis examines the _'stability'_ of the stimulus-response characateristics of the SPARS. It is a descriptive analysis. We assessed stability by two methods:
+
+1. **Stability of the curvilinear shape of the curve**. To do this, we fit linear mixed models using 1^st^, 2^nd^, and 3^rd^ order othogonal polynomials to 100 bootstrap replicates of the data, and examined the proportion of replicates best modelled by a particular order of polynomial expression. 
+
+2. **Stability of the fixed effect $\beta$ coefficients across sample size**.
 
 ----
 
@@ -109,314 +113,671 @@ data_ref <- select(data_nest, PID)
 
 ----
 
-# Sampling
+# Stability of the curvilinear shape of the curve
 
-### Senario 1 (n = 6)
+## Summary plot
 
-```{r n6}
+```{r curve}
 # Set random seed
 set.seed(1234)
 
-# Generate data
-n6 <- map(1:20, ~ sampler(size = 6))
+############################################################
+#                                                          #
+#        Generate bootstrap samples of n = 19 each         #
+#                                                          #
+############################################################
+# Generate samples
+n100 <- map(1:100, ~ sampler(size = 19))
 
 # Unnest data and clean-up
-n6 %<>% map2(.x = .,
-             .y = sprintf('%02i', 1:20),
-             # Unnest each list item
-             ~ unnest(.x) %>%
-                 # Add a column with the sample label to each list item
-                 mutate(sample = .y) %>%
-                 # Select required column in each list item
-                 select(sample, PID, intensity, tri_mean) %>%
-                 # Re-nest each list item dataframe under the sample label
-                 group_by(sample) %>%
-                 nest())
+n100 %<>% map2(.x = .,
+               .y = sprintf('%03i', 1:100),
+               # Unnest each list item
+               ~ unnest(.x) %>%
+                   # Add a column with the sample label to each list item
+                   mutate(sample = .y) %>%
+                   # Select required column in each list item
+                   select(sample, PID, intensity, tri_mean) %>%
+                   # Re-nest each list item dataframe under the sample label
+                   group_by(sample) %>%
+                   nest()) %>%
+    # Convert to a single dataframe
+    map_df(~ data.frame(.x))
 
-# Convert n5 to a single dataframe
-n6 %<>% map_df(~ data.frame(.x))
+############################################################
+#                                                          #
+#          Add linear, quadratic and cubic model           #
+#                                                          #
+############################################################
+n100 %<>% mutate(
+    # Linear model
+    L.model = map(.x = data,
+                  ~ lmer(tri_mean ~ poly(intensity, 1) + (intensity | PID),
+                         data = .x,
+                         REML = FALSE)),
+    # Quadratic model
+    Q.model = map(.x = data,
+                  ~ lmer(tri_mean ~ poly(intensity, 2) + (intensity | PID),
+                         data = .x,
+                         REML = FALSE)),
+    # Cubic model
+    C.model = map(.x = data,
+                  ~ lmer(tri_mean ~ poly(intensity, 3) + (intensity | PID),
+                         data = .x,
+                         REML = FALSE)))
 
-# Add plots
-n6 %<>% mutate(plot = map2(.x = data,
+############################################################
+#                                                          #
+#           Compare models using likelihood test           #
+#                                                          #
+############################################################
+n100 %<>% mutate(
+    compare = pmap(.l = list(L.model, Q.model, C.model),
+                   # Compare models
+                   ~ anova(..1, ..2, ..3) %>%
+                       # Add a model type label to the output dataframe
+                       mutate(Model = c('Linear',
+                                        'Quadratic', 
+                                        'Cubic')) %>%
+                       # Make it pretty
+                       select(Model, everything())))
+
+############################################################
+#                                                          #
+#            Extract the name of the best model            #
+#                                                          #
+############################################################
+n100 %<>% mutate(
+    best_model = map(.x = compare,
+                     # Filter for the model with the lowest p-value
+                     ~ filter(.x,
+                              `Pr(>Chisq)` == min(`Pr(>Chisq)`, 
+                                                  na.rm = TRUE)) %>%
+                         # If lowest p is > 0.05, then relabel as 'Linear'
+                         mutate(Model = case_when(
+                             `Pr(>Chisq)` < 0.05 ~ Model,
+                             TRUE ~ 'Linear'
+                             )) %>%
+                         # Extract the name of the best model
+                         .$Model))
+
+############################################################
+#                                                          #
+#                           Plot                           #
+#                                                          #
+############################################################
+n100 %>%
+    # Extract and prepare the data for plotting
+    select(sample, best_model) %>% 
+    unnest() %>%
+    mutate(group = 'x-label') %>% 
+    mutate(best_model = fct_relevel(best_model,
+                                    'Linear', 'Quadratic', 'Cubic')) %>%
+    # Make plot
+    ggplot(data = .) +
+    aes(group,
+        fill = best_model) +
+    geom_bar(position = position_fill()) +
+    labs(title = 'Proportion of best models',
+         subtitle = 'Boostrap replicates = 100',
+         y = 'Proportion') +
+    scale_fill_manual(name = 'Best model',
+                      values = c('#009E73', '#0072B2', '#D55E00')) +
+    theme(axis.title.x = element_blank(),
+          axis.text.x = element_blank(),
+          axis.ticks.x = element_blank())
+```
+
+### Illustrative sample-level plot
+
+```{r curve_plot}
+############################################################
+#                                                          #
+#             Take a random sample of 25 plots             #
+#                                                          #
+############################################################
+plot_25 <- sample_n(tbl = n100, 
+                    size = 25)
+
+############################################################
+#                                                          #
+#                Prepare data for plotting                 #
+#                                                          #
+############################################################
+# Subset dataframe according to model type (linear, quadratic, cubic)
+plot_25L <- plot_25 %>% 
+    select(sample, data, best_model) %>% 
+    filter(best_model == 'Linear') 
+
+plot_25Q <- plot_25 %>% 
+    select(sample, data, best_model) %>% 
+    filter(best_model == 'Quadratic')
+
+plot_25C <- plot_25 %>% 
+    select(sample, data, best_model) %>% 
+    filter(best_model == 'Cubic')
+
+############################################################
+#                                                          #
+#                      Generate plots                      #
+#                                                          #
+############################################################
+# Apply plotting function to each subset 
+# (changing plotting colours for each subset)
+
+## Linear model
+if(nrow(plot_25L) > 0) {
+    plot_25L %<>% 
+        mutate(plot = map2(.x = data, 
                            .y = sample,
-                   ~ ggplot(data = .x) +
-                       aes(x = intensity,
-                           y = tri_mean) +
-                       geom_point(colour = '#000000',
-                                  shape = 21,
-                                  size = 2,
-                                  alpha = 0.6,
-                                  position = position_jitter(width = 0.05)) +
-                       geom_smooth(method = 'loess',
-                                   se = FALSE,
-                                   colour = '#666666', 
-                                   size = 0.6) +
-                       labs(subtitle = paste0('[SAMPLE ', .y, ']')) +
-                       scale_y_continuous(limits = c(-50, 50)) +
-                       scale_x_continuous(breaks = seq(from = 1, to = 4, by = 1)) +
-                       theme(legend.position = 'none',
-                             axis.title = element_blank())))
+                           ~ ggplot(data = .x) +
+                               aes(x = intensity,
+                                   y = tri_mean) +
+                               geom_point(colour = '#009E73',
+                                          shape = 21,
+                                          size = 2,
+                                          alpha = 0.6,
+                                          position = position_jitter(width = 0.05)) +
+                               geom_smooth(method = 'loess',
+                                           colour = '#009E73',
+                                           se = FALSE,
+                                           size = 0.6) +
+                               labs(subtitle = paste0('[SAMPLE: ', .y, ']')) +
+                               scale_y_continuous(limits = c(-50, 50)) +
+                               scale_x_continuous(breaks = seq(from = 1, to = 4, by = 1)) +
+                               scale_fill_manual(values = cb_pal[1:3]) +
+                               theme(legend.position = 'none',
+                                     axis.title = element_blank())))
+}
 
-# Add linear, quadratic and cubic model
-n6 %<>% mutate(L.model = map(.x = data,
-                           ~ lmer(tri_mean ~ poly(intensity, 1) + (intensity | PID),
-                                  data = .x,
-                                  REML = FALSE)),
-               Q.model = map(.x = data,
-                           ~ lmer(tri_mean ~ poly(intensity, 2) + (intensity | PID),
-                                  data = .x,
-                                  REML = FALSE)),
-               C.model = map(.x = data,
-                           ~ lmer(tri_mean ~ poly(intensity, 3) + (intensity | PID),
-                                  data = .x,
-                                  REML = FALSE)))
-
-# Compare models using likelihood test
-n6 %<>% mutate(compare = pmap(.l = list(L.model, Q.model, C.model),
-                              ~ anova(..1, ..2, ..3) %>%
-                                  mutate(Model = c('Linear', 'Quadratic', 'Cubic')) %>%
-                                  select(Model, everything())))
-
-# Extract the name of the best model
-n6 %<>% mutate(best_model = map(.x = compare,
-                                ~ filter(.x, 
-                                         `Pr(>Chisq)` == min(`Pr(>Chisq)`, 
-                                                             na.rm = TRUE)) %>%
-                                    mutate(Model = case_when(
-                                        `Pr(>Chisq)` < 0.05 ~ Model,
-                                        TRUE ~ 'Linear'
-                                        )) %>%
-                                    .$Model))
-```
-
-**Composite plot of SPAR rating vs stimulus intensity for 20 random samples (n = 6)**  
-Open circles: participant trimeans | Grey curve: loess curve  
-_[Sampling was performed with replacement]_
-
-```{r n6_plot, fig.height = 9, fig.width = 9, echo = FALSE}
-# Composite plot
-wrap_plots(n6$plot, ncol = 5)
-```
-
-### Senario 2 (n = 12)
-
-```{r n12}
-# Set random seed
-set.seed(5678)
-
-# Generate data
-n12 <- map(1:20, ~ sampler(size = 6))
-
-# Unnest data and clean-up
-n12 %<>% map2(.x = .,
-             .y = sprintf('%02i', 1:20),
-             # Unnest each list item
-             ~ unnest(.x) %>%
-                 # Add a column with the sample label to each list item
-                 mutate(sample = .y) %>%
-                 # Select required column in each list item
-                 select(sample, PID, intensity, tri_mean) %>%
-                 # Re-nest each list item dataframe under the sample label
-                 group_by(sample) %>%
-                 nest())
-
-# Convert n5 to a single dataframe
-n12 %<>% map_df(~ data.frame(.x))
-
-# Add plots
-n12 %<>% mutate(plot = map2(.x = data,
+## Quadratic model
+if(nrow(plot_25Q) > 0) {
+    plot_25Q %<>% 
+        mutate(plot = map2(.x = data, 
                            .y = sample,
-                   ~ ggplot(data = .x) +
-                       aes(x = intensity,
-                           y = tri_mean) +
-                       geom_point(colour = '#000000',
-                                  shape = 21,
-                                  size = 2,
-                                  alpha = 0.6,
-                                  position = position_jitter(width = 0.05)) +
-                       geom_smooth(method = 'loess',
-                                   se = FALSE,
-                                   colour = '#666666', 
-                                   size = 0.6) +
-                       labs(subtitle = paste0('[SAMPLE ', .y, ']')) +
-                       scale_y_continuous(limits = c(-50, 50)) +
-                       scale_x_continuous(breaks = seq(from = 1, to = 4, by = 1)) +
-                       theme(legend.position = 'none',
-                             axis.title = element_blank())))
+                           ~ ggplot(data = .x) +
+                               aes(x = intensity,
+                                   y = tri_mean) +
+                               geom_point(colour = '#0072B2',
+                                          shape = 21,
+                                          size = 2,
+                                          alpha = 0.6,
+                                          position = position_jitter(width = 0.05)) +
+                               geom_smooth(method = 'loess',
+                                           colour = '#0072B2',
+                                           se = FALSE,
+                                           size = 0.6) +
+                               labs(subtitle = paste0('[SAMPLE: ', .y, ']')) +
+                               scale_y_continuous(limits = c(-50, 50)) +
+                               scale_x_continuous(breaks = seq(from = 1, to = 4, by = 1)) +
+                               theme(legend.position = 'none',
+                                     axis.title = element_blank())))
+}
 
-# Add linear, quadratic and cubic model
-n12 %<>% mutate(L.model = map(.x = data,
-                           ~ lmer(tri_mean ~ poly(intensity, 1) + (intensity | PID),
-                                  data = .x,
-                                  REML = FALSE)),
-               Q.model = map(.x = data,
-                           ~ lmer(tri_mean ~ poly(intensity, 2) + (intensity | PID),
-                                  data = .x,
-                                  REML = FALSE)),
-               C.model = map(.x = data,
-                           ~ lmer(tri_mean ~ poly(intensity, 3) + (intensity | PID),
-                                  data = .x,
-                                  REML = FALSE)))
-
-# Compare models using likelihood test
-n12 %<>% mutate(compare = pmap(.l = list(L.model, Q.model, C.model),
-                              ~ anova(..1, ..2, ..3) %>%
-                                  mutate(Model = c('Linear', 'Quadratic', 'Cubic')) %>%
-                                  select(Model, everything())))
-
-# Extract the name of the best model
-n12 %<>% mutate(best_model = map(.x = compare,
-                                ~ filter(.x, 
-                                         `Pr(>Chisq)` == min(`Pr(>Chisq)`, 
-                                                             na.rm = TRUE)) %>%
-                                    mutate(Model = case_when(
-                                        `Pr(>Chisq)` < 0.05 ~ Model,
-                                        TRUE ~ 'Linear'
-                                        )) %>%
-                                    .$Model))
-```
-
-**Composite plot of SPAR rating vs stimulus intensity for 20 random samples (n = 12)**  
-Open circles: participant trimeans | Grey curve: loess curve  
-_[Sampling was performed with replacement]_
-
-```{r n12_plot, fig.height = 9, fig.width = 9, echo = FALSE}
-# Composite plot
-wrap_plots(n6$plot, ncol = 5)
-```
-
-### Senario 3 (n = 18)
-
-```{r n18}
-# Set random seed
-set.seed(91011)
-
-# Generate data
-n18 <- map(1:20, ~ sampler(size = 6))
-
-# Unnest data and clean-up
-n18 %<>% map2(.x = .,
-             .y = sprintf('%02i', 1:20),
-             # Unnest each list item
-             ~ unnest(.x) %>%
-                 # Add a column with the sample label to each list item
-                 mutate(sample = .y) %>%
-                 # Select required column in each list item
-                 select(sample, PID, intensity, tri_mean) %>%
-                 # Re-nest each list item dataframe under the sample label
-                 group_by(sample) %>%
-                 nest())
-
-# Convert n5 to a single dataframe
-n18 %<>% map_df(~ data.frame(.x))
-
-# Add plots
-n18 %<>% mutate(plot = map2(.x = data,
+## Cubic model
+if(nrow(plot_25C) > 0) {
+    plot_25C %<>% 
+        mutate(plot = map2(.x = data, 
                            .y = sample,
-                   ~ ggplot(data = .x) +
-                       aes(x = intensity,
-                           y = tri_mean) +
-                       geom_point(colour = '#000000',
-                                  shape = 21,
-                                  size = 2,
-                                  alpha = 0.6,
-                                  position = position_jitter(width = 0.05)) +
-                       geom_smooth(method = 'loess',
-                                   se = FALSE,
-                                   colour = '#666666', 
-                                   size = 0.6) +
-                       labs(subtitle = paste0('[SAMPLE ', .y, ']')) +
-                       scale_y_continuous(limits = c(-50, 50)) +
-                       scale_x_continuous(breaks = seq(from = 1, to = 4, by = 1)) +
-                       theme(legend.position = 'none',
-                             axis.title = element_blank())))
+                           ~ ggplot(data = .x) +
+                               aes(x = intensity,
+                                   y = tri_mean) +
+                               geom_point(colour = '#D55E00',
+                                          shape = 21,
+                                          size = 2,
+                                          alpha = 0.6,
+                                          position = position_jitter(width = 0.05)) +
+                               geom_smooth(method = 'loess',
+                                           colour = '#D55E00',
+                                           se = FALSE,
+                                           size = 0.6) +
+                               labs(subtitle = paste0('[SAMPLE: ', .y, ']')) +
+                               scale_y_continuous(limits = c(-50, 50)) +
+                               scale_x_continuous(breaks = seq(from = 1, to = 4, by = 1)) +
+                               theme(legend.position = 'none',
+                                     axis.title = element_blank())))
+}
 
-# Add linear, quadratic and cubic model
-n18 %<>% mutate(L.model = map(.x = data,
-                           ~ lmer(tri_mean ~ poly(intensity, 1) + (intensity | PID),
-                                  data = .x,
-                                  REML = FALSE)),
-               Q.model = map(.x = data,
-                           ~ lmer(tri_mean ~ poly(intensity, 2) + (intensity | PID),
-                                  data = .x,
-                                  REML = FALSE)),
-               C.model = map(.x = data,
-                           ~ lmer(tri_mean ~ poly(intensity, 3) + (intensity | PID),
-                                  data = .x,
-                                  REML = FALSE)))
+############################################################
+#                                                          #
+#                Row bind the subsets back                 #
+#          together (excluding any without plots)          #
+#                                                          #
+############################################################
+if(ncol(plot_25L) == 4 & ncol(plot_25Q) == 4 & ncol(plot_25C) == 4) {
 
-# Compare models using likelihood test
-n18 %<>% mutate(compare = pmap(.l = list(L.model, Q.model, C.model),
-                              ~ anova(..1, ..2, ..3) %>%
-                                  mutate(Model = c('Linear', 'Quadratic', 'Cubic')) %>%
-                                  select(Model, everything())))
-
-# Extract the name of the best model
-n18 %<>% mutate(best_model = map(.x = compare,
-                                ~ filter(.x, 
-                                         `Pr(>Chisq)` == min(`Pr(>Chisq)`, 
-                                                             na.rm = TRUE)) %>%
-                                    mutate(Model = case_when(
-                                        `Pr(>Chisq)` < 0.05 ~ Model,
-                                        TRUE ~ 'Linear'
-                                        )) %>%
-                                    .$Model))
+    plot_25 <- bind_rows(plot_25L, plot_25Q, plot_25C)
+    
+} else if (ncol(plot_25L) != 4 & ncol(plot_25Q) == 4 & ncol(plot_25C) == 4) {
+    
+    plot_25 <- bind_rows(plot_25Q, plot_25C)
+    
+} else if (ncol(plot_25L) != 4 & ncol(plot_25Q) != 4 & ncol(plot_25C) == 4) {
+    
+    plot_25 <- plot_25C
+    
+} else if (ncol(plot_25L) == 4 & ncol(plot_25Q) != 4 & ncol(plot_25C) == 4) {
+    
+    plot_25 <- bind_rows(plot_25L, plot_25C)
+    
+} else if (ncol(plot_25L) == 4 & ncol(plot_25Q) == 4 & ncol(plot_25C) != 4) {
+    
+    plot_25 <- bind_rows(plot_25L, plot_25Q)
+    
+} else if (ncol(plot_25L) == 4 & ncol(plot_25Q) != 4 & ncol(plot_25C) != 4) {
+    
+    plot_25 <- plot_25L
+    
+} else {
+    
+    plot_25 <- plot_25Q
+    
+}
 ```
 
-**Composite plot of SPAR rating vs stimulus intensity for 20 random samples (n = 18)**  
-Open circles: participant trimeans | Grey curve: loess curve  
-_[Sampling was performed with replacement]_
+**Plot of 25 randomly selected best fit models for 100 bootstrapped samples (with replacement) of SPAR rating vs stimulus intensity**  
+Open circles: participant trimeans | Curve: loess curve  
+<span style="color:#009E73";>Green: Linear model</span> | <span style="color:#0072B2";>Blue: Quadratic model</span> | <span style="color:#D55E00";>Orange: Cubic model</span>
 
-```{r n18_plot, fig.height = 9, fig.width = 9, echo = FALSE}
-# Composite plot
-wrap_plots(n6$plot, ncol = 5)
+```{r curve_plot2, fig.height = 12, fig.width = 9, echo = FALSE}
+############################################################
+#                                                          #
+#                       Print plots                        #
+#                                                          #
+############################################################
+wrap_plots(plot_25$plot, ncol = 5)
 ```
 
 ----
 
-# Summary of best model
+# Stability of the fixed effect $\beta$ coefficients across sample size
 
-```{r test}
-# Extract data
-n6_best <- n6 %>%
-    select(sample, best_model) %>% 
-    unnest() %>% 
-    mutate(n_sample = '6')
+```{r betas}
+# Set random seed
+set.seed(1234)
 
-n12_best <- n12 %>% 
-    select(sample, best_model) %>% 
-    unnest() %>% 
-    mutate(sample = sprintf('%02.0f', 21:40)) %>% 
-    mutate(n_sample = '12')
+############################################################
+#                                                          #
+#       Create 150 bootstrap samples across 5 sample       #
+#               sizes (n = 6, 9, 12, 15, 18)               #
+#                                                          #
+############################################################
+## N = 6 (250 samples for n = 6 because of greater variability in best model)
+n06 <- map(1:250, ~ sampler(size = 6))
 
-n18_best <- n18 %>% 
-    select(sample, best_model) %>% 
-    unnest() %>% 
-    mutate(sample = sprintf('%02.0f', 41:60)) %>% 
-    mutate(n_sample = '18')
+# Unnest data and clean-up
+n06 %<>% map2(.x = .,
+              .y = sprintf('%03i', 1:250),
+               # Unnest each list item
+              ~ unnest(.x) %>%
+                  # Add a column with the sample label to each list item
+                  mutate(sample = .y) %>%
+                  # Select required column in each list item
+                  select(sample, PID, intensity, tri_mean) %>%
+                  # Re-nest each list item dataframe under the sample label
+                  group_by(sample) %>%
+                  nest() %>%
+                  # Add a sample size group identifier
+                  mutate(id = 'n = 06') %>% 
+                  select(sample, id, data)) %>%
+    # Convert to a single dataframe
+    map_df(~ data.frame(.x))
 
-# Join datasets
-model_combined <- bind_rows(n6_best, n12_best, n18_best) %>% 
-    mutate(n_sample = fct_relevel(n_sample, 
-                                  '6', '12', '18'),
-           best_model = fct_relevel(best_model,
-                                    'Linear', 'Quadratic', 'Cubic'))
+## N = 9
+n09 <- map(1:200, ~ sampler(size = 9))
 
-# Plot
-foo <- colorRampPalette(colors = c('#88caef', '#0072B2'))(3)
+# Unnest data and clean-up
+n09 %<>% map2(.x = .,
+              .y = sprintf('%03i', 1:200),
+               # Unnest each list item
+              ~ unnest(.x) %>%
+                  # Add a column with the sample label to each list item
+                  mutate(sample = .y) %>%
+                  # Select required column in each list item
+                  select(sample, PID, intensity, tri_mean) %>%
+                  # Re-nest each list item dataframe under the sample label
+                  group_by(sample) %>%
+                  nest() %>%
+                  # Add a sample size group identifier
+                  mutate(id = 'n = 09') %>% 
+                  select(sample, id, data)) %>%
+    # Convert to a single dataframe
+    map_df(~ data.frame(.x))
 
-ggplot(data = model_combined) +
-    aes(n_sample,
-        fill = best_model) +
-    geom_bar(position = position_fill()) +
-    labs(title = 'Proportion of best models for each of three sample size senarios',
-         subtitle = 'Twenty resamples (with replacement) taken for each senario',
-         x = 'Sample size',
-         y = 'Proportion') +
-    scale_fill_manual(name = 'Best model',
-                      values = foo)
+## N = 12
+n12 <- map(1:200, ~ sampler(size = 12))
+
+# Unnest data and clean-up
+n12 %<>% map2(.x = .,
+              .y = sprintf('%03i', 1:200),
+               # Unnest each list item
+              ~ unnest(.x) %>%
+                  # Add a column with the sample label to each list item
+                  mutate(sample = .y) %>%
+                  # Select required column in each list item
+                  select(sample, PID, intensity, tri_mean) %>%
+                  # Re-nest each list item dataframe under the sample label
+                  group_by(sample) %>%
+                  nest() %>%
+                  # Add a sample size group identifier
+                  mutate(id = 'n = 012') %>% 
+                  select(sample, id, data)) %>%
+    # Convert to a single dataframe
+    map_df(~ data.frame(.x))
+
+## N = 15
+n15 <- map(1:200, ~ sampler(size = 15))
+
+# Unnest data and clean-up
+n15 %<>% map2(.x = .,
+              .y = sprintf('%03i', 1:200),
+               # Unnest each list item
+              ~ unnest(.x) %>%
+                  # Add a column with the sample label to each list item
+                  mutate(sample = .y) %>%
+                  # Select required column in each list item
+                  select(sample, PID, intensity, tri_mean) %>%
+                  # Re-nest each list item dataframe under the sample label
+                  group_by(sample) %>%
+                  nest() %>%
+                  # Add a sample size group identifier
+                  mutate(id = 'n = 15') %>% 
+                  select(sample, id, data)) %>%
+    # Convert to a single dataframe
+    map_df(~ data.frame(.x))
+
+## N = 18
+n18 <- map(1:200, ~ sampler(size = 18))
+
+# Unnest data and clean-up
+n18 %<>% map2(.x = .,
+              .y = sprintf('%03i', 1:200),
+               # Unnest each list item
+              ~ unnest(.x) %>%
+                  # Add a column with the sample label to each list item
+                  mutate(sample = .y) %>%
+                  # Select required column in each list item
+                  select(sample, PID, intensity, tri_mean) %>%
+                  # Re-nest each list item dataframe under the sample label
+                  group_by(sample) %>%
+                  nest() %>%
+                  # Add a sample size group identifier
+                  mutate(id = 'n = 06') %>% 
+                  select(sample, id, data)) %>%
+    # Convert to a single dataframe
+    map_df(~ data.frame(.x))
+
+############################################################
+#                                                          #
+#          Add linear, quadratic and cubic model           #
+#                                                          #
+############################################################
+# N = 6
+n06 %<>% mutate(
+    # Linear model
+    L.model = map(.x = data,
+                  ~ lmer(tri_mean ~ poly(intensity, 1) + (intensity | PID),
+                         data = .x,
+                         REML = FALSE)),
+    # Quadratic model
+    Q.model = map(.x = data,
+                  ~ lmer(tri_mean ~ poly(intensity, 2) + (intensity | PID),
+                         data = .x,
+                         REML = FALSE)),
+    # Cubic model
+    C.model = map(.x = data,
+                  ~ lmer(tri_mean ~ poly(intensity, 3) + (intensity | PID),
+                         data = .x,
+                         REML = FALSE)))
+
+# N = 9
+n09 %<>% mutate(
+    # Linear model
+    L.model = map(.x = data,
+                  ~ lmer(tri_mean ~ poly(intensity, 1) + (intensity | PID),
+                         data = .x,
+                         REML = FALSE)),
+    # Quadratic model
+    Q.model = map(.x = data,
+                  ~ lmer(tri_mean ~ poly(intensity, 2) + (intensity | PID),
+                         data = .x,
+                         REML = FALSE)),
+    # Cubic model
+    C.model = map(.x = data,
+                  ~ lmer(tri_mean ~ poly(intensity, 3) + (intensity | PID),
+                         data = .x,
+                         REML = FALSE)))
+
+# N = 12
+n12 %<>% mutate(
+    # Linear model
+    L.model = map(.x = data,
+                  ~ lmer(tri_mean ~ poly(intensity, 1) + (intensity | PID),
+                         data = .x,
+                         REML = FALSE)),
+    # Quadratic model
+    Q.model = map(.x = data,
+                  ~ lmer(tri_mean ~ poly(intensity, 2) + (intensity | PID),
+                         data = .x,
+                         REML = FALSE)),
+    # Cubic model
+    C.model = map(.x = data,
+                  ~ lmer(tri_mean ~ poly(intensity, 3) + (intensity | PID),
+                         data = .x,
+                         REML = FALSE)))
+
+# N = 15
+n15 %<>% mutate(
+    # Linear model
+    L.model = map(.x = data,
+                  ~ lmer(tri_mean ~ poly(intensity, 1) + (intensity | PID),
+                         data = .x,
+                         REML = FALSE)),
+    # Quadratic model
+    Q.model = map(.x = data,
+                  ~ lmer(tri_mean ~ poly(intensity, 2) + (intensity | PID),
+                         data = .x,
+                         REML = FALSE)),
+    # Cubic model
+    C.model = map(.x = data,
+                  ~ lmer(tri_mean ~ poly(intensity, 3) + (intensity | PID),
+                         data = .x,
+                         REML = FALSE)))
+
+# N = 18
+n18 %<>% mutate(
+    # Linear model
+    L.model = map(.x = data,
+                  ~ lmer(tri_mean ~ poly(intensity, 1) + (intensity | PID),
+                         data = .x,
+                         REML = FALSE)),
+    # Quadratic model
+    Q.model = map(.x = data,
+                  ~ lmer(tri_mean ~ poly(intensity, 2) + (intensity | PID),
+                         data = .x,
+                         REML = FALSE)),
+    # Cubic model
+    C.model = map(.x = data,
+                  ~ lmer(tri_mean ~ poly(intensity, 3) + (intensity | PID),
+                         data = .x,
+                         REML = FALSE)))
+
+############################################################
+#                                                          #
+#           Compare models using likelihood test           #
+#                                                          #
+############################################################
+# N = 6
+n06 %<>% mutate(
+    compare = pmap(.l = list(L.model, Q.model, C.model),
+                   # Compare models
+                   ~ anova(..1, ..2, ..3) %>%
+                       # Add a model type label to the output dataframe
+                       mutate(Model = c('Linear',
+                                        'Quadratic', 
+                                        'Cubic')) %>%
+                       # Make it pretty
+                       select(Model, everything())))
+
+# N = 9
+n09 %<>% mutate(
+    compare = pmap(.l = list(L.model, Q.model, C.model),
+                   # Compare models
+                   ~ anova(..1, ..2, ..3) %>%
+                       # Add a model type label to the output dataframe
+                       mutate(Model = c('Linear',
+                                        'Quadratic', 
+                                        'Cubic')) %>%
+                       # Make it pretty
+                       select(Model, everything())))
+
+# N = 12
+n12 %<>% mutate(
+    compare = pmap(.l = list(L.model, Q.model, C.model),
+                   # Compare models
+                   ~ anova(..1, ..2, ..3) %>%
+                       # Add a model type label to the output dataframe
+                       mutate(Model = c('Linear',
+                                        'Quadratic', 
+                                        'Cubic')) %>%
+                       # Make it pretty
+                       select(Model, everything())))
+
+# N = 15
+n15 %<>% mutate(
+    compare = pmap(.l = list(L.model, Q.model, C.model),
+                   # Compare models
+                   ~ anova(..1, ..2, ..3) %>%
+                       # Add a model type label to the output dataframe
+                       mutate(Model = c('Linear',
+                                        'Quadratic', 
+                                        'Cubic')) %>%
+                       # Make it pretty
+                       select(Model, everything())))
+
+# N = 18
+n18 %<>% mutate(
+    compare = pmap(.l = list(L.model, Q.model, C.model),
+                   # Compare models
+                   ~ anova(..1, ..2, ..3) %>%
+                       # Add a model type label to the output dataframe
+                       mutate(Model = c('Linear',
+                                        'Quadratic', 
+                                        'Cubic')) %>%
+                       # Make it pretty
+                       select(Model, everything())))
 ```
 
+### Plot variability in best model
+
+```{r beta2}
+
+
+
+```
+
+```{r beta3}
+############################################################
+#                                                          #
+#               Extract the name of the best               #
+#             model and keep 100 cubic models              #
+#                                                          #
+############################################################
+# N = 6
+n06 %<>% mutate(
+    best_model = map(.x = compare,
+                     # Filter for the model with the lowest p-value
+                     ~ filter(.x,
+                              `Pr(>Chisq)` == min(`Pr(>Chisq)`, 
+                                                  na.rm = TRUE)) %>%
+                         # If lowest p is > 0.05, then relabel as 'Linear'
+                         mutate(Model = case_when(
+                             `Pr(>Chisq)` < 0.05 ~ Model,
+                             TRUE ~ 'Linear'
+                             )) %>%
+                         # Extract the name of the best model
+                         .$Model))
+
+## Filter out 100 cubic models
+n06 %<>% filter(best_model == 'Cubic') %>%
+    sample_n(size = 100)
+
+# N = 9
+n09 %<>% mutate(
+    best_model = map(.x = compare,
+                     # Filter for the model with the lowest p-value
+                     ~ filter(.x,
+                              `Pr(>Chisq)` == min(`Pr(>Chisq)`, 
+                                                  na.rm = TRUE)) %>%
+                         # If lowest p is > 0.05, then relabel as 'Linear'
+                         mutate(Model = case_when(
+                             `Pr(>Chisq)` < 0.05 ~ Model,
+                             TRUE ~ 'Linear'
+                             )) %>%
+                         # Extract the name of the best model
+                         .$Model)) 
+
+## Filter out 100 cubic models
+n09 %<>% filter(best_model == 'Cubic') %>%
+    sample_n(size = 100)
+
+# N = 12
+n12 %<>% mutate(
+    best_model = map(.x = compare,
+                     # Filter for the model with the lowest p-value
+                     ~ filter(.x,
+                              `Pr(>Chisq)` == min(`Pr(>Chisq)`, 
+                                                  na.rm = TRUE)) %>%
+                         # If lowest p is > 0.05, then relabel as 'Linear'
+                         mutate(Model = case_when(
+                             `Pr(>Chisq)` < 0.05 ~ Model,
+                             TRUE ~ 'Linear'
+                             )) %>%
+                         # Extract the name of the best model
+                         .$Model)) 
+
+## Filter out 100 cubic models
+n12 %<>% filter(best_model == 'Cubic') %>%
+    sample_n(size = 100)
+
+# N = 15
+n15 %<>% mutate(
+    best_model = map(.x = compare,
+                     # Filter for the model with the lowest p-value
+                     ~ filter(.x,
+                              `Pr(>Chisq)` == min(`Pr(>Chisq)`, 
+                                                  na.rm = TRUE)) %>%
+                         # If lowest p is > 0.05, then relabel as 'Linear'
+                         mutate(Model = case_when(
+                             `Pr(>Chisq)` < 0.05 ~ Model,
+                             TRUE ~ 'Linear'
+                             )) %>%
+                         # Extract the name of the best model
+                         .$Model)) 
+
+## Filter out 100 cubic models
+n15 %<>% filter(best_model == 'Cubic') %>%
+    sample_n(size = 100)
+
+# N = 18
+n18 %<>% mutate(
+    best_model = map(.x = compare,
+                     # Filter for the model with the lowest p-value
+                     ~ filter(.x,
+                              `Pr(>Chisq)` == min(`Pr(>Chisq)`, 
+                                                  na.rm = TRUE)) %>%
+                         # If lowest p is > 0.05, then relabel as 'Linear'
+                         mutate(Model = case_when(
+                             `Pr(>Chisq)` < 0.05 ~ Model,
+                             TRUE ~ 'Linear'
+                             )) %>%
+                         # Extract the name of the best model
+                         .$Model))
+
+## Filter out 100 cubic models
+n18 %<>% filter(best_model == 'Cubic') %>%
+    sample_n(size = 100)
+```
 ----
 
 # Session information
