@@ -1,8 +1,8 @@
 ---
 title: "SPARS trial A"
-subtitle: "Regression diagnostics for the best linear mixed model of the SPARS stimulus-response relationship"
+subtitle: "Regression diagnostics for the best-fit linear mixed model of the SPARS stimulus-response relationship"
 author: "Peter Kamerman"
-date: "12 Feb 2018"
+date: "13 Feb 2018"
 output: 
   html_document:
     keep_md: true
@@ -26,7 +26,7 @@ Descriptive plots of the data are provided in _4A-stimulus-response-1.html_, mod
 
 # Import and cleaning
 
-For details on the importing and cleaning of the data, please refer to: _4A-stimulus-response-1.html_.
+For details on the importing and preliminary cleaning of the data, please refer to: _4A-stimulus-response-1.html_.
 
 
 
