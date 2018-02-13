@@ -18,14 +18,14 @@ output:
 # Load packages
 library(magrittr)
 library(tidyverse)
-library(segmented)
 library(patchwork)
-library(robust)
-
-my.control <- lmRob.control(mxr = 1000, mxf = 1000, mxs = 1000)
+library(lmerTest)
+library(robustlmm)
+library(sjPlot)
+library(influence.ME)
 
 # Set ggplot theme
-sjPlot::set_theme(base = theme_bw())
+theme_set(new = theme_bw())
 
 # knitr setup
 knitr::opts_chunk$set(warning = FALSE,
@@ -39,7 +39,7 @@ knitr::opts_chunk$set(warning = FALSE,
 
 ----
 
-This script is part 3 of our analysis of the stimulus-response characteristics of the SPARS. This script describes the scale charateristics of the relationship between stimulus intensity and SPARS rating. 
+This script is part 3 of our analysis of the stimulus-response characteristics of the SPARS. In this analysis we examined whether there is a linear relationship between change in stimulus intensity and change in rating magnitude between two successive stimuli, irrespective of the direction of the change?
 
 Descriptive plots of the data are provided in _4A-stimulus-response-1.html_, modelling of the relationship is described in _4A-stimulus-reponse-2.html_, and diagnostics on the final linear mixed model are described in _4A-stimulus-response-4.html_.
 
@@ -47,9 +47,9 @@ Descriptive plots of the data are provided in _4A-stimulus-response-1.html_, mod
 
 # Import and cleaning
 
-For detailed on the importing and cleaning of the data, please refer to: _4A-stimulus-response-1.html_.
+For details on the importing and preliminary cleaning of the data, please refer to: _4A-stimulus-response-1.html_.
 
-```{r import_and_clean, include = FALSE}
+```{r import, include = FALSE}
 ############################################################
 #                                                          #
 #                          Import                          #
@@ -65,31 +65,35 @@ data <- read_rds('./data-cleaned/SPARS_A.rds')
 data %<>%
   # Select required columns
   select(PID, block, block_order, trial_number, intensity, intensity_char, rating) 
+```
 
-############################################################
-#                                                          #
-#               Define Davies test function                #
-#                                                          #
-############################################################
-# 'data' is a daraframe
-# 'x_col' and 'y_col' define the columns to extract from the dataframe
-davies_test <- function(data, x_col, y_col) {
-    x <- data[[x_col]]
-    y <- data[[y_col]]
-    mod <- lm(y ~ x)
-    davies.test(obj = mod, 
-                seg.Z = ~ x)
-}
 
+```{r clean}
 ############################################################
 #                                                          #
-#                 Diagnostic plot function                 #
+#          Define Walf CI function for robust LMM          #
 #                                                          #
 ############################################################
-lm_diagnostics <- function(model) {
-    par(mfrow = c(2, 2))
-    plot(model)
-}
+# Adapted from code provided Ben Bolker on StackExchange: https://stats.stackexchange.com/questions/233800/how-can-i-get-confidence-intervals-for-fixed-effects-using-the-rlmer-function-r
+
+confint.rlmerMod <- function(object, level = 0.95) {
+  # Extract beta coefficients
+  beta <- fixef(object)
+  # Extract names of coefficients
+  parm <- names(beta)
+  # Extract standard errors for the coefficients
+  se <- sqrt(diag(vcov(object)))
+  # Set level of confidence interval
+  z <- qnorm((1 + level) / 2)
+  # Calculate CI
+  ctab <- cbind(beta - (z * se), 
+                beta + (z * se))
+  # label column names
+  colnames(ctab) <- c(paste(100 * ((1 - level) / 2), '%'),
+                      paste(100 * ((1 + level) / 2), '%'))
+  # Output
+  return(as.data.frame(ctab[parm, ]))
+  }
 
 ############################################################
 #                                                          #
@@ -98,50 +102,72 @@ lm_diagnostics <- function(model) {
 ############################################################
 # Calculate lagged data 
 data_scale <- data %>%
-  # Get lag-1 stimulus intensity and FEST rating by PID
-  group_by(PID) %>%
-  mutate(intensity_lag = lag(intensity),
-         rating_lag = lag(rating)) %>%
-  # Ungroup and remove incomplete cases greated by lag function
-  ungroup() %>%
-  filter(complete.cases(.))
+    # Get lag-1 stimulus intensity and FEST rating by PID
+    group_by(PID) %>%
+    mutate(intensity_lag = lag(intensity),
+           rating_lag = lag(rating)) %>%
+    # Ungroup and remove incomplete cases greated by lag function
+    ungroup() %>%
+    filter(complete.cases(.))
 
 # Calculate change in stimulus intensity and SPARS rating between successive stimuli
 data_scale %<>%
     mutate(intensity_delta = intensity - intensity_lag,
-         rating_delta = rating - rating_lag) %>%
-  # Determine the direction of the change in stimulus intensity
-  mutate(change_direction = case_when(
-    intensity_delta > 0 ~ 'up',
-    intensity_delta < 0 ~ 'down',
-    intensity_delta == 0 ~ 'no change'
-    ))
+           rating_delta = rating - rating_lag) %>%
+    # Determine the direction of the change in stimulus intensity
+    mutate(change_direction = case_when(
+        intensity_delta > 0 ~ 'up',
+        intensity_delta < 0 ~ 'down',
+        intensity_delta == 0 ~ 'no change'
+        ))
 
-# Create a duplicate set of no change data with 'change_direction' coded as 'up', and 'down'
-## Temp object with change up
-foo_up <- data_scale %>%
-    filter(change_direction == 'no change') %>% 
-    mutate(change_direction = 'up')
-
-## Final combined object (up and down)
-data_nochange <- data_scale %>% 
-    filter(change_direction == 'no change') %>% 
-    mutate(change_direction = 'down') %>%
-    bind_rows(foo_up)
-
-## Remove temp object
-rm(foo_up)
+# Filter out 'no change' change_direction
+data_reduced <- data_scale %>%
+    filter(change_direction != 'no change') 
 ``` 
 
 ----
 
-# Scaling properties
+# Exporatory plots 
 
-In this analysis we examined whether there is a linear relationship between change in stimulus intensity and change in rating magnitude between two successive stimuli, irrespective of the direction of the change?
+### Group-level
 
-### Exploratory plots
+```{r exploratory_plots, fig.width = 7, fig.height = 7}
+# Generate the plots for each individual
+data_scale %>%
+    # Filter out 'no change'
+    filter(change_direction != 'no change') %>% 
+    ggplot(data = .) +
+    aes(y = rating_delta,
+        x = intensity_delta,
+        colour = change_direction) +
+    geom_point() +
+    geom_smooth(method = 'lm') +
+    scale_color_brewer(name = 'Direction of intensity change: ',
+                       labels = c('Down', 'Up'),
+                       type = 'qual',
+                       palette = 'Dark2') +
+    scale_x_continuous(limits = c(-3.5, 3.5), 
+                       breaks = seq(from = -3, to = 3, by = 1),
+                       expand = c(0,0)) +
+    scale_y_continuous(limits = c(-70, 70), 
+                       breaks = seq(from = -60, to = 60, by = 20),
+                                    expand = c(0,0)) +
+    labs(title = 'Group-level plot: Change in SPARS rating vs Change in stimulus intensity between two successive stimuli',
+         subtitle = 'Coloured points: Individual responses for all trials | Coloured line: Linear trend for context\nGreen points/line: When a stimulus was of less intensity than the preceding stimulus | Orange points/line: When a stimulus was of greater intensity than the preceding stimulus\nData when successive stimuli were of the same intensity (zero change) have been omitted.',
+         x = expression(Delta~stimulus~intensity~(J)),
+         y = expression(Delta~SPARS~rating)) +
+    theme(legend.position = 'top')
+```
 
-```{r response_plots, fig.width = 10, fig.height = 10}
+### Participant-level
+
+**Participant-level plot: Change in SPARS rating vs change in stimulus intensity between two successive stimuli**  
+Coloured points: Per trial responses | Coloured line: Linear trend for the group  
+<span style="#009E79">Green points/line</span>: When a stimulus was less than the preceding stimulus intensity | <span style="E25E1E">Orange points/line</span>: When a stimulus was greater than the preceding stimulus intensity.  
+Data when successive stimuli were of the same intensity (zero change) have been omitted.
+
+```{r exploratory_plots2, fig.width = 10, fig.height = 10}
 # Generate the plots for each individual
 scale_plots <- data_scale %>%
     # Filter out 'no change'
@@ -177,46 +203,142 @@ scale_plots <- data_scale %>%
 wrap_plots(scale_plots$plot, ncol = 4)
 ```
 
-### Linear mixed model regression
+----
 
-To examine whether the relationship between change in rating intenisty and change in stimulus intensity was affected by the direction of the change in stimulus intensity (i.e., whether the preceeding stimulus was greater than or less than the current stimulus), we performed a linear mixed model regression (with random slope and intercept) that included an interaction term between change in stimulus intensity and the direction of the change in stimulus intensity ('up' or 'down'):
+# Linear mixed model regression
+
+To examine whether the relationship between change in rating intensity and change in stimulus intensity was affected by the direction of the change in stimulus intensity (i.e., whether the preceding stimulus was greater than or less than the current stimulus), we fit a linear mixed model regression (with random intercept) that included an interaction term between change in stimulus intensity and the direction of the change in stimulus intensity ('up' or 'down'):
 
 $$\Delta~SPARS~rating \thicksim \Delta~stimulus~intenisty~\ast~direction~of~change~+~(1~|~participant)$$
 
-#### Process data
+### Generate Robust LMM
 
-```{r segmented_lmm, results = 'asis'}
-data_reduced <- data_scale %>%
-    # Filter out 'no change'
-    filter(change_direction != 'no change') 
+Preliminary analysis indicated that influence points may be an issue, and so we modelled the data using robust methods.
 
-scale_lmm <- lmerTest::lmer(rating_delta ~ intensity_delta * change_direction + (1 | PID),
-                            data = data_reduced)
+We generated two models. The first model included an interaction term between change in stimulus internist's and direction of change, and the second model did not. Comparing the models allows one you check whether the slope of the SPARS rating vs change in stimulus intensity relationship was dependent on the direction of the change in stimulus intensity.
 
-knitr::kable(broom::tidy(lmerTest::anova(scale_lmm)),
-             caption = 'ANOVA: Linear mixed model')
+```{r segmented_lmm, fig.width = 9}
+# Linear mixed model with interaction
+scale_lmm <- rlmer(rating_delta ~ intensity_delta * change_direction + (1 | PID),
+                   method = 'DASvar', 
+                   data = data_reduced)
+
+# Linear mixed model without interaction
+scale_lmm2 <- rlmer(rating_delta ~ intensity_delta + change_direction + (1 | PID),
+                    method = 'DASvar', 
+                    data = data_reduced)
+
+# Inspect models
+## With interaction
+summary(scale_lmm)
+ci_interaction <- confint.rlmerMod(object = scale_lmm)
+knitr::kable(ci_interaction,
+             caption = 'Interaction model: Wald 95% confidence intervals of fixed effects')
+
+## Without interaction
+summary(scale_lmm2)
+ci_main <- confint.rlmerMod(object = scale_lmm2)
+knitr::kable(ci_main,
+             caption = 'Main effects model: Wald 95% confidence intervals of fixed effects')
+
+## Compare the models
+### Prepare for plotting
+ci_interaction %<>%
+    rownames_to_column(var = 'Fixed effects') %>%
+    mutate(model = 'interaction') %>% 
+    filter(`Fixed effects` != 'intensity_delta:change_directionup')
+
+ci_main %<>%
+    rownames_to_column(var = 'Fixed effects') %>%
+    mutate(model = 'main effects')
+
+ci <- bind_rows(ci_main, ci_interaction)
+
+ci %>% 
+    mutate(`Fixed effects` = fct_relevel(`Fixed effects`,
+                                         '(Intercept)', 
+                                         'intensity_delta', 
+                                         'change_directionup')) %>%
+    ggplot(data = .) +
+    aes(x = `Fixed effects`,
+        y = (`2.5 %` + `97.5 %`) / 2,
+        ymin = `2.5 %`,
+        ymax = `97.5 %`,
+        colour = model,
+        fill = model) +
+    geom_crossbar(position = position_dodge(width = 1),
+                  alpha = 0.7) +
+    scale_fill_brewer(name = 'Model', 
+                      labels = c('Interaction', 'Main effects only'),
+                      type = 'qual', 
+                      palette = 'Dark2') +
+    scale_colour_brewer(name = 'Model', 
+                        labels = c('Interaction', 'Main effects only'),
+                        type = 'qual', 
+                        palette = 'Dark2') +
+    labs(title = 'Comparison of the Wald 95% confidence intervals of the fixed effects (intercept and main effects)',
+         subtitle = 'The middle line in each bar shows the mid-point between the interval edges',
+         y = 'Units')
 ```
 
-```{r segmented_lmm2}
-sjPlot::sjt.lmer(scale_lmm,
-                 show.header = TRUE,
-                 string.dv = "Response", 
-                 string.pred = "Coefficients",
-                 depvar.labels = '',
-                 pred.labels = 'intensity',
-                 string.est = 'Estimate',
-                 string.ci = '95% CI',
-                 string.p = 'p-value',
-                 show.icc = FALSE,
-                 show.r2 = FALSE)
+Using the confidence intervals of the fixed effect estimates to assess significance (intervals that excluded zero were considered significant at the 5% level), we assessed the interaction term to be not significant. When comparing the models, the fixed effect estimates for the two models were similar (see the plot above), and therefore we conclude that the direction of the change in stimulus intensity between two successive stimuli does not influence the slope of the relationship between change in stimulus intensity and change in SPARS rating.
+
+### Model diagnostics
+
+A basic diagnostic assessment did not identify any violations of the model assumptions.
+
+```{r diagnostics}
+# Generate plots
+p_list <- list(plot(scale_lmm2, which = 1), 
+               plot(scale_lmm2, which = 2),
+               plot(scale_lmm2, which = 3))
+
+# Print plots
+walk(p_list, ~print(.x))
 ```
 
-#### Basic model diagnostics
+### Plot of predicted values
 
-```{r segmented_lmm3}
-sjPlot::plot_model(scale_lmm,
-                   type = 'diag')
+```{r predicted}
+# Predicted values from the main effects model
+## Generate 'newdata'
+new_data <- data_reduced %>%
+    select(intensity_delta, change_direction, PID)
+
+## Get predictions
+yhat <- data_frame(y = predict(object = scale_lmm2,
+                               newdata = new_data))
+
+## Bind to 'new_data/extra_data'
+predicted <- bind_cols(yhat, new_data) %>%
+    rename(x = intensity_delta,
+           group = change_direction)
+
+## Plot
+ggplot(data = predicted) +
+    aes(x = x,
+        y = y,
+        colour = group) +
+    geom_line() +
+    geom_point() +
+    scale_color_brewer(name = 'Direction of\nintensity change',
+                       labels = c('Down', 'Up'),
+                       type = 'qual',
+                       palette = 'Dark2') +
+    scale_x_continuous(limits = c(-3, 3), 
+                       breaks = seq(from = -3, to = 3, by = 1)) +
+    scale_y_continuous(limits = c(-60, 60), 
+                       breaks = seq(from = -60, to = 60, by = 20)) +
+    labs(title = 'Plot of predicted change in SPARS ratings vs change stimulus intensity',
+         x = expression(Delta~stimulus~intensity~(J)),
+         y = expression(Delta~SPARS~rating~(predicted)))
 ```
+
+----
+
+# Summary
+
+There is linear scaling between change in stimulus intensity and change in SPARS rating, and the sensitivity of this response (the slope of the curve) is consistent across increasing and decreasing changes in stimulus intensities. The estimate for change in the change in stimulus intensity (intensity_delta) main effect was 13.3 (95% CI: 12.3 to 14.4), indicating that a single unit change (1 J) in stimulus intensity results in 12.3 to 14.4 unit change in SPARS rating.
 
 ----
 
