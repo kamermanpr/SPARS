@@ -2,7 +2,7 @@
 title: "SPARS trial A"
 subtitle: "Modelling the SPARS stimulus-response relationship"
 author: "Peter Kamerman"
-date: "12 Feb 2018"
+date: "13 Feb 2018"
 output: 
   html_document:
     keep_md: true
@@ -509,13 +509,13 @@ summary(qmm)
 ## tau = 0.025
 ## 
 ## Fixed effects:
-##                        Value Std. Error lower bound upper bound  Pr(>|t|)
-## (Intercept)         -36.3724     3.9834    -44.3774     -28.367 3.766e-12
-## poly(intensity, 3)1 204.7079    20.4654    163.5812     245.835 1.996e-13
-## poly(intensity, 3)2  11.5495    20.5220    -29.6910      52.790   0.57615
-## poly(intensity, 3)3  26.7629    11.6935      3.2640      50.262   0.02645
+##                       Value Std. Error lower bound upper bound  Pr(>|t|)
+## (Intercept)         -36.372     25.723     -88.064      15.319   0.16368
+## poly(intensity, 3)1 204.708     18.875     166.777     242.639 1.271e-14
+## poly(intensity, 3)2  11.550     21.647     -31.952      55.051   0.59608
+## poly(intensity, 3)3  26.763     12.657       1.328      52.198   0.03958
 ##                        
-## (Intercept)         ***
+## (Intercept)            
 ## poly(intensity, 3)1 ***
 ## poly(intensity, 3)2    
 ## poly(intensity, 3)3 *  
@@ -526,12 +526,12 @@ summary(qmm)
 ## 
 ## Fixed effects:
 ##                         Value Std. Error lower bound upper bound  Pr(>|t|)
-## (Intercept)         -16.06242    7.93277   -32.00393     -0.1209  0.048353
-## poly(intensity, 3)1 205.06628   17.84392   169.20758    240.9250 1.631e-15
-## poly(intensity, 3)2   0.84314   11.27131   -21.80740     23.4937  0.940675
-## poly(intensity, 3)3  21.92427    7.32054     7.21309     36.6355  0.004296
+## (Intercept)         -16.06242    8.65155   -33.44837      1.3235   0.06939
+## poly(intensity, 3)1 205.06628   20.69548   163.47716    246.6554 2.727e-13
+## poly(intensity, 3)2   0.84314   11.77315   -22.81589     24.5022   0.94320
+## poly(intensity, 3)3  21.92427    7.44867     6.95561     36.8929   0.00495
 ##                        
-## (Intercept)         *  
+## (Intercept)         .  
 ## poly(intensity, 3)1 ***
 ## poly(intensity, 3)2    
 ## poly(intensity, 3)3 ** 
@@ -542,10 +542,10 @@ summary(qmm)
 ## 
 ## Fixed effects:
 ##                        Value Std. Error lower bound upper bound  Pr(>|t|)
-## (Intercept)           3.2873     5.9685     -8.7068      15.281  0.584292
-## poly(intensity, 3)1 204.0394    18.1031    167.6598     240.419 3.273e-15
-## poly(intensity, 3)2   2.2389    10.8587    -19.5825      24.060  0.837504
-## poly(intensity, 3)3  22.1176     7.5047      7.0363      37.199  0.004899
+## (Intercept)           3.2873     7.3279    -11.4386      18.013  0.655697
+## poly(intensity, 3)1 204.0394    20.9856    161.8673     246.212 5.075e-13
+## poly(intensity, 3)2   2.2389    10.7960    -19.4566      23.934  0.836575
+## poly(intensity, 3)3  22.1176     7.2645      7.5190      36.716  0.003742
 ##                        
 ## (Intercept)            
 ## poly(intensity, 3)1 ***
@@ -558,10 +558,10 @@ summary(qmm)
 ## 
 ## Fixed effects:
 ##                        Value Std. Error lower bound upper bound  Pr(>|t|)
-## (Intercept)          19.0218     7.3117      4.3283      33.715  0.012239
-## poly(intensity, 3)1 203.2674    18.6516    165.7856     240.749 1.073e-14
-## poly(intensity, 3)2   5.9630    11.6105    -17.3692      29.295  0.609849
-## poly(intensity, 3)3  22.6834     8.0738      6.4585      38.908  0.007109
+## (Intercept)          19.0218     7.9245      3.0969      34.947   0.02022
+## poly(intensity, 3)1 203.2674    21.1488    160.7672     245.768 7.382e-13
+## poly(intensity, 3)2   5.9630    11.2225    -16.5894      28.515   0.59758
+## poly(intensity, 3)3  22.6834     7.6832      7.2435      38.123   0.00483
 ##                        
 ## (Intercept)         *  
 ## poly(intensity, 3)1 ***
@@ -574,14 +574,14 @@ summary(qmm)
 ## 
 ## Fixed effects:
 ##                        Value Std. Error lower bound upper bound  Pr(>|t|)
-## (Intercept)          22.0604     8.7124      4.5522      39.569   0.01459
-## poly(intensity, 3)1 188.9824    23.7343    141.2865     236.678 2.181e-10
-## poly(intensity, 3)2  22.3598    13.5240     -4.8178      49.537   0.10466
-## poly(intensity, 3)3  12.1005    10.4267     -8.8527      33.054   0.25146
+## (Intercept)          22.0604    20.6589    -19.4552      63.576   0.29082
+## poly(intensity, 3)1 188.9824    20.7621    147.2595     230.705 4.153e-12
+## poly(intensity, 3)2  22.3598    12.5392     -2.8386      47.558   0.08075
+## poly(intensity, 3)3  12.1005     8.1714     -4.3205      28.521   0.14505
 ##                        
-## (Intercept)         *  
+## (Intercept)            
 ## poly(intensity, 3)1 ***
-## poly(intensity, 3)2    
+## poly(intensity, 3)2 .  
 ## poly(intensity, 3)3    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1

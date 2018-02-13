@@ -2,7 +2,7 @@
 title: "SPARS trial A"
 subtitle: "Descriptive plots of the SPARS stimulus-response relationship"
 author: "Peter Kamerman"
-date: "12 Feb 2018"
+date: "13 Feb 2018"
 output: 
   html_document:
     keep_md: true
@@ -94,6 +94,11 @@ tri.mean <- function(x) {
   return(tm)
 }
 
+############################################################
+#                                                          #
+#                    Generate core data                    #
+#                                                          #
+############################################################
 # Calculate the participant average 
 data_tm <- data %>% 
   group_by(PID, intensity) %>%
