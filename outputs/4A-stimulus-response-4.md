@@ -2,7 +2,7 @@
 title: "SPARS trial A"
 subtitle: "Stability of the SPARS stimulus-response relationship"
 author: "Peter Kamerman"
-date: "`r format(Sys.Date(), '%d %b %Y')`"
+date: "14 Feb 2018"
 output: 
   html_document:
     keep_md: true
@@ -14,26 +14,7 @@ output:
     code_folding: show
 ---
 
-```{r setup, include = FALSE}
-# Load packages
-library(magrittr)
-library(tidyverse)
-library(lme4)
-library(patchwork)
 
-# Set ggplot theme 
-theme_set(new = theme_bw())
-
-# knitr setup
-knitr::opts_chunk$set(warning = FALSE,
-                      message = FALSE,
-                      cache = TRUE,
-                      fig.retina = 2,
-                      fig.height = 7,
-                      fig.width = 7,
-                      fig.align = 'center',
-                      fig.path = 'figures/4A-stimulus-response-4/')
-```
 
 ----
 
@@ -45,13 +26,40 @@ Descriptive plots of the data are provided in _"outputs/4A-stimulus-response-1.h
 
 # Import and clean/transfrom data
 
-```{r import}
+
+```r
 # Import
 data <- read_rds('./data-cleaned/SPARS_A.rds')
 
 # Inspect
 glimpse(data)
+```
 
+```
+## Observations: 1,927
+## Variables: 19
+## $ PID               <chr> "ID01", "ID01", "ID01", "ID01", "ID01", "ID0...
+## $ block             <chr> "A", "A", "A", "A", "A", "A", "A", "A", "A",...
+## $ block_order       <dbl> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,...
+## $ trial_number      <dbl> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 1...
+## $ intensity         <dbl> 3.75, 1.50, 3.25, 1.50, 3.00, 2.75, 1.00, 2....
+## $ intensity_char    <chr> "3.75", "1.50", "3.25", "1.50", "3.00", "2.7...
+## $ rating            <dbl> -10, -40, -10, -25, -20, -25, -40, 2, -40, -...
+## $ rating_positive   <dbl> 40, 10, 40, 25, 30, 25, 10, 52, 10, 40, 54, ...
+## $ EDA               <dbl> 18315.239, 13904.177, 11543.449, 20542.834, ...
+## $ age               <dbl> 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, ...
+## $ sex               <dbl> 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,...
+## $ panas_positive    <dbl> 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, ...
+## $ panas_negative    <dbl> 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, ...
+## $ dass42_depression <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,...
+## $ dass42_anxiety    <dbl> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,...
+## $ dass42_stress     <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,...
+## $ pcs_magnification <dbl> 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,...
+## $ pcs_rumination    <dbl> 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, ...
+## $ pcs_helplessness  <dbl> 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, ...
+```
+
+```r
 ############################################################
 #                                                          #
 #              Define Tukey trimean function               #
@@ -116,7 +124,8 @@ data_ref <- select(data_nest, PID)
 
 ### Senario 1 (n = 6)
 
-```{r n6}
+
+```r
 # Set random seed
 set.seed(1234)
 
@@ -179,7 +188,8 @@ n06_best <- n06 %>%
 
 ### Senario 2 (n = 9)
 
-```{r n09}
+
+```r
 # Set random seed
 set.seed(1234)
 
@@ -242,7 +252,8 @@ n09_best <- n09 %>%
 
 ### Senario 3 (n = 12)
 
-```{r n12}
+
+```r
 # Set random seed
 set.seed(1234)
 
@@ -305,7 +316,8 @@ n12_best <- n12 %>%
 
 ### Senario 4 (n = 15)
 
-```{r n15}
+
+```r
 # Set random seed
 set.seed(1234)
 
@@ -368,7 +380,8 @@ n15_best <- n15 %>%
 
 ### Senario 5 (n = 18)
 
-```{r n18}
+
+```r
 # Set random seed
 set.seed(1234)
 
@@ -433,7 +446,8 @@ n18_best <- n18 %>%
 
 # Summary of best model
 
-```{r summary}
+
+```r
 # Join datasets
 model_combined <- bind_rows(n06_best, n09_best, 
                             n12_best, n15_best, 
@@ -461,11 +475,57 @@ ggplot(data = model_combined) +
     scale_y_continuous(breaks = seq(from = 0, to = 1, by = 0.2))
 ```
 
+<img src="figures/4A-stimulus-response-4/summary-1.png" width="672" style="display: block; margin: auto;" />
+
 Across all sample sizes, the cubic model is the best fit model the majority of the time. However the proportion of times when the cubic model is the best fit model is dependent on sample size, such that for n = 6, the cubic model was the best model in only about 40% of cases, but at when n = 18, the cubic model was the best model in about 80% of cases. The next most commonly best fit model across all samples sizes was a linear (1^st^-order) model. 
 
 ----
 
 # Session information
-```{r session_info}
+
+```r
 sessionInfo()
+```
+
+```
+## R version 3.4.3 (2017-11-30)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS High Sierra 10.13.3
+## 
+## Matrix products: default
+## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] bindrcpp_0.2       patchwork_0.0.1    lme4_1.1-15       
+##  [4] Matrix_1.2-12      forcats_0.2.0      stringr_1.2.0     
+##  [7] dplyr_0.7.4        purrr_0.2.4        readr_1.1.1       
+## [10] tidyr_0.8.0        tibble_1.4.2       ggplot2_2.2.1.9000
+## [13] tidyverse_1.2.1    magrittr_1.5      
+## 
+## loaded via a namespace (and not attached):
+##  [1] tidyselect_0.2.3  reshape2_1.4.3    splines_3.4.3    
+##  [4] haven_1.1.1       lattice_0.20-35   colorspace_1.3-2 
+##  [7] htmltools_0.3.6   yaml_2.1.16       rlang_0.1.6      
+## [10] nloptr_1.0.4      pillar_1.1.0      foreign_0.8-69   
+## [13] glue_1.2.0        modelr_0.1.1      readxl_1.0.0     
+## [16] bindr_0.1         plyr_1.8.4        munsell_0.4.3    
+## [19] gtable_0.2.0      cellranger_1.1.0  rvest_0.3.2      
+## [22] codetools_0.2-15  psych_1.7.8       evaluate_0.10.1  
+## [25] labeling_0.3      knitr_1.19        parallel_3.4.3   
+## [28] broom_0.4.3       Rcpp_0.12.15      scales_0.5.0.9000
+## [31] backports_1.1.2   jsonlite_1.5      mnormt_1.5-5     
+## [34] hms_0.4.1         digest_0.6.15     stringi_1.1.6    
+## [37] grid_3.4.3        rprojroot_1.3-2   cli_1.0.0        
+## [40] tools_3.4.3       lazyeval_0.2.1    crayon_1.3.4     
+## [43] pkgconfig_2.0.1   MASS_7.3-48       xml2_1.2.0       
+## [46] lubridate_1.7.1   minqa_1.2.4       assertthat_0.2.0 
+## [49] rmarkdown_1.8     httr_1.3.1        rstudioapi_0.7   
+## [52] R6_2.2.2          nlme_3.1-131      compiler_3.4.3
 ```
