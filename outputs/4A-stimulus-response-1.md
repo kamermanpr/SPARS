@@ -2,7 +2,7 @@
 title: "SPARS trial A"
 subtitle: "Descriptive plots of the SPARS stimulus-response relationship"
 author: "Peter Kamerman"
-date: "13 Feb 2018"
+date: "14 Feb 2018"
 output: 
   html_document:
     keep_md: true
@@ -20,7 +20,7 @@ output:
 
 This script is part 1 of our analysis of the stimulus-response characteristics of the SPARS. This script generates exploratory plots of the relationship between stimulus intensity and SPARS rating.
 
-Modelling of the stimulus-response relationship is described in _4A-stimulus-response-2.html_, the scale attributes are described in _4A-stimulus-reponse-3.html_, and diagnostics on the final linear mixed model are described in _4A-stimulus-response-4.html_.
+Modelling of the stimulus-response relationship is described in _"outputs/4A-stimulus-response-2.html"_, the diagnostics on the final linear mixed model are described in _"outputs/4A-stimulus-response-3.html"_, the stability of the model is described in _"outputs/4A-stimulus-response-4.html"_, and the sensitivity of the scale to changes in stimulus intensity are described in _"outputs/4A-stimulus-reponse-3.html"_.
 
 ----
 
