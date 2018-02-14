@@ -1,8 +1,8 @@
 ---
 title: "SPARS trial A"
 subtitle: "Descriptive plots of the SPARS stimulus-response relationship"
-author: "Peter Kamerman"
-date: "14 Feb 2018"
+author: "Peter Kamerman and Tory Madden"
+date: "14 February 2018"
 output: 
   html_document:
     keep_md: true
@@ -20,7 +20,7 @@ output:
 
 This script is part 1 of our analysis of the stimulus-response characteristics of the SPARS. This script generates exploratory plots of the relationship between stimulus intensity and SPARS rating.
 
-Modelling of the stimulus-response relationship is described in _"outputs/4A-stimulus-response-2.html"_, the diagnostics on the final linear mixed model are described in _"outputs/4A-stimulus-response-3.html"_, the stability of the model is described in _"outputs/4A-stimulus-response-4.html"_, and the sensitivity of the scale to changes in stimulus intensity are described in _"outputs/4A-stimulus-reponse-3.html"_.
+Modelling of the stimulus-response relationship is described in _"outputs/4A-stimulus-response-2.html"_, the diagnostics on the final linear mixed model are described in _"outputs/4A-stimulus-response-3.html"_, the stability of the model is described in _"outputs/4A-stimulus-response-4.html"_, and the sensitivity of the scale to changes in stimulus intensity are described in _"outputs/4A-stimulus-reponse-5.html"_.
 
 ----
 
@@ -61,7 +61,7 @@ glimpse(data)
 
 ----
 
-# Clean and process data
+# Clean and transform data
 
 We performed a basic clean-up of the data, and then calculated _Tukey trimean_ at each stimulus intensity for each participant (participant average), and finally the _median_ of the trimeans at each stimulus intensity across participants (group average). 
 
@@ -241,36 +241,21 @@ sessionInfo()
 ## [10] ggplot2_2.2.1.9000 tidyverse_1.2.1    magrittr_1.5      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] nlme_3.1-131       lubridate_1.7.1    httr_1.3.1        
-##  [4] rprojroot_1.3-2    tools_3.4.3        TMB_1.7.12        
-##  [7] backports_1.1.2    DT_0.4             R6_2.2.2          
-## [10] sjlabelled_1.0.7   lazyeval_0.2.1     colorspace_1.3-2  
-## [13] nnet_7.3-12        withr_2.1.1.9000   tidyselect_0.2.3  
-## [16] mnormt_1.5-5       emmeans_1.1        compiler_3.4.3    
-## [19] cli_1.0.0          rvest_0.3.2        xml2_1.2.0        
-## [22] sandwich_2.4-0     labeling_0.3       effects_4.0-0     
-## [25] scales_0.5.0.9000  lmtest_0.9-35      mvtnorm_1.0-7     
-## [28] psych_1.7.8        blme_1.0-4         digest_0.6.15     
-## [31] foreign_0.8-69     minqa_1.2.4        rmarkdown_1.8     
-## [34] stringdist_0.9.4.6 pkgconfig_2.0.1    htmltools_0.3.6   
-## [37] lme4_1.1-15        htmlwidgets_1.0    pwr_1.2-1         
-## [40] rlang_0.1.6        readxl_1.0.0       rstudioapi_0.7    
-## [43] shiny_1.0.5        bindr_0.1          zoo_1.8-1         
-## [46] jsonlite_1.5       sjPlot_2.4.1       modeltools_0.2-21 
-## [49] bayesplot_1.4.0    Matrix_1.2-12      Rcpp_0.12.15      
-## [52] munsell_0.4.3      abind_1.4-5        prediction_0.2.0  
-## [55] merTools_0.3.0     stringi_1.1.6      multcomp_1.4-8    
-## [58] yaml_2.1.16        snakecase_0.8.1    carData_3.0-0     
-## [61] MASS_7.3-48        plyr_1.8.4         grid_3.4.3        
-## [64] parallel_3.4.3     sjmisc_2.7.0       crayon_1.3.4      
-## [67] lattice_0.20-35    ggeffects_0.3.1    haven_1.1.1       
-## [70] splines_3.4.3      sjstats_0.14.1     hms_0.4.1         
-## [73] knitr_1.19         pillar_1.1.0       estimability_1.2  
-## [76] reshape2_1.4.3     codetools_0.2-15   stats4_3.4.3      
-## [79] glue_1.2.0         evaluate_0.10.1    modelr_0.1.1      
-## [82] httpuv_1.3.5       nloptr_1.0.4       cellranger_1.1.0  
-## [85] gtable_0.2.0       assertthat_0.2.0   mime_0.5          
-## [88] coin_1.2-2         xtable_1.8-2       broom_0.4.3       
-## [91] survey_3.33        coda_0.19-1        survival_2.41-3   
-## [94] arm_1.9-3          glmmTMB_0.2.0      TH.data_1.0-8
+##  [1] tidyselect_0.2.3  reshape2_1.4.3    haven_1.1.1      
+##  [4] lattice_0.20-35   colorspace_1.3-2  htmltools_0.3.6  
+##  [7] yaml_2.1.16       rlang_0.1.6       pillar_1.1.0     
+## [10] foreign_0.8-69    glue_1.2.0        withr_2.1.1.9000 
+## [13] modelr_0.1.1      readxl_1.0.0      bindr_0.1        
+## [16] plyr_1.8.4        munsell_0.4.3     gtable_0.2.0     
+## [19] cellranger_1.1.0  rvest_0.3.2       psych_1.7.8      
+## [22] evaluate_0.10.1   labeling_0.3      knitr_1.19       
+## [25] parallel_3.4.3    broom_0.4.3       Rcpp_0.12.15     
+## [28] scales_0.5.0.9000 backports_1.1.2   jsonlite_1.5     
+## [31] mnormt_1.5-5      hms_0.4.1         digest_0.6.15    
+## [34] stringi_1.1.6     grid_3.4.3        rprojroot_1.3-2  
+## [37] cli_1.0.0         tools_3.4.3       lazyeval_0.2.1   
+## [40] crayon_1.3.4      pkgconfig_2.0.1   xml2_1.2.0       
+## [43] lubridate_1.7.1   assertthat_0.2.0  rmarkdown_1.8    
+## [46] httr_1.3.1        rstudioapi_0.7    R6_2.2.2         
+## [49] nlme_3.1-131      compiler_3.4.3
 ```

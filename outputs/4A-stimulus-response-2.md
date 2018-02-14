@@ -1,8 +1,8 @@
 ---
 title: "SPARS trial A"
 subtitle: "Modelling the SPARS stimulus-response relationship"
-author: "Peter Kamerman"
-date: "13 Feb 2018"
+author: "Peter Kamerman and Tory Madden"
+date: "14 February 2018"
 output: 
   html_document:
     keep_md: true
@@ -18,17 +18,67 @@ output:
 
 ----
 
-This script is part 2 of our analysis of the stimulus-response characteristics of the SPARS. This script models the relationship between stimulus intensity and SPARS rating using linear mixed models and quantile mixed model regression. 
+This script is part 2 of our analysis of the stimulus-response characteristics of the SPARS. This script models the relationship between stimulus intensity and SPARS rating using linear mixed models and quantile mixed model regression.
 
-Descriptive plots of the data are provided in _4A-stimulus-response-1.html_, the scale attributes are described in _4A-stimulus-reponse-3.html_, and diagnostics on the final linear mixed model are described in _4A-stimulus-response-4.html_.
+Descriptive plots of the data are provided in _"outputs/4A-stimulus-response-1.html"_, the diagnostics on the final linear mixed model are described in _"outputs/4A-stimulus-response-3.html"_, the stability of the model is described in _"outputs/4A-stimulus-response-4.html"_, and the sensitivity of the scale to changes in stimulus intensity are described in _"outputs/4A-stimulus-reponse-3.html"_.
 
 ----
 
-# Import and cleaning
-
-For detailed on the importing and cleaning of the data, please refer to: _4A-stimulus-response-1.html_.
+# Import and clean/transform data
 
 
+```r
+############################################################
+#                                                          #
+#                          Import                          #
+#                                                          #
+############################################################
+data <- read_rds('./data-cleaned/SPARS_A.rds')
+
+############################################################
+#                                                          #
+#                          Clean                           #
+#                                                          #
+############################################################
+data %<>%
+  # Select required columns
+  select(PID, block, block_order, trial_number, intensity, intensity_char, rating) 
+
+############################################################
+#                                                          #
+#                Calculate 'Tukey trimean'                 #
+#                                                          #
+############################################################
+# Define tri.mean function
+tri.mean <- function(x) {
+  # Calculate quantiles
+  q1 <- quantile(x, probs = 0.25, na.rm = TRUE)[[1]]
+  q2 <- median(x, na.rm = TRUE)
+  q3 <- quantile(x, probs = 0.75, na.rm = TRUE)[[1]]
+  # Calculate trimean
+  tm <- (q2 + ((q1 + q3) / 2)) / 2
+  # Convert to integer
+  tm <- as.integer(round(tm))
+  return(tm)
+}
+
+############################################################
+#                                                          #
+#                    Generate core data                    #
+#                                                          #
+############################################################
+# Calculate the participant average 
+data_tm <- data %>% 
+  group_by(PID, intensity) %>%
+  summarise(tri_mean = tri.mean(rating)) %>%
+  ungroup()
+
+# Calculate the group average
+data_group <- data_tm %>%
+  group_by(intensity) %>%
+  summarise(median = median(tri_mean)) %>%
+  ungroup()
+```
 
 ----
 
@@ -36,7 +86,7 @@ For detailed on the importing and cleaning of the data, please refer to: _4A-sti
 
 To allow for a curvilinear relationship between stimulus intensity and rating, we modelled the data using polynomial regression, with 1^st^ (linear), 2^nd^ (quadratic), and 3^rd^ (cubic) order orthogonal polynomials. For each polynomial expression, we modelled the random effects as random intercept only, and as random intercept and slope. 
 
-The random intercept only and random intercept and slope models were compared using the logliklihood test, and the better model taken foward.
+The random intercept only and random intercept and slope models were compared using the likelihood test, and the better model taken forward.
 
 ### 1st-order (linear) polynomial
 
@@ -483,7 +533,7 @@ ggplot() +
 
 <img src="figures/4A-stimulus-response-2/lmm_plot-1.png" width="672" style="display: block; margin: auto;" />
 
-The cubic model has the best fit. The resulting curvilinear response function is _steepest_ at the extremes and  _flattens out_ in the mid-ranges of stumulus intensity. We performed diagnostics on this model to confirm that the model was properly specified.
+The cubic model has the best fit. The resulting curvilinear response function is _steepest_ at the extremes and  _flattens out_ in the mid-ranges of stimulus intensity. We performed diagnostics on this model to confirm that the model was properly specified.
 
 ----
 
@@ -509,16 +559,16 @@ summary(qmm)
 ## tau = 0.025
 ## 
 ## Fixed effects:
-##                       Value Std. Error lower bound upper bound  Pr(>|t|)
-## (Intercept)         -36.372     25.723     -88.064      15.319   0.16368
-## poly(intensity, 3)1 204.708     18.875     166.777     242.639 1.271e-14
-## poly(intensity, 3)2  11.550     21.647     -31.952      55.051   0.59608
-## poly(intensity, 3)3  26.763     12.657       1.328      52.198   0.03958
+##                        Value Std. Error lower bound upper bound  Pr(>|t|)
+## (Intercept)         -36.3724     3.6042    -43.6153     -29.129 1.486e-13
+## poly(intensity, 3)1 204.7079    21.9431    160.6116     248.804 1.917e-12
+## poly(intensity, 3)2  11.5495    20.7990    -30.2477      53.347   0.58122
+## poly(intensity, 3)3  26.7629    14.1446     -1.6617      55.188   0.06439
 ##                        
-## (Intercept)            
+## (Intercept)         ***
 ## poly(intensity, 3)1 ***
 ## poly(intensity, 3)2    
-## poly(intensity, 3)3 *  
+## poly(intensity, 3)3 .  
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -526,10 +576,10 @@ summary(qmm)
 ## 
 ## Fixed effects:
 ##                         Value Std. Error lower bound upper bound  Pr(>|t|)
-## (Intercept)         -16.06242    8.65155   -33.44837      1.3235   0.06939
-## poly(intensity, 3)1 205.06628   20.69548   163.47716    246.6554 2.727e-13
-## poly(intensity, 3)2   0.84314   11.77315   -22.81589     24.5022   0.94320
-## poly(intensity, 3)3  21.92427    7.44867     6.95561     36.8929   0.00495
+## (Intercept)         -16.06242    8.25551   -32.65248      0.5276  0.057443
+## poly(intensity, 3)1 205.06628   24.27344   156.28697    253.8456 3.976e-11
+## poly(intensity, 3)2   0.84314   12.75757   -24.79417     26.4804  0.947576
+## poly(intensity, 3)3  21.92427    6.83364     8.19156     35.6570  0.002355
 ##                        
 ## (Intercept)         .  
 ## poly(intensity, 3)1 ***
@@ -542,10 +592,10 @@ summary(qmm)
 ## 
 ## Fixed effects:
 ##                        Value Std. Error lower bound upper bound  Pr(>|t|)
-## (Intercept)           3.2873     7.3279    -11.4386      18.013  0.655697
-## poly(intensity, 3)1 204.0394    20.9856    161.8673     246.212 5.075e-13
-## poly(intensity, 3)2   2.2389    10.7960    -19.4566      23.934  0.836575
-## poly(intensity, 3)3  22.1176     7.2645      7.5190      36.716  0.003742
+## (Intercept)           3.2873     6.6515    -10.0793      16.654  0.623359
+## poly(intensity, 3)1 204.0394    24.7605    154.2812     253.798 8.212e-11
+## poly(intensity, 3)2   2.2389    11.3863    -20.6428      25.120  0.844933
+## poly(intensity, 3)3  22.1176     7.3382      7.3709      36.864  0.004074
 ##                        
 ## (Intercept)            
 ## poly(intensity, 3)1 ***
@@ -558,10 +608,10 @@ summary(qmm)
 ## 
 ## Fixed effects:
 ##                        Value Std. Error lower bound upper bound  Pr(>|t|)
-## (Intercept)          19.0218     7.9245      3.0969      34.947   0.02022
-## poly(intensity, 3)1 203.2674    21.1488    160.7672     245.768 7.382e-13
-## poly(intensity, 3)2   5.9630    11.2225    -16.5894      28.515   0.59758
-## poly(intensity, 3)3  22.6834     7.6832      7.2435      38.123   0.00483
+## (Intercept)          19.0218     8.2427      2.4575      35.586   0.02528
+## poly(intensity, 3)1 203.2674    25.3092    152.4066     254.128 1.711e-10
+## poly(intensity, 3)2   5.9630    11.4359    -17.0184      28.944   0.60442
+## poly(intensity, 3)3  22.6834     7.3971      7.8185      37.548   0.00352
 ##                        
 ## (Intercept)         *  
 ## poly(intensity, 3)1 ***
@@ -573,13 +623,13 @@ summary(qmm)
 ## tau = 0.975
 ## 
 ## Fixed effects:
-##                        Value Std. Error lower bound upper bound  Pr(>|t|)
-## (Intercept)          22.0604    20.6589    -19.4552      63.576   0.29082
-## poly(intensity, 3)1 188.9824    20.7621    147.2595     230.705 4.153e-12
-## poly(intensity, 3)2  22.3598    12.5392     -2.8386      47.558   0.08075
-## poly(intensity, 3)3  12.1005     8.1714     -4.3205      28.521   0.14505
+##                         Value Std. Error lower bound upper bound  Pr(>|t|)
+## (Intercept)          22.06042   11.26859    -0.58466      44.706   0.05597
+## poly(intensity, 3)1 188.98239   23.60457   141.54723     236.418 1.869e-10
+## poly(intensity, 3)2  22.35978   13.17588    -4.11815      48.838   0.09604
+## poly(intensity, 3)3  12.10052    7.38350    -2.73717      26.938   0.10765
 ##                        
-## (Intercept)            
+## (Intercept)         .  
 ## poly(intensity, 3)1 ***
 ## poly(intensity, 3)2 .  
 ## poly(intensity, 3)3    

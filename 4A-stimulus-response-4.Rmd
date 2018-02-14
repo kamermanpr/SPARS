@@ -21,8 +21,8 @@ library(tidyverse)
 library(lme4)
 library(patchwork)
 
-# Set ggplot theme (since I've loaded sjPlot)
-sjPlot::set_theme(base = theme_bw())
+# Set ggplot theme 
+theme_set(new = theme_bw())
 
 # knitr setup
 knitr::opts_chunk$set(warning = FALSE,
@@ -31,16 +31,18 @@ knitr::opts_chunk$set(warning = FALSE,
                       fig.height = 7,
                       fig.width = 7,
                       fig.align = 'center',
-                      fig.path = 'figures/5A-response-stability/')
+                      fig.path = 'figures/4A-stimulus-response-4/')
 ```
 
 ----
 
-This analysis examines the _'stability'_ of the stimulus-response characateristics of the SPARS. It is a descriptive analysis (see plots). We assessed stability by examining the stimulus-response relationship of SPARS under three sample size senarios: n = 6, n = 12, and n = 18 (original sample: n = 19). Under each sample size senario, we generated 20 random samples (with replacement) and examined the stimulus-response relationship for each replicate. 
+This script is part 4 of our analysis of the stimulus-response characteristics of the SPARS. In this analysis we examine the _'stability'_ of the stimulus-response characateristics of the SPARS. It is a descriptive analysis (see plots). We assessed stability by examining the stimulus-response relationship of SPARS under three sample size senarios: n = 6, n = 12, and n = 18 (original sample: n = 19). Under each sample size senario, we generated 20 random samples (with replacement) and examined the stimulus-response relationship for each replicate. 
+
+Descriptive plots of the data are provided in _"outputs/4A-stimulus-response-1.html"_, modelling of the stimulus-response relationship is described in _"outputs/4A-stimulus-response-2.html"_, the diagnostics on the final linear mixed model are described in _"outputs/4A-stimulus-response-3.html"_, and the sensitivity of the scale to changes in stimulus intensity are described in _"outputs/4A-stimulus-reponse-5.html"_.
 
 ----
 
-# Import and inspect data
+# Import and clean/transfrom data
 
 ```{r import}
 # Import
@@ -48,13 +50,7 @@ data <- read_rds('./data-cleaned/SPARS_A.rds')
 
 # Inspect
 glimpse(data)
-```
 
-----
-
-# Functions
-
-```{r functions}
 ############################################################
 #                                                          #
 #              Define Tukey trimean function               #
@@ -83,13 +79,12 @@ sampler <- function(x = data_ref, y = data_nest, size = 6, by = 'PID') {
         arrange(PID)
     return(foo)
 }
-```
 
-----
-
-# Clean data
-
-```{r clean}
+############################################################
+#                                                          #
+#                    Generate core data                    #
+#                                                          #
+############################################################
 # Calculate trimeans
 data_tm <- data %>%
     # Select columns

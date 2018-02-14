@@ -1,8 +1,8 @@
 ---
 title: "SPARS trial A"
-subtitle: "Scaling: Stimulus-response characteristics of the SPARS"
+subtitle: "Sensitivity of the SPARS to changes in stimulus intensity"
 author: "Peter Kamerman"
-date: "13 Feb 2018"
+date: "14 Feb 2018"
 output: 
   html_document:
     keep_md: true
@@ -18,21 +18,32 @@ output:
 
 ----
 
-This script is part 3 of our analysis of the stimulus-response characteristics of the SPARS. In this analysis we examined whether there is a linear relationship between change in stimulus intensity and change in rating magnitude between two successive stimuli, irrespective of the direction of the change?
+This script is part 5 of our analysis of the stimulus-response characteristics of the SPARS. In this analysis we examined whether there is a linear relationship between change in stimulus intensity and change in rating magnitude between two successive stimuli, irrespective of the direction of the change?
 
-Descriptive plots of the data are provided in _4A-stimulus-response-1.html_, modelling of the relationship is described in _4A-stimulus-reponse-2.html_, and diagnostics on the final linear mixed model are described in _4A-stimulus-response-4.html_.
+Descriptive plots of the data are provided in _"outputs/4A-stimulus-response-1.html"_, modelling of the stimulus-response relationship is described in _"outputs/4A-stimulus-response-2.html"_, the diagnostics on the final linear mixed model are described in _"outputs/4A-stimulus-response-3.html"_, and the stability of the model is described in _"outputs/4A-stimulus-response-4.html"_.
 
 ----
 
-# Import and cleaning
-
-For details on the importing and preliminary cleaning of the data, please refer to: _4A-stimulus-response-1.html_.
-
-
-
+# Import and clean/transform data
 
 
 ```r
+############################################################
+#                                                          #
+#                          Import                          #
+#                                                          #
+############################################################
+data <- read_rds('./data-cleaned/SPARS_A.rds')
+
+############################################################
+#                                                          #
+#                          Clean                           #
+#                                                          #
+############################################################
+data %<>%
+  # Select required columns
+  select(PID, block, block_order, trial_number, intensity, intensity_char, rating) 
+
 ############################################################
 #                                                          #
 #          Define Walf CI function for robust LMM          #
@@ -125,7 +136,7 @@ data_scale %>%
     theme(legend.position = 'top')
 ```
 
-<img src="figures/4A-stimulus-response-3/exploratory_plots-1.png" width="672" style="display: block; margin: auto;" />
+<img src="figures/4A-stimulus-response-5/exploratory_plots-1.png" width="672" style="display: block; margin: auto;" />
 
 ### Participant-level
 
@@ -171,7 +182,7 @@ scale_plots <- data_scale %>%
 wrap_plots(scale_plots$plot, ncol = 4)
 ```
 
-<img src="figures/4A-stimulus-response-3/exploratory_plots2-1.png" width="960" style="display: block; margin: auto;" />
+<img src="figures/4A-stimulus-response-5/exploratory_plots2-1.png" width="960" style="display: block; margin: auto;" />
 
 ----
 
@@ -371,7 +382,7 @@ ci %>%
          y = 'Units')
 ```
 
-<img src="figures/4A-stimulus-response-3/segmented_lmm-1.png" width="864" style="display: block; margin: auto;" />
+<img src="figures/4A-stimulus-response-5/segmented_lmm-1.png" width="864" style="display: block; margin: auto;" />
 
 Using the confidence intervals of the fixed effect estimates to assess significance (intervals that excluded zero were considered significant at the 5% level), we assessed the interaction term to be not significant. When comparing the models, the fixed effect estimates for the two models were similar (see the plot above), and therefore we conclude that the direction of the change in stimulus intensity between two successive stimuli does not influence the slope of the relationship between change in stimulus intensity and change in SPARS rating.
 
@@ -390,7 +401,7 @@ p_list <- list(plot(scale_lmm2, which = 1),
 walk(p_list, ~print(.x))
 ```
 
-<img src="figures/4A-stimulus-response-3/diagnostics-1.png" width="672" style="display: block; margin: auto;" /><img src="figures/4A-stimulus-response-3/diagnostics-2.png" width="672" style="display: block; margin: auto;" /><img src="figures/4A-stimulus-response-3/diagnostics-3.png" width="672" style="display: block; margin: auto;" />
+<img src="figures/4A-stimulus-response-5/diagnostics-1.png" width="672" style="display: block; margin: auto;" /><img src="figures/4A-stimulus-response-5/diagnostics-2.png" width="672" style="display: block; margin: auto;" /><img src="figures/4A-stimulus-response-5/diagnostics-3.png" width="672" style="display: block; margin: auto;" />
 
 ### Plot of predicted values
 
@@ -430,7 +441,7 @@ ggplot(data = predicted) +
          y = expression(Delta~SPARS~rating~(predicted)))
 ```
 
-<img src="figures/4A-stimulus-response-3/predicted-1.png" width="672" style="display: block; margin: auto;" />
+<img src="figures/4A-stimulus-response-5/predicted-1.png" width="672" style="display: block; margin: auto;" />
 
 ----
 

@@ -11,7 +11,7 @@
 
 <meta name="author" content="Peter Kamerman" />
 
-<meta name="date" content="2018-02-13" />
+<meta name="date" content="2018-02-14" />
 
 <title>SPARS trial A</title>
 
@@ -235,21 +235,36 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">SPARS trial A</h1>
-<h3 class="subtitle"><em>Scaling: Stimulus-response characteristics of the SPARS</em></h3>
+<h3 class="subtitle"><em>Sensitivity of the SPARS to changes in stimulus intensity</em></h3>
 <h4 class="author"><em>Peter Kamerman</em></h4>
-<h4 class="date"><em>13 Feb 2018</em></h4>
+<h4 class="date"><em>14 Feb 2018</em></h4>
 
 </div>
 
 
 <hr />
-<p>This script is part 3 of our analysis of the stimulus-response characteristics of the SPARS. In this analysis we examined whether there is a linear relationship between change in stimulus intensity and change in rating magnitude between two successive stimuli, irrespective of the direction of the change?</p>
-<p>Descriptive plots of the data are provided in <em>4A-stimulus-response-1.html</em>, modelling of the relationship is described in <em>4A-stimulus-reponse-2.html</em>, and diagnostics on the final linear mixed model are described in <em>4A-stimulus-response-4.html</em>.</p>
+<p>This script is part 5 of our analysis of the stimulus-response characteristics of the SPARS. In this analysis we examined whether there is a linear relationship between change in stimulus intensity and change in rating magnitude between two successive stimuli, irrespective of the direction of the change?</p>
+<p>Descriptive plots of the data are provided in <em>“outputs/4A-stimulus-response-1.html”</em>, modelling of the stimulus-response relationship is described in <em>“outputs/4A-stimulus-response-2.html”</em>, the diagnostics on the final linear mixed model are described in <em>“outputs/4A-stimulus-response-3.html”</em>, and the stability of the model is described in <em>“outputs/4A-stimulus-response-4.html”</em>.</p>
 <hr />
-<div id="import-and-cleaning" class="section level1">
-<h1>Import and cleaning</h1>
-<p>For details on the importing and preliminary cleaning of the data, please refer to: <em>4A-stimulus-response-1.html</em>.</p>
+<div id="import-and-cleantransform-data" class="section level1">
+<h1>Import and clean/transform data</h1>
 <pre class="r"><code>############################################################
+#                                                          #
+#                          Import                          #
+#                                                          #
+############################################################
+data &lt;- read_rds('./data-cleaned/SPARS_A.rds')
+
+############################################################
+#                                                          #
+#                          Clean                           #
+#                                                          #
+############################################################
+data %&lt;&gt;%
+  # Select required columns
+  select(PID, block, block_order, trial_number, intensity, intensity_char, rating) 
+
+############################################################
 #                                                          #
 #          Define Walf CI function for robust LMM          #
 #                                                          #

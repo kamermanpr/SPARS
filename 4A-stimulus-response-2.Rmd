@@ -1,8 +1,8 @@
 ---
 title: "SPARS trial A"
 subtitle: "Modelling the SPARS stimulus-response relationship"
-author: "Peter Kamerman"
-date: "`r format(Sys.Date(), '%d %b %Y')`"
+author: "Peter Kamerman and Tory Madden"
+date: "`r format(Sys.Date(), '%d %B %Y')`"
 output: 
   html_document:
     keep_md: true
@@ -39,17 +39,15 @@ knitr::opts_chunk$set(warning = FALSE,
 
 ----
 
-This script is part 2 of our analysis of the stimulus-response characteristics of the SPARS. This script models the relationship between stimulus intensity and SPARS rating using linear mixed models and quantile mixed model regression. 
+This script is part 2 of our analysis of the stimulus-response characteristics of the SPARS. This script models the relationship between stimulus intensity and SPARS rating using linear mixed models and quantile mixed model regression.
 
-Descriptive plots of the data are provided in _4A-stimulus-response-1.html_, the scale attributes are described in _4A-stimulus-reponse-3.html_, and diagnostics on the final linear mixed model are described in _4A-stimulus-response-4.html_.
+Descriptive plots of the data are provided in _"outputs/4A-stimulus-response-1.html"_, the diagnostics on the final linear mixed model are described in _"outputs/4A-stimulus-response-3.html"_, the stability of the model is described in _"outputs/4A-stimulus-response-4.html"_, and the sensitivity of the scale to changes in stimulus intensity are described in _"outputs/4A-stimulus-reponse-3.html"_.
 
 ----
 
-# Import and cleaning
+# Import and clean/transform data
 
-For detailed on the importing and cleaning of the data, please refer to: _4A-stimulus-response-1.html_.
-
-```{r import_and_clean, include = FALSE}
+```{r import_and_clean}
 ############################################################
 #                                                          #
 #                          Import                          #
@@ -108,7 +106,7 @@ data_group <- data_tm %>%
 
 To allow for a curvilinear relationship between stimulus intensity and rating, we modelled the data using polynomial regression, with 1^st^ (linear), 2^nd^ (quadratic), and 3^rd^ (cubic) order orthogonal polynomials. For each polynomial expression, we modelled the random effects as random intercept only, and as random intercept and slope. 
 
-The random intercept only and random intercept and slope models were compared using the logliklihood test, and the better model taken foward.
+The random intercept only and random intercept and slope models were compared using the likelihood test, and the better model taken forward.
 
 ### 1st-order (linear) polynomial
 
@@ -253,7 +251,7 @@ ggplot() +
   scale_x_continuous(breaks = seq(from = 1, to = 4, by = 0.5))
 ```
 
-The cubic model has the best fit. The resulting curvilinear response function is _steepest_ at the extremes and  _flattens out_ in the mid-ranges of stumulus intensity. We performed diagnostics on this model to confirm that the model was properly specified.
+The cubic model has the best fit. The resulting curvilinear response function is _steepest_ at the extremes and  _flattens out_ in the mid-ranges of stimulus intensity. We performed diagnostics on this model to confirm that the model was properly specified.
 
 ----
 
