@@ -1,0 +1,425 @@
+---
+title: "SPARS trial A"
+subtitle: "Stability of the stimulus-response relationship"
+author: "Peter Kamerman"
+date: "`r format(Sys.Date(), '%d %b %Y')`"
+output: 
+  html_document:
+    keep_md: true
+    theme: yeti
+    hightlight: pygments
+    toc: true
+    toc_depth: 5
+    toc_float: true
+    code_folding: show
+---
+
+```{r setup, include = FALSE}
+# Load packages
+library(magrittr)
+library(tidyverse)
+library(lme4)
+library(patchwork)
+
+# Set ggplot theme (since I've loaded sjPlot)
+sjPlot::set_theme(base = theme_bw())
+
+# knitr setup
+knitr::opts_chunk$set(warning = FALSE,
+                      message = FALSE,
+                      fig.retina = 2,
+                      fig.height = 7,
+                      fig.width = 7,
+                      fig.align = 'center',
+                      fig.path = 'figures/5A-response-stability/')
+```
+
+----
+
+This analysis examines the _'stability'_ of the stimulus-response characateristics of the SPARS. It is a descriptive analysis (see plots). We assessed stability by examining the stimulus-response relationship of SPARS under three sample size senarios: n = 6, n = 12, and n = 18 (original sample: n = 19). Under each sample size senario, we generated 20 random samples (with replacement) and examined the stimulus-response relationship for each replicate. 
+
+----
+
+# Import and inspect data
+
+```{r import}
+# Import
+data <- read_rds('./data-cleaned/SPARS_A.rds')
+
+# Inspect
+glimpse(data)
+```
+
+----
+
+# Functions
+
+```{r functions}
+############################################################
+#                                                          #
+#              Define Tukey trimean function               #
+#                                                          #
+############################################################
+tri.mean <- function(x) {
+  # Calculate quantiles
+  q1 <- quantile(x, probs = 0.25, na.rm = TRUE)[[1]]
+  q2 <- median(x, na.rm = TRUE)
+  q3 <- quantile(x, probs = 0.75, na.rm = TRUE)[[1]]
+  # Calculate trimean
+  tm <- (q2 + ((q1 + q3) / 2)) / 2
+  # Convert to integer
+  tm <- as.integer(round(tm))
+  return(tm)
+}
+
+############################################################
+#                                                          #
+#             Define random sampling function              #
+#                                                          #
+############################################################
+sampler <- function(x = data_ref, y = data_nest, size = 6, by = 'PID') {
+    foo <- sample_n(x, size = size, replace = TRUE) %>%
+        inner_join(x = ., y = y, by = by) %>%
+        arrange(PID)
+    return(foo)
+}
+```
+
+----
+
+# Clean data
+
+```{r clean}
+# Calculate trimeans
+data_tm <- data %>%
+    # Select columns
+    select(PID, intensity, rating) %>%
+    # Calculate tri.mean
+    group_by(PID, intensity) %>% 
+    summarise(tri_mean = tri.mean(rating))
+
+# Generated nested table of data_tm
+data_nest <- data_tm %>% 
+    group_by(PID) %>% 
+    nest()
+
+# Generate sampling reference
+data_ref <- select(data_nest, PID)
+```
+
+----
+
+# Sampling
+
+### Senario 1 (n = 6)
+
+```{r n6}
+# Set random seed
+set.seed(1234)
+
+# Generate data
+n6 <- map(1:20, ~ sampler(size = 6))
+
+# Unnest data and clean-up
+n6 %<>% map2(.x = .,
+             .y = sprintf('%02i', 1:20),
+             # Unnest each list item
+             ~ unnest(.x) %>%
+                 # Add a column with the sample label to each list item
+                 mutate(sample = .y) %>%
+                 # Select required column in each list item
+                 select(sample, PID, intensity, tri_mean) %>%
+                 # Re-nest each list item dataframe under the sample label
+                 group_by(sample) %>%
+                 nest())
+
+# Convert n5 to a single dataframe
+n6 %<>% map_df(~ data.frame(.x))
+
+# Add plots
+n6 %<>% mutate(plot = map2(.x = data,
+                           .y = sample,
+                   ~ ggplot(data = .x) +
+                       aes(x = intensity,
+                           y = tri_mean) +
+                       geom_point(colour = '#000000',
+                                  shape = 21,
+                                  size = 2,
+                                  alpha = 0.6,
+                                  position = position_jitter(width = 0.05)) +
+                       geom_smooth(method = 'loess',
+                                   se = FALSE,
+                                   colour = '#666666', 
+                                   size = 0.6) +
+                       labs(subtitle = paste0('[SAMPLE ', .y, ']')) +
+                       scale_y_continuous(limits = c(-50, 50)) +
+                       scale_x_continuous(breaks = seq(from = 1, to = 4, by = 1)) +
+                       theme(legend.position = 'none',
+                             axis.title = element_blank())))
+
+# Add linear, quadratic and cubic model
+n6 %<>% mutate(L.model = map(.x = data,
+                           ~ lmer(tri_mean ~ poly(intensity, 1) + (intensity | PID),
+                                  data = .x,
+                                  REML = FALSE)),
+               Q.model = map(.x = data,
+                           ~ lmer(tri_mean ~ poly(intensity, 2) + (intensity | PID),
+                                  data = .x,
+                                  REML = FALSE)),
+               C.model = map(.x = data,
+                           ~ lmer(tri_mean ~ poly(intensity, 3) + (intensity | PID),
+                                  data = .x,
+                                  REML = FALSE)))
+
+# Compare models using likelihood test
+n6 %<>% mutate(compare = pmap(.l = list(L.model, Q.model, C.model),
+                              ~ anova(..1, ..2, ..3) %>%
+                                  mutate(Model = c('Linear', 'Quadratic', 'Cubic')) %>%
+                                  select(Model, everything())))
+
+# Extract the name of the best model
+n6 %<>% mutate(best_model = map(.x = compare,
+                                ~ filter(.x, 
+                                         `Pr(>Chisq)` == min(`Pr(>Chisq)`, 
+                                                             na.rm = TRUE)) %>%
+                                    mutate(Model = case_when(
+                                        `Pr(>Chisq)` < 0.05 ~ Model,
+                                        TRUE ~ 'Linear'
+                                        )) %>%
+                                    .$Model))
+```
+
+**Composite plot of SPAR rating vs stimulus intensity for 20 random samples (n = 6)**  
+Open circles: participant trimeans | Grey curve: loess curve  
+_[Sampling was performed with replacement]_
+
+```{r n6_plot, fig.height = 9, fig.width = 9, echo = FALSE}
+# Composite plot
+wrap_plots(n6$plot, ncol = 5)
+```
+
+### Senario 2 (n = 12)
+
+```{r n12}
+# Set random seed
+set.seed(5678)
+
+# Generate data
+n12 <- map(1:20, ~ sampler(size = 6))
+
+# Unnest data and clean-up
+n12 %<>% map2(.x = .,
+             .y = sprintf('%02i', 1:20),
+             # Unnest each list item
+             ~ unnest(.x) %>%
+                 # Add a column with the sample label to each list item
+                 mutate(sample = .y) %>%
+                 # Select required column in each list item
+                 select(sample, PID, intensity, tri_mean) %>%
+                 # Re-nest each list item dataframe under the sample label
+                 group_by(sample) %>%
+                 nest())
+
+# Convert n5 to a single dataframe
+n12 %<>% map_df(~ data.frame(.x))
+
+# Add plots
+n12 %<>% mutate(plot = map2(.x = data,
+                           .y = sample,
+                   ~ ggplot(data = .x) +
+                       aes(x = intensity,
+                           y = tri_mean) +
+                       geom_point(colour = '#000000',
+                                  shape = 21,
+                                  size = 2,
+                                  alpha = 0.6,
+                                  position = position_jitter(width = 0.05)) +
+                       geom_smooth(method = 'loess',
+                                   se = FALSE,
+                                   colour = '#666666', 
+                                   size = 0.6) +
+                       labs(subtitle = paste0('[SAMPLE ', .y, ']')) +
+                       scale_y_continuous(limits = c(-50, 50)) +
+                       scale_x_continuous(breaks = seq(from = 1, to = 4, by = 1)) +
+                       theme(legend.position = 'none',
+                             axis.title = element_blank())))
+
+# Add linear, quadratic and cubic model
+n12 %<>% mutate(L.model = map(.x = data,
+                           ~ lmer(tri_mean ~ poly(intensity, 1) + (intensity | PID),
+                                  data = .x,
+                                  REML = FALSE)),
+               Q.model = map(.x = data,
+                           ~ lmer(tri_mean ~ poly(intensity, 2) + (intensity | PID),
+                                  data = .x,
+                                  REML = FALSE)),
+               C.model = map(.x = data,
+                           ~ lmer(tri_mean ~ poly(intensity, 3) + (intensity | PID),
+                                  data = .x,
+                                  REML = FALSE)))
+
+# Compare models using likelihood test
+n12 %<>% mutate(compare = pmap(.l = list(L.model, Q.model, C.model),
+                              ~ anova(..1, ..2, ..3) %>%
+                                  mutate(Model = c('Linear', 'Quadratic', 'Cubic')) %>%
+                                  select(Model, everything())))
+
+# Extract the name of the best model
+n12 %<>% mutate(best_model = map(.x = compare,
+                                ~ filter(.x, 
+                                         `Pr(>Chisq)` == min(`Pr(>Chisq)`, 
+                                                             na.rm = TRUE)) %>%
+                                    mutate(Model = case_when(
+                                        `Pr(>Chisq)` < 0.05 ~ Model,
+                                        TRUE ~ 'Linear'
+                                        )) %>%
+                                    .$Model))
+```
+
+**Composite plot of SPAR rating vs stimulus intensity for 20 random samples (n = 12)**  
+Open circles: participant trimeans | Grey curve: loess curve  
+_[Sampling was performed with replacement]_
+
+```{r n12_plot, fig.height = 9, fig.width = 9, echo = FALSE}
+# Composite plot
+wrap_plots(n6$plot, ncol = 5)
+```
+
+### Senario 3 (n = 18)
+
+```{r n18}
+# Set random seed
+set.seed(91011)
+
+# Generate data
+n18 <- map(1:20, ~ sampler(size = 6))
+
+# Unnest data and clean-up
+n18 %<>% map2(.x = .,
+             .y = sprintf('%02i', 1:20),
+             # Unnest each list item
+             ~ unnest(.x) %>%
+                 # Add a column with the sample label to each list item
+                 mutate(sample = .y) %>%
+                 # Select required column in each list item
+                 select(sample, PID, intensity, tri_mean) %>%
+                 # Re-nest each list item dataframe under the sample label
+                 group_by(sample) %>%
+                 nest())
+
+# Convert n5 to a single dataframe
+n18 %<>% map_df(~ data.frame(.x))
+
+# Add plots
+n18 %<>% mutate(plot = map2(.x = data,
+                           .y = sample,
+                   ~ ggplot(data = .x) +
+                       aes(x = intensity,
+                           y = tri_mean) +
+                       geom_point(colour = '#000000',
+                                  shape = 21,
+                                  size = 2,
+                                  alpha = 0.6,
+                                  position = position_jitter(width = 0.05)) +
+                       geom_smooth(method = 'loess',
+                                   se = FALSE,
+                                   colour = '#666666', 
+                                   size = 0.6) +
+                       labs(subtitle = paste0('[SAMPLE ', .y, ']')) +
+                       scale_y_continuous(limits = c(-50, 50)) +
+                       scale_x_continuous(breaks = seq(from = 1, to = 4, by = 1)) +
+                       theme(legend.position = 'none',
+                             axis.title = element_blank())))
+
+# Add linear, quadratic and cubic model
+n18 %<>% mutate(L.model = map(.x = data,
+                           ~ lmer(tri_mean ~ poly(intensity, 1) + (intensity | PID),
+                                  data = .x,
+                                  REML = FALSE)),
+               Q.model = map(.x = data,
+                           ~ lmer(tri_mean ~ poly(intensity, 2) + (intensity | PID),
+                                  data = .x,
+                                  REML = FALSE)),
+               C.model = map(.x = data,
+                           ~ lmer(tri_mean ~ poly(intensity, 3) + (intensity | PID),
+                                  data = .x,
+                                  REML = FALSE)))
+
+# Compare models using likelihood test
+n18 %<>% mutate(compare = pmap(.l = list(L.model, Q.model, C.model),
+                              ~ anova(..1, ..2, ..3) %>%
+                                  mutate(Model = c('Linear', 'Quadratic', 'Cubic')) %>%
+                                  select(Model, everything())))
+
+# Extract the name of the best model
+n18 %<>% mutate(best_model = map(.x = compare,
+                                ~ filter(.x, 
+                                         `Pr(>Chisq)` == min(`Pr(>Chisq)`, 
+                                                             na.rm = TRUE)) %>%
+                                    mutate(Model = case_when(
+                                        `Pr(>Chisq)` < 0.05 ~ Model,
+                                        TRUE ~ 'Linear'
+                                        )) %>%
+                                    .$Model))
+```
+
+**Composite plot of SPAR rating vs stimulus intensity for 20 random samples (n = 18)**  
+Open circles: participant trimeans | Grey curve: loess curve  
+_[Sampling was performed with replacement]_
+
+```{r n18_plot, fig.height = 9, fig.width = 9, echo = FALSE}
+# Composite plot
+wrap_plots(n6$plot, ncol = 5)
+```
+
+----
+
+# Summary of best model
+
+```{r test}
+# Extract data
+n6_best <- n6 %>%
+    select(sample, best_model) %>% 
+    unnest() %>% 
+    mutate(n_sample = '6')
+
+n12_best <- n12 %>% 
+    select(sample, best_model) %>% 
+    unnest() %>% 
+    mutate(sample = sprintf('%02.0f', 21:40)) %>% 
+    mutate(n_sample = '12')
+
+n18_best <- n18 %>% 
+    select(sample, best_model) %>% 
+    unnest() %>% 
+    mutate(sample = sprintf('%02.0f', 41:60)) %>% 
+    mutate(n_sample = '18')
+
+# Join datasets
+model_combined <- bind_rows(n6_best, n12_best, n18_best) %>% 
+    mutate(n_sample = fct_relevel(n_sample, 
+                                  '6', '12', '18'),
+           best_model = fct_relevel(best_model,
+                                    'Linear', 'Quadratic', 'Cubic'))
+
+# Plot
+foo <- colorRampPalette(colors = c('#88caef', '#0072B2'))(3)
+
+ggplot(data = model_combined) +
+    aes(n_sample,
+        fill = best_model) +
+    geom_bar(position = position_fill()) +
+    labs(title = 'Proportion of best models for each of three sample size senarios',
+         subtitle = 'Twenty resamples (with replacement) taken for each senario',
+         x = 'Sample size',
+         y = 'Proportion') +
+    scale_fill_manual(name = 'Best model',
+                      values = foo)
+```
+
+----
+
+# Session information
+```{r session_info}
+sessionInfo()
+```
