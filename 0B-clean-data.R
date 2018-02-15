@@ -92,15 +92,27 @@ data %<>%
     mutate(intensity_rank = dense_rank(intensity)) %>%
     ungroup()
 
-# Converted FEST to a 0-100 positive scale
+# Converted SPARS to a 0-100 positive scale
 data %<>%
     mutate(rating_positive = rating + 50)
+
+# Convert NRS_NP and CNRS_P to SPARS-equivalent ranges (+50 to 50)
+data %<>%
+    # Fix column format to do the maths
+    mutate(rating = as.numeric(rating)) %>%
+    # CNRS_P conversion(divide rating by 2)
+    # NRS_NP conversion (-100 and divide then by 2)
+    mutate(rating_equivalent = case_when(
+        scale == 'CNRS_P' ~ rating / 2,
+        scale == 'NRS_NP' ~ (rating - 100) / 2,
+        TRUE ~ rating
+    ))
 
 # Select columns
 ## Select required columns
 data %<>%
     select(PID, scale, block_number, trial_number, intensity, intensity_char,
-           intensity_rank, rating, rating_positive)
+           intensity_rank, rating, rating_positive, rating_equivalent)
 
 # Final tweaks
 data %<>%
