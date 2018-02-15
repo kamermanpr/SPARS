@@ -1,0 +1,423 @@
+---
+title: "SPARS trial B"
+subtitle: "Agreement between the SPARS and the CNRS_P/NRS_NP"
+author: "Peter Kamerman and Tory Madden"
+date: "`r format(Sys.Date(), '%d %B %Y')`"
+output: 
+  html_document:
+    keep_md: true
+    theme: yeti
+    hightlight: pygments
+    toc: true
+    toc_depth: 5
+    toc_float: true
+    code_folding: show
+---
+
+```{r setup, include = FALSE}
+# Load packages
+library(magrittr)
+library(tidyverse)
+library(boot)
+
+# Set ggplot theme
+theme_set(new = theme_bw())
+
+# knitr setup
+knitr::opts_chunk$set(warning = FALSE,
+                      message = FALSE,
+                      cache = TRUE,
+                      fig.retina = 2,
+                      fig.height = 9,
+                      fig.width = 9,
+                      fig.align = 'center',
+                      fig.path = 'figures/6B-scale-agreement/')
+```
+
+----
+
+This script assesses the agreement between the SPARS and the scaled NRS_NP and CNRS_P.[^1]
+
+Because the three measurement scales were not used concurrently to rate each stimulus, we could not assess agreement using a standard procedure such as the Bland-Altman method. Instead, for each participant, and at each stimulus intensity, we generated 50,000 bootstrap resamples _(sampled with replacement)_ of ratings for each of the scales. We then calculated the median rating for each scale for each of the resamples and subtracted the values as follows: 
+
+$$ Median_{(SPARS)} - Median_{(CNRS\_P / NRS\_NP)} $$
+
+These data were then used to calculate a 95% bootstrap confidence interval (bias-corrected and accelerated method, BCa [^2]) of the difference in medians at each stimulus intensity. Confidence intervals that included 0 were interpreted as indicating agreement between the two measurements scale at a particular stimulus intensity. Values less than 0 indicate that SPARS under-estimated stimulus intensity compared to CNRS_P, and _visa versa_ for values greater than 0. 
+
+To get a feel for rating agreement at the group-level, we used the point estimates of the differences in medians (see above) to calculate a 95% bootstrap interval _(50,000 resamples, BCa method)_ for the cohort at each stimulus intensity.
+
+[^1]: Raw scores for the CNRS_P and NRS_NP scales (both rated on 0 to 100 scales) were converted to SPARS equivalent ranges (-50 to +50). CNRS_P ratings were a converted to a 0 to 50 range by dividing 2, such that after the scaling, 0 = _no pain_ and 50 = _worst pain you can imagine_. NRS_NP ratings were converted to a -50 to 0 range by subtracting 100, and then dividing 2, such that after the scaling, -50 = _no sensation_ and 0 = _pain_. This is equivalent to the negative range of the SPARS.
+
+[^2]: Bias-corrected accelerated intervals work best for larger samples (>25), and therefore we incresaed our resample rate to 50,000 to help identify a stable distribution.
+
+----
+
+# Import and inspect data
+
+```{r import}
+# Import
+data <- read_rds('./data-cleaned/SPARS_B.rds')
+
+# Inspect
+glimpse(data)
+```
+
+----
+
+# Clean and transform data
+
+```{r clean}
+############################################################
+#                                                          #
+#                          Clean                           #
+#                                                          #
+############################################################
+data %<>%
+    # Select required columns
+    select(PID, scale, intensity_rank, rating_equivalent) 
+
+############################################################
+#                                                          #
+#                Define bootstrap function                 #
+#                                                          #
+############################################################
+# Participant-level bootstrap function
+boot_deltaP <- function(d, i) {
+    foo <- d[i, ]
+    # Extract a random sample of SPARS rating data, and calculate a median
+    spars <- foo[foo$scale == 'SPARS', ]
+    spars <- spars$rating_equivalent
+    spars <- median(spars, na.rm = TRUE)
+    # Extract a random sample of OTHER rating data, and calculate a median
+    other <- foo[foo$scale == 'OTHER', ]
+    other <- other$rating_equivalent
+    other <- median(other, na.rm = TRUE)
+    # Calculate the difference in medians
+    spars - other
+}
+
+# Group-level bootstrap function
+boot_deltaG <- function(d, i) {
+    foo <- d[i, ]
+    # Extract a random sample of delta median estimates and calculate the median
+    median(foo$statistic, na.rm = TRUE)
+}
+
+############################################################
+#                                                          #
+#                    Generate core data                    #
+#                                                          #
+############################################################
+# Generate SPRS vs CNRS_P data
+cnrs_agreement <- data %>%
+    # Remove NRS_NP data
+    filter(scale != 'NRS_NP') %>%
+    # Recode CNRS_P to OTHER
+    mutate(scale = case_when(
+        scale == 'CNRS_P' ~ 'OTHER',
+        TRUE ~ 'SPARS'
+    )) %>%
+    # Group and nest by PID and stimulus intensity
+    group_by(PID, intensity_rank) %>%
+    nest()
+
+# Generate SPRS vs NRS_NP data
+nrs_agreement <- data %>%
+    # Remove NRS_NP data
+    filter(scale != 'CNRS_P') %>%
+    # Remove ID01 (no NRS_NP data)
+    filter(PID != 'ID01') %>%
+    # Recode CNRS_P to OTHER
+    mutate(scale = case_when(
+        scale == 'NRS_NP' ~ 'OTHER',
+        TRUE ~ 'SPARS'
+    )) %>%
+    # Group and nest by PID and stimulus intensity
+    group_by(PID, intensity_rank) %>%
+    nest()
+``` 
+
+----
+
+# Agreement between SPARS and CNRS_P
+
+### Participant-level agreement
+
+```{r cnrs_agreementP}
+# Set random seed
+set.seed(1234)
+
+# Perform bootstrap
+cnrs_agreementP <- cnrs_agreement %>%
+    mutate(boot = map(.x = data,
+                      ~ boot::boot(data = .x, 
+                                   statistic = boot_deltaP,
+                                   R = 10000,
+                                   stype = 'i')))
+
+# Calculate 95% ci
+cnrs_agreementP %<>%
+    mutate(boot_ci = map(.x = boot,
+                         ~ boot::boot.ci(boot.out = .x,
+                                         type = 'bca')))
+
+# Extract data
+cnrs_agreementP %<>%
+   mutate(statistic = map(.x = boot_ci,
+                          ~ .x$t0),
+          lower_ci = map(.x = boot_ci,
+                         ~ .x$bca[[4]]),
+          upper_ci = map(.x = boot_ci,
+                         ~ .x$bca[[5]]))
+
+# Clean-up
+cnrs_agreementP %<>%
+    select(-data, -boot, -boot_ci) %>%
+    unnest() %>%
+    # Add colour coding column
+    mutate(includes_zero = case_when(
+        lower_ci <= 0 & upper_ci >= 0 ~ 'yes',
+        TRUE ~ 'no'
+    ))
+    
+
+# Plot
+ggplot(data = cnrs_agreementP) +
+    aes(x = as.factor(intensity_rank),
+        y = statistic,
+        ymin = lower_ci,
+        ymax = upper_ci,
+        fill = includes_zero,
+        colour = includes_zero) +
+    geom_crossbar() +
+    geom_hline(yintercept = 0,
+               linetype = 2) +
+    scale_fill_brewer(name = 'Interval includes zero: ',
+                      type = 'qual',
+                      palette = 'Dark2') +
+    scale_colour_brewer(name = 'Interval includes zero: ',
+                        type = 'qual',
+                        palette = 'Dark2') +
+    labs(title = 'Participant-level agreement between SPARS and CNRS_P ratings',
+         subtitle = 'Bars: 95% confidence interval of the difference in median\nIntervals including zero interpreted as evidence for agreement',
+         x = 'Stimulus intensity (rank)',
+         y = expression(Delta~median~rating)) +
+    facet_wrap(~ PID) +
+    theme(legend.position = 'top')
+```
+
+There are significant participant-level discrepancies in agreement, but particularly at the lower stimulus intensities. In all cases (at the low end of the intensity range), the SPARS underestimated CNRS_P ratings, but this is likely an artefact of the two instruments, where SPARS continues to record (using a negative range) non-painful stimuli, while the CNRS_P reaches a floor value of zero when the stimulus intensity is no longer perceived as painful. When there was agreement, it tended to be in the upper ranges of stimulus intensity. There was significant heterogeneity across participants. 
+
+### Group-level
+
+```{r cnrs_agreementG}
+# Set random seed
+set.seed(1234)
+
+# Perform bootstrap
+cnrs_agreementG <- cnrs_agreementP %>%
+    group_by(intensity_rank) %>%
+    nest() %>% 
+    mutate(boot = map(.x = data,
+                      ~ boot::boot(data = .x, 
+                                   statistic = boot_deltaG,
+                                   R = 10000,
+                                   stype = 'i')))
+
+# Calculate 95% ci
+cnrs_agreementG %<>%
+    mutate(boot_ci = map(.x = boot,
+                         ~ boot::boot.ci(boot.out = .x,
+                                         type = 'bca')))
+
+# Extract data
+cnrs_agreementG %<>%
+   mutate(statistic = map(.x = boot_ci,
+                          ~ .x$t0),
+          lower_ci = map(.x = boot_ci,
+                         ~ .x$bca[[4]]),
+          upper_ci = map(.x = boot_ci,
+                         ~ .x$bca[[5]]))
+
+# Clean-up
+cnrs_agreementG %<>%
+    select(-data, -boot, -boot_ci) %>%
+    unnest() %>%
+    # Add colour coding column
+    mutate(includes_zero = case_when(
+        lower_ci <= 0 & upper_ci >= 0 ~ 'yes',
+        TRUE ~ 'no'
+    ))
+    
+
+# Plot
+ggplot(data = cnrs_agreementG) +
+    aes(x = as.factor(intensity_rank),
+        y = statistic,
+        ymin = lower_ci,
+        ymax = upper_ci,
+        fill = includes_zero,
+        colour = includes_zero) +
+    geom_crossbar() +
+    geom_hline(yintercept = 0,
+               linetype = 2) +
+    scale_fill_brewer(name = 'Interval includes zero: ',
+                      type = 'qual',
+                      palette = 'Dark2') +
+    scale_colour_brewer(name = 'Interval includes zero: ',
+                        type = 'qual',
+                        palette = 'Dark2') +
+    labs(title = 'Group-level agreement between SPARS and CNRS_P ratings',
+         subtitle = 'Bars: 95% confidence interval of the difference in median\nIntervals including zero interpreted as evidence for agreement',
+         x = 'Stimulus intensity (rank)',
+         y = expression(Delta~median~rating)) +
+    theme(legend.position = 'top')
+```
+
+As expected, agreement between the two scales is poor at the low range of stimulus intensities. At higher stimulus intensities, the upper limits of the 95% confidence intervals tend to approach zero, but except for the 8J stimulus, the intervals do not include zero (we believe that the 8J finding results from sampling variation rather than being a true effect). Across the range of stimulus intensities, the width of the interval is large, and reflects high inter-individual variation in SPARS and CNRS_P ratings at each stimulus intensity. 
+
+----
+
+# Agreement between SPARS and NRS_NP
+
+### Participant-level agreement
+
+```{r nrs_agreementP}
+# Set random seed
+set.seed(1234)
+
+# Perform bootstrap
+nrs_agreementP <- nrs_agreement %>%
+    mutate(boot = map(.x = data,
+                      ~ boot::boot(data = .x, 
+                                   statistic = boot_deltaP,
+                                   R = 10000,
+                                   stype = 'i')))
+
+# Calculate 95% ci
+nrs_agreementP %<>%
+    mutate(boot_ci = map(.x = boot,
+                         ~ boot::boot.ci(boot.out = .x,
+                                         type = 'bca')))
+
+# Extract data
+nrs_agreementP %<>%
+   mutate(statistic = map(.x = boot_ci,
+                          ~ .x$t0),
+          lower_ci = map(.x = boot_ci,
+                         ~ .x$bca[[4]]),
+          upper_ci = map(.x = boot_ci,
+                         ~ .x$bca[[5]]))
+
+# Clean-up
+nrs_agreementP %<>%
+    select(-data, -boot, -boot_ci) %>%
+    unnest() %>%
+    # Add colour coding column
+    mutate(includes_zero = case_when(
+        lower_ci <= 0 & upper_ci >= 0 ~ 'yes',
+        TRUE ~ 'no'
+    ))
+    
+
+# Plot
+ggplot(data = nrs_agreementP) +
+    aes(x = as.factor(intensity_rank),
+        y = statistic,
+        ymin = lower_ci,
+        ymax = upper_ci,
+        fill = includes_zero,
+        colour = includes_zero) +
+    geom_crossbar() +
+    geom_hline(yintercept = 0,
+               linetype = 2) +
+    scale_fill_brewer(name = 'Interval includes zero: ',
+                      type = 'qual',
+                      palette = 'Dark2') +
+    scale_colour_brewer(name = 'Interval includes zero: ',
+                        type = 'qual',
+                        palette = 'Dark2') +
+    labs(title = 'Participant-level agreement between SPARS and NRS_NP ratings',
+         subtitle = 'Bars: 95% confidence interval of the difference in median\nIntervals including zero interpreted as evidence for agreement',
+         x = 'Stimulus intensity (rank)',
+         y = expression(Delta~median~rating)) +
+    facet_wrap(~ PID) +
+    theme(legend.position = 'top')
+```
+
+As with the SPARS/CNRS_P data, there are significant participant-level discrepancies in agreement, but in this case the problem is mostly apparent at the higher stimulus intensities. In all cases (at the high end of the intensity range), the SPARS over-estimated NRS_NP ratings, but this is likely an artefact of the two instruments, where SPARS continues to record (over its positive range) painful stimuli, while the NRS_NP reaches a ceiling value of zero when the stimulus intensity is first perceived as painful. When there was agreement, it tended to be in the lower ranges of stimulus intensity. There was significant heterogeneity across participants. 
+
+### Group-level
+
+```{r nrs_agreementG}
+# Set random seed
+set.seed(1234)
+
+# Perform bootstrap
+nrs_agreementG <- nrs_agreementP %>%
+    group_by(intensity_rank) %>%
+    nest() %>% 
+    mutate(boot = map(.x = data,
+                      ~ boot::boot(data = .x, 
+                                   statistic = boot_deltaG,
+                                   R = 10000,
+                                   stype = 'i')))
+
+# Calculate 95% ci
+nrs_agreementG %<>%
+    mutate(boot_ci = map(.x = boot,
+                         ~ boot::boot.ci(boot.out = .x,
+                                         type = 'bca')))
+
+# Extract data
+nrs_agreementG %<>%
+   mutate(statistic = map(.x = boot_ci,
+                          ~ .x$t0),
+          lower_ci = map(.x = boot_ci,
+                         ~ .x$bca[[4]]),
+          upper_ci = map(.x = boot_ci,
+                         ~ .x$bca[[5]]))
+
+# Clean-up
+nrs_agreementG %<>%
+    select(-data, -boot, -boot_ci) %>%
+    unnest() %>%
+    # Add colour coding column
+    mutate(includes_zero = case_when(
+        lower_ci <= 0 & upper_ci >= 0 ~ 'yes',
+        TRUE ~ 'no'
+    ))
+    
+
+# Plot
+ggplot(data = nrs_agreementG) +
+    aes(x = as.factor(intensity_rank),
+        y = statistic,
+        ymin = lower_ci,
+        ymax = upper_ci,
+        fill = includes_zero,
+        colour = includes_zero) +
+    geom_crossbar() +
+    geom_hline(yintercept = 0,
+               linetype = 2) +
+    scale_fill_brewer(name = 'Interval includes zero: ',
+                      type = 'qual',
+                      palette = 'Dark2') +
+    scale_colour_brewer(name = 'Interval includes zero: ',
+                        type = 'qual',
+                        palette = 'Dark2') +
+    labs(title = 'Group-level agreement between SPARS and NRS_NP ratings',
+         subtitle = 'Bars: 95% confidence interval of the difference in median\nIntervals including zero interpreted as evidence for agreement',
+         x = 'Stimulus intensity (rank)',
+         y = expression(Delta~median~rating)) +
+    theme(legend.position = 'top')
+```
+
+Compared to the SPARS/CNRS_P group-level agreement, group-level agreement for the SPARS/NRS_NP was better (more intervals included zero, the exceptions being the three highest intensity ratings), but the intervals were wide, and the inclusion of zero was quite marginal in most cases. In general, the SPARS ratings over-estimated NRS_NP ratings.
+
+----
+
+# Session information
+```{r session_info}
+sessionInfo()
+```
