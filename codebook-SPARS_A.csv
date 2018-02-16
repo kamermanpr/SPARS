@@ -1,0 +1,20 @@
+Variable,Variable_class,Measurement_information,Extra_notes
+PID,character,Unique participant identifier.,
+block,character,Experimental block identifier.,
+block_order,numeric,Sequence of experimental blocks.,
+trial_number,numeric,Trial number within each block. ,
+intensity,character,Laser energy used (Joules).,"Nine stimulus intensitieswere used, ranging from 1J to 9J, and spaced at 0.25J intervals."
+intensity_char,numeric,Laser energy used (Joules) expressed as class character (*.rds format only).,
+rating,numeric,Raw rating scale data,"SPARS is a -50 to +50 scale anchored at -50 with 'no sensation', at 0 with 'the exact point at which what you feel transitions to pain', and at +50 with 'the worst pain you can imagine'."
+rating_positive,numeric,Rating scale data after correcting SPARS to a positive scale covering 0 (no sensation) to 100 (worst pain you can imagine) by adding 50.,
+EDA,numeric,,
+age,numeric,,
+sex,numeric,,
+panas_positive,numeric,,
+panas_negative,numeric,,
+dass42_depression,numeric,,
+dass42_anxiety,numeric,,
+dass42_stress,numeric,,
+pcs_magnification,numeric,,
+pcs_rumination,numeric,,
+pcs_helplessness,numeric,,

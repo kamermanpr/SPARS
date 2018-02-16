@@ -2,7 +2,7 @@
 title: "SPARS trial B"
 subtitle: "Descriptive plots of the stimulus-response relationship for the SPARS, NRS_NP, and CNRS_P"
 author: "Peter Kamerman and Tory Madden"
-date: "15 February 2018"
+date: "16 February 2018"
 output: 
   html_document:
     keep_md: true
@@ -23,7 +23,7 @@ This script assesses and contrasts the stimulus-response characteristics of the 
 The three scales measure the following ranges of somatic sensation:  
 
 - CNRS_P: 0 _(no pain)_ to 100 _(worst pain you can imagine)_
-_
+
 - NRS_NP: 0 _(no sensation)_ to 100 _(pain)_
 
 - SPARS: -50 _(no sensation)_, 0 _(pain threshold)_, +50 _(worst pain you can imagine)_
@@ -206,7 +206,7 @@ walk(plot_equi$plots, ~ print(.x))
 
 ### Tukey trimean plots (participant-level)
 
-For each participant, we calculated the Tukey trimean of the intensity rating at each stimulus intensity for each of the measurement scales. The -50 to 50 scaled units were used in the calculation for the CNRS_P and NRS_NP. 
+For each participant, we calculated the Tukey trimean of the intensity rating at each stimulus intensity and for each of the measurement scales. The scaled versions of the CNRS_P and NRS_NP were used. 
 
 
 ```r
@@ -309,6 +309,16 @@ data %>%
 
 ----
 
+# Summary
+
+In general, the ratings provided on the SPARS were less than those provided on the CNRS_P (even at higher stimulus intensities), and greater than those provided on the NRS_NP (even at lower stimulus intensities). This indicates that the extra dimensionality of the SPARS compared to the other two scales (the SPARS allowing the ratings of stimulus intensities from _no sensation_ to _worst pain imaginable_) leads to a compression of the numeric value of the ratings into a narrower band around 0 (pain thershold) compared to the two polar scales (measuring either noxious or non-nonxious stimulus ranges). 
+
+However, the trendlines indicate that the SPARS scale is reporting the same information as each of the other two scales in their respective domains (sensation of noxious and non-noxious stimuli), but the sensitivity of the SPARS, in each of the two domains, may be lower than thay achieved from the two domain-specific scales. 
+
+(Please also see: _outputs/6B-scale-agreement.html_)
+
+----
+
 # Session information
 
 ```r
@@ -328,7 +338,7 @@ sessionInfo()
 ## [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
 ## 
 ## attached base packages:
-## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## [1] stats     graphics  grDevices utils     datasets  base     
 ## 
 ## other attached packages:
 ##  [1] bindrcpp_0.2       forcats_0.2.0      stringr_1.2.0     
@@ -339,19 +349,19 @@ sessionInfo()
 ## loaded via a namespace (and not attached):
 ##  [1] Rcpp_0.12.15       RColorBrewer_1.1-2 cellranger_1.1.0  
 ##  [4] pillar_1.1.0       compiler_3.4.3     plyr_1.8.4        
-##  [7] bindr_0.1          tools_3.4.3        digest_0.6.15     
-## [10] lubridate_1.7.1    jsonlite_1.5       evaluate_0.10.1   
-## [13] nlme_3.1-131       gtable_0.2.0       lattice_0.20-35   
-## [16] pkgconfig_2.0.1    rlang_0.1.6        psych_1.7.8       
-## [19] cli_1.0.0          rstudioapi_0.7     yaml_2.1.16       
-## [22] parallel_3.4.3     haven_1.1.1        xml2_1.2.0        
-## [25] httr_1.3.1         knitr_1.19         hms_0.4.1         
-## [28] tidyselect_0.2.3   rprojroot_1.3-2    grid_3.4.3        
-## [31] glue_1.2.0         R6_2.2.2           readxl_1.0.0      
-## [34] foreign_0.8-69     rmarkdown_1.8      modelr_0.1.1      
-## [37] reshape2_1.4.3     backports_1.1.2    scales_0.5.0.9000 
-## [40] htmltools_0.3.6    rvest_0.3.2        assertthat_0.2.0  
-## [43] mnormt_1.5-5       colorspace_1.3-2   labeling_0.3      
-## [46] stringi_1.1.6      lazyeval_0.2.1     munsell_0.4.3     
-## [49] broom_0.4.3        crayon_1.3.4
+##  [7] bindr_0.1          methods_3.4.3      tools_3.4.3       
+## [10] digest_0.6.15      lubridate_1.7.1    jsonlite_1.5      
+## [13] evaluate_0.10.1    nlme_3.1-131       gtable_0.2.0      
+## [16] lattice_0.20-35    pkgconfig_2.0.1    rlang_0.1.6       
+## [19] psych_1.7.8        cli_1.0.0          rstudioapi_0.7    
+## [22] yaml_2.1.16        parallel_3.4.3     haven_1.1.1       
+## [25] xml2_1.2.0         httr_1.3.1         knitr_1.19        
+## [28] hms_0.4.1          tidyselect_0.2.3   rprojroot_1.3-2   
+## [31] grid_3.4.3         glue_1.2.0         R6_2.2.2          
+## [34] readxl_1.0.0       foreign_0.8-69     rmarkdown_1.8     
+## [37] modelr_0.1.1       reshape2_1.4.3     backports_1.1.2   
+## [40] scales_0.5.0.9000  htmltools_0.3.6    rvest_0.3.2       
+## [43] assertthat_0.2.0   mnormt_1.5-5       colorspace_1.3-2  
+## [46] labeling_0.3       stringi_1.1.6      lazyeval_0.2.1    
+## [49] munsell_0.4.3      broom_0.4.3        crayon_1.3.4
 ```

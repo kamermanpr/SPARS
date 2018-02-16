@@ -2,7 +2,7 @@
 title: "SPARS trial A"
 subtitle: "Measures of central tendency"
 author: "Peter Kamerman"
-date: "10 Feb 2018"
+date: "16 Feb 2018"
 output: 
   html_document:
     keep_md: true

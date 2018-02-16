@@ -2,7 +2,7 @@
 title: "SPARS trial A"
 subtitle: "Descriptive plots of the SPARS stimulus-response relationship"
 author: "Peter Kamerman and Tory Madden"
-date: "14 February 2018"
+date: "16 February 2018"
 output: 
   html_document:
     keep_md: true
@@ -20,7 +20,7 @@ output:
 
 This script is part 1 of our analysis of the stimulus-response characteristics of the SPARS. This script generates exploratory plots of the relationship between stimulus intensity and SPARS rating.
 
-Modelling of the stimulus-response relationship is described in _"outputs/4A-stimulus-response-2.html"_, the diagnostics on the final linear mixed model are described in _"outputs/4A-stimulus-response-3.html"_, the stability of the model is described in _"outputs/4A-stimulus-response-4.html"_, and the sensitivity of the scale to changes in stimulus intensity are described in _"outputs/4A-stimulus-reponse-5.html"_.
+Modelling of the stimulus-response relationship is described in _"outputs/4A-stimulus-response-2.html"_, the diagnostics on the final linear mixed model are described in _"outputs/4A-stimulus-response-3.html"_, the stability of the model is described in _"outputs/4A-stimulus-response-4.html"_, the sensitivity of the scale to changes in stimulus intensity are described in _"outputs/4A-stimulus-reponse-5.html"_, and the variance in ratings at each stimulus intensity is described in _"outputs/4A-stimulus-reponse-6.html"_.
 
 ----
 
@@ -232,7 +232,7 @@ sessionInfo()
 ## [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
 ## 
 ## attached base packages:
-## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## [1] stats     graphics  grDevices utils     datasets  base     
 ## 
 ## other attached packages:
 ##  [1] bindrcpp_0.2       patchwork_0.0.1    forcats_0.2.0     
@@ -249,13 +249,13 @@ sessionInfo()
 ## [16] plyr_1.8.4        munsell_0.4.3     gtable_0.2.0     
 ## [19] cellranger_1.1.0  rvest_0.3.2       psych_1.7.8      
 ## [22] evaluate_0.10.1   labeling_0.3      knitr_1.19       
-## [25] parallel_3.4.3    broom_0.4.3       Rcpp_0.12.15     
-## [28] scales_0.5.0.9000 backports_1.1.2   jsonlite_1.5     
-## [31] mnormt_1.5-5      hms_0.4.1         digest_0.6.15    
-## [34] stringi_1.1.6     grid_3.4.3        rprojroot_1.3-2  
-## [37] cli_1.0.0         tools_3.4.3       lazyeval_0.2.1   
-## [40] crayon_1.3.4      pkgconfig_2.0.1   xml2_1.2.0       
-## [43] lubridate_1.7.1   assertthat_0.2.0  rmarkdown_1.8    
-## [46] httr_1.3.1        rstudioapi_0.7    R6_2.2.2         
-## [49] nlme_3.1-131      compiler_3.4.3
+## [25] parallel_3.4.3    broom_0.4.3       methods_3.4.3    
+## [28] Rcpp_0.12.15      scales_0.5.0.9000 backports_1.1.2  
+## [31] jsonlite_1.5      mnormt_1.5-5      hms_0.4.1        
+## [34] digest_0.6.15     stringi_1.1.6     grid_3.4.3       
+## [37] rprojroot_1.3-2   cli_1.0.0         tools_3.4.3      
+## [40] lazyeval_0.2.1    crayon_1.3.4      pkgconfig_2.0.1  
+## [43] xml2_1.2.0        lubridate_1.7.1   assertthat_0.2.0 
+## [46] rmarkdown_1.8     httr_1.3.1        rstudioapi_0.7   
+## [49] R6_2.2.2          nlme_3.1-131      compiler_3.4.3
 ```

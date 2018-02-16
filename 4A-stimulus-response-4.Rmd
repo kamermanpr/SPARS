@@ -27,7 +27,6 @@ theme_set(new = theme_bw())
 # knitr setup
 knitr::opts_chunk$set(warning = FALSE,
                       message = FALSE,
-                      cache = TRUE,
                       fig.retina = 2,
                       fig.height = 7,
                       fig.width = 7,
@@ -39,7 +38,7 @@ knitr::opts_chunk$set(warning = FALSE,
 
 This script is part 4 of our analysis of the stimulus-response characteristics of the SPARS. In this analysis we examine the _'stability'_ of the stimulus-response relationship of the SPARS. It is a descriptive analysis (see plots). We assessed stability by examining the stimulus-response relationship of SPARS under five study sample size senarios (n: 6, 9, 12, 15, 18). Under each sample size senario, we generated 500 random samples (with replacement), and fit linear mixed models to each of the 500 samples with the predictor (stimulus intensity) modelled as a 1^st^ (linear), 2^nd^ (quadratic), and 3^rd^ (cubic)-order orthogonal polynomial. The likelihood test was then used to decide which of the three models had the best fit for each sample, and the proportion of best models fitting each of the polynomial forms was plotted for each study sample size senario.   
 
-Descriptive plots of the data are provided in _"outputs/4A-stimulus-response-1.html"_, modelling of the stimulus-response relationship is described in _"outputs/4A-stimulus-response-2.html"_, the diagnostics on the final linear mixed model are described in _"outputs/4A-stimulus-response-3.html"_, and the sensitivity of the scale to changes in stimulus intensity are described in _"outputs/4A-stimulus-reponse-5.html"_.
+Descriptive plots of the data are provided in _"outputs/4A-stimulus-response-1.html"_, modelling of the stimulus-response relationship is described in _"outputs/4A-stimulus-response-2.html"_, the diagnostics on the final linear mixed model are described in _"outputs/4A-stimulus-response-3.html"_, the sensitivity of the scale to changes in stimulus intensity are described in _"outputs/4A-stimulus-reponse-5.html"_, and the variance in ratings at each stimulus intensity is described in _"outputs/4A-stimulus-reponse-6.html"_.
 
 ----
 

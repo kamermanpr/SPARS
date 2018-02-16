@@ -1,0 +1,11 @@
+Variable,Variable_class,Measurement_information,Extra_notes
+PID,character,Unique participant identifier.,
+scale,character,"The measurement scale used by a participant ('CNRS_P', 'NRS_NP', 'SPARS'). ",The order in which scales were tested was randomized between participants.
+block_number,numeric,Experimental block identifier.,"Trials were grouped into blocks, with 27 trials per block, and 4 sequential blocks per scale. Stimulus order was  randomized within each block. Participants had breaks between blocks."
+trial_number,numeric,Trial number within each block. ,"Trials were ordered sequentially, and reset to 1 for each new block"
+intensity,numeric,Laser energy used (Joules).,"Nine stimulus intensities, spaced at 0.25J intervals , were used for each participant."
+intensity_char,numeric,Laser energy used (Joules) expressed as class character (*.rds format only).,
+intensity_rank,numeric,Laser stimuli ranked in ascending order of intensity.,"Ranking was performed within each participant, so every participant has stimuli ranked from 1 to 9. "
+rating,numeric,Raw rating scale data,"CNRS_P is a 0-100 scale anchored at 0 with 'no pain' and 100 with 'the worst pain you can imagine'. NRS_NP is a 0-100 scale anchored at 0 with 'no sensation' and at 100 with 'pain'. SPARS is a -50 to +50 scale anchored at -50 with 'no sensation', at 0 with 'the exact point at which what you feel transitions to pain', and at +50 with 'the worst pain you can imagine'."
+rating_positive,numeric,Rating scale data after correcting SPARS to a positive scale covering 0 (no sensation) to 100 (worst pain you can imagine) by adding 50.,
+rating_equivalent,numeric,"Rating scale data after correcting CNRS_P (divide by 2) and NRS_NP (minus 100, and divide by 2) to cover the -50 to +50 range of SPARS.",

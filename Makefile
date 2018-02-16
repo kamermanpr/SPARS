@@ -17,18 +17,35 @@ DATA_B = 	data-cleaned/SPARS_B.csv \
 3A = 	outputs/3A-order-effects.md \
 		outputs/3A-order-effects.html
 
-4A = 	outputs/4A-response-characteristics.md \
-		outputs/4A-response-characteristics.html
+4A1 = 	outputs/4A-stimulus-response-1.md \
+		outputs/4A-stimulus-response-1.html
 
-4B = 	outputs/4B-response-characteristics.md \
-		outputs/4B-response-characteristics.html
+4A2 = 	outputs/4A-stimulus-response-2.md \
+		outputs/4A-stimulus-response-2.html
 
-5A = 	outputs/4B-response-stability.md \
-		outputs/4B-response-stability.html
+4A3 = 	outputs/4A-stimulus-response-3.md \
+		outputs/4A-stimulus-response-3.html
+
+4A4 = 	outputs/4A-stimulus-response-4.md \
+		outputs/4A-stimulus-response-4.html
+
+4A5 = 	outputs/4A-stimulus-response-5.md \
+		outputs/4A-stimulus-response-5.html
+
+4A6 = 	outputs/4A-stimulus-response-6.md \
+		outputs/4A-stimulus-response-6.html
+
+5B = 	outputs/5B-stimulus-response.md \
+		outputs/5B-stimulus-response.html
+
+6B = 	outputs/6B-scale-agreement-5.md \
+		outputs/6B-scale-agreement.html
 
 .PHONY: all
 
-all: $(DATA_A) $(DATA_B) $(1A) $(2A) $(3A) $(4A) $(4B) $(5A)
+all: 	$(DATA_A) $(DATA_B) $(1A) $(2A) $(3A) \
+		$(4A1) $(4A2) $(4A3) $(4A4) $(4A5) $(4A6) \
+		$(5B) $(6B)
 
 # Clean
 clean:
@@ -59,18 +76,42 @@ outputs/3A-order-effects.html outputs/3A-order-effects.md: \
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
 	mv figures/3A-order-effects outputs/figures/
 
-outputs/4A-response-characteristics.html outputs/4A-response-characteristics.md: \
-4A-response-characteristics.Rmd data-cleaned/SPARS_A.rds
+outputs/4A-stimulus-response-1.html outputs/4A-stimulus-response-1.md: \
+4A-stimulus-response-1.Rmd data-cleaned/SPARS_A.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
-	mv figures/4A-response-characteristics outputs/figures/
+	mv figures/4A-stimulus-response-1 outputs/figures/
 
-outputs/4B-response-characteristics.html outputs/4B-response-characteristics.md: \
-4B-response-characteristics.Rmd data-cleaned/SPARS_B.rds
+outputs/4A-stimulus-response-2.html outputs/4A-stimulus-response-2.md: \
+4A-stimulus-response-2.Rmd data-cleaned/SPARS_A.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
-	mv figures/4B-response-characteristics outputs/figures/
+	mv figures/4A-stimulus-response-2 outputs/figures/
 
-outputs/5A-response-stability.html outputs/5A-response-stability.md: \
-5A-response-stability.Rmd data-cleaned/SPARS_A.rds
+outputs/4A-stimulus-response-3.html outputs/4A-stimulus-response-3.md: \
+4A-stimulus-response-3.Rmd data-cleaned/SPARS_A.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
-	mv figures/5A-response-stability outputs/figures/
-	rm -r figures/
+	mv figures/4A-stimulus-response-3 outputs/figures/
+
+outputs/4A-stimulus-response-4.html outputs/4A-stimulus-response-4.md: \
+4A-stimulus-response-4.Rmd data-cleaned/SPARS_A.rds
+	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
+	mv figures/4A-stimulus-response-4 outputs/figures/
+
+outputs/4A-stimulus-response-5.html outputs/4A-stimulus-response-5.md: \
+4A-stimulus-response-5.Rmd data-cleaned/SPARS_A.rds
+	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
+	mv figures/4A-stimulus-response-5 outputs/figures/
+
+outputs/4A-stimulus-response-6.html outputs/4A-stimulus-response-6.md: \
+4A-stimulus-response-6.Rmd data-cleaned/SPARS_A.rds
+	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
+	mv figures/4A-stimulus-response-6 outputs/figures/
+
+outputs/5B-stimulus-response.html outputs/5B-stimulus-response.md: \
+5B-stimulus-response.Rmd data-cleaned/SPARS_B.rds
+	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
+	mv figures/5B-stimulus-response outputs/figures/
+
+outputs/6B-scale-agreement.html outputs/6B-scale-agreement.md: \
+6B-scale-agreement.Rmd data-cleaned/SPARS_B.rds
+	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
+	mv figures/6B-scale-agreement outputs/figures/

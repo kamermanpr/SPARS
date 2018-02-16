@@ -2,7 +2,7 @@
 title: "SPARS trial A"
 subtitle: "Diagnostics for the best-fit linear mixed model of the SPARS stimulus-response relationship"
 author: "Peter Kamerman and Tory Madden"
-date: "14 February 2018"
+date: "16 February 2018"
 output: 
   html_document:
     keep_md: true
@@ -20,7 +20,7 @@ output:
 
 This script is part 3 of our analysis of the stimulus-response characteristics of the SPARS. This script generates diagnostics on the final (best) linear mixed model of the relationship between stimulus intensity and SPARS rating.
 
-Descriptive plots of the data are provided in _"outputs/4A-stimulus-response-1.html"_, modelling of the stimulus-response relationship is described in _"outputs/4A-stimulus-response-2.html"_, the stability of the model is described in _"outputs/4A-stimulus-response-4.html"_, and the sensitivity of the scale to changes in stimulus intensity are described in _"outputs/4A-stimulus-reponse-5.html"_.
+Descriptive plots of the data are provided in _"outputs/4A-stimulus-response-1.html"_, modelling of the stimulus-response relationship is described in _"outputs/4A-stimulus-response-2.html"_, the stability of the model is described in _"outputs/4A-stimulus-response-4.html"_, the sensitivity of the scale to changes in stimulus intensity are described in _"outputs/4A-stimulus-reponse-5.html"_, and the variance in ratings at each stimulus intensity is described in _"outputs/4A-stimulus-reponse-6.html"_.
 
 ----
 
@@ -475,7 +475,7 @@ sessionInfo()
 ## [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
 ## 
 ## attached base packages:
-## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## [1] methods   stats     graphics  grDevices utils     datasets  base     
 ## 
 ## other attached packages:
 ##  [1] bindrcpp_0.2       patchwork_0.0.1    HLMdiag_0.3.1     

@@ -2,7 +2,7 @@
 title: "SPARS trial A"
 subtitle: "Stability of the SPARS stimulus-response relationship"
 author: "Peter Kamerman"
-date: "14 Feb 2018"
+date: "16 Feb 2018"
 output: 
   html_document:
     keep_md: true
@@ -20,7 +20,7 @@ output:
 
 This script is part 4 of our analysis of the stimulus-response characteristics of the SPARS. In this analysis we examine the _'stability'_ of the stimulus-response relationship of the SPARS. It is a descriptive analysis (see plots). We assessed stability by examining the stimulus-response relationship of SPARS under five study sample size senarios (n: 6, 9, 12, 15, 18). Under each sample size senario, we generated 500 random samples (with replacement), and fit linear mixed models to each of the 500 samples with the predictor (stimulus intensity) modelled as a 1^st^ (linear), 2^nd^ (quadratic), and 3^rd^ (cubic)-order orthogonal polynomial. The likelihood test was then used to decide which of the three models had the best fit for each sample, and the proportion of best models fitting each of the polynomial forms was plotted for each study sample size senario.   
 
-Descriptive plots of the data are provided in _"outputs/4A-stimulus-response-1.html"_, modelling of the stimulus-response relationship is described in _"outputs/4A-stimulus-response-2.html"_, the diagnostics on the final linear mixed model are described in _"outputs/4A-stimulus-response-3.html"_, and the sensitivity of the scale to changes in stimulus intensity are described in _"outputs/4A-stimulus-reponse-5.html"_.
+Descriptive plots of the data are provided in _"outputs/4A-stimulus-response-1.html"_, modelling of the stimulus-response relationship is described in _"outputs/4A-stimulus-response-2.html"_, the diagnostics on the final linear mixed model are described in _"outputs/4A-stimulus-response-3.html"_, the sensitivity of the scale to changes in stimulus intensity are described in _"outputs/4A-stimulus-reponse-5.html"_, and the variance in ratings at each stimulus intensity is described in _"outputs/4A-stimulus-reponse-6.html"_.
 
 ----
 
@@ -500,7 +500,7 @@ sessionInfo()
 ## [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
 ## 
 ## attached base packages:
-## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## [1] methods   stats     graphics  grDevices utils     datasets  base     
 ## 
 ## other attached packages:
 ##  [1] bindrcpp_0.2       patchwork_0.0.1    lme4_1.1-15       
@@ -517,15 +517,15 @@ sessionInfo()
 ## [13] glue_1.2.0        modelr_0.1.1      readxl_1.0.0     
 ## [16] bindr_0.1         plyr_1.8.4        munsell_0.4.3    
 ## [19] gtable_0.2.0      cellranger_1.1.0  rvest_0.3.2      
-## [22] codetools_0.2-15  psych_1.7.8       evaluate_0.10.1  
-## [25] labeling_0.3      knitr_1.19        parallel_3.4.3   
-## [28] broom_0.4.3       Rcpp_0.12.15      scales_0.5.0.9000
-## [31] backports_1.1.2   jsonlite_1.5      mnormt_1.5-5     
-## [34] hms_0.4.1         digest_0.6.15     stringi_1.1.6    
-## [37] grid_3.4.3        rprojroot_1.3-2   cli_1.0.0        
-## [40] tools_3.4.3       lazyeval_0.2.1    crayon_1.3.4     
-## [43] pkgconfig_2.0.1   MASS_7.3-48       xml2_1.2.0       
-## [46] lubridate_1.7.1   minqa_1.2.4       assertthat_0.2.0 
-## [49] rmarkdown_1.8     httr_1.3.1        rstudioapi_0.7   
-## [52] R6_2.2.2          nlme_3.1-131      compiler_3.4.3
+## [22] psych_1.7.8       evaluate_0.10.1   knitr_1.19       
+## [25] parallel_3.4.3    broom_0.4.3       Rcpp_0.12.15     
+## [28] scales_0.5.0.9000 backports_1.1.2   jsonlite_1.5     
+## [31] mnormt_1.5-5      hms_0.4.1         digest_0.6.15    
+## [34] stringi_1.1.6     grid_3.4.3        rprojroot_1.3-2  
+## [37] cli_1.0.0         tools_3.4.3       lazyeval_0.2.1   
+## [40] crayon_1.3.4      pkgconfig_2.0.1   MASS_7.3-48      
+## [43] xml2_1.2.0        lubridate_1.7.1   minqa_1.2.4      
+## [46] assertthat_0.2.0  rmarkdown_1.8     httr_1.3.1       
+## [49] rstudioapi_0.7    R6_2.2.2          nlme_3.1-131     
+## [52] compiler_3.4.3
 ```

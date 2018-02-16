@@ -2,7 +2,7 @@
 title: "SPARS trial A"
 subtitle: "Modelling the SPARS stimulus-response relationship"
 author: "Peter Kamerman and Tory Madden"
-date: "14 February 2018"
+date: "16 February 2018"
 output: 
   html_document:
     keep_md: true
@@ -20,7 +20,7 @@ output:
 
 This script is part 2 of our analysis of the stimulus-response characteristics of the SPARS. This script models the relationship between stimulus intensity and SPARS rating using linear mixed models and quantile mixed model regression.
 
-Descriptive plots of the data are provided in _"outputs/4A-stimulus-response-1.html"_, the diagnostics on the final linear mixed model are described in _"outputs/4A-stimulus-response-3.html"_, the stability of the model is described in _"outputs/4A-stimulus-response-4.html"_, and the sensitivity of the scale to changes in stimulus intensity are described in _"outputs/4A-stimulus-reponse-3.html"_.
+Descriptive plots of the data are provided in _"outputs/4A-stimulus-response-1.html"_, the diagnostics on the final linear mixed model are described in _"outputs/4A-stimulus-response-3.html"_, the stability of the model is described in _"outputs/4A-stimulus-response-4.html"_, the sensitivity of the scale to changes in stimulus intensity are described in _"outputs/4A-stimulus-reponse-5.html"_, and the variance in ratings at each stimulus intensity is described in _"outputs/4A-stimulus-reponse-6.html"_.
 
 ----
 
@@ -560,12 +560,12 @@ summary(qmm)
 ## 
 ## Fixed effects:
 ##                        Value Std. Error lower bound upper bound  Pr(>|t|)
-## (Intercept)         -36.3724     3.6042    -43.6153     -29.129 1.486e-13
-## poly(intensity, 3)1 204.7079    21.9431    160.6116     248.804 1.917e-12
-## poly(intensity, 3)2  11.5495    20.7990    -30.2477      53.347   0.58122
-## poly(intensity, 3)3  26.7629    14.1446     -1.6617      55.188   0.06439
+## (Intercept)         -36.3724    30.7098    -98.0859      25.341   0.24197
+## poly(intensity, 3)1 204.7079    18.3780    167.7760     241.640 4.975e-15
+## poly(intensity, 3)2  11.5495    24.0393    -36.7593      59.858   0.63305
+## poly(intensity, 3)3  26.7629    14.7302     -2.8385      56.364   0.07536
 ##                        
-## (Intercept)         ***
+## (Intercept)            
 ## poly(intensity, 3)1 ***
 ## poly(intensity, 3)2    
 ## poly(intensity, 3)3 .  
@@ -576,10 +576,10 @@ summary(qmm)
 ## 
 ## Fixed effects:
 ##                         Value Std. Error lower bound upper bound  Pr(>|t|)
-## (Intercept)         -16.06242    8.25551   -32.65248      0.5276  0.057443
-## poly(intensity, 3)1 205.06628   24.27344   156.28697    253.8456 3.976e-11
-## poly(intensity, 3)2   0.84314   12.75757   -24.79417     26.4804  0.947576
-## poly(intensity, 3)3  21.92427    6.83364     8.19156     35.6570  0.002355
+## (Intercept)         -16.06242    8.02620   -32.19169      0.0668  0.050920
+## poly(intensity, 3)1 205.06628   18.79350   167.29934    242.8332 1.028e-14
+## poly(intensity, 3)2   0.84314   15.16737   -29.63682     31.3231  0.955895
+## poly(intensity, 3)3  21.92427    7.20174     7.45184     36.3967  0.003745
 ##                        
 ## (Intercept)         .  
 ## poly(intensity, 3)1 ***
@@ -592,10 +592,10 @@ summary(qmm)
 ## 
 ## Fixed effects:
 ##                        Value Std. Error lower bound upper bound  Pr(>|t|)
-## (Intercept)           3.2873     6.6515    -10.0793      16.654  0.623359
-## poly(intensity, 3)1 204.0394    24.7605    154.2812     253.798 8.212e-11
-## poly(intensity, 3)2   2.2389    11.3863    -20.6428      25.120  0.844933
-## poly(intensity, 3)3  22.1176     7.3382      7.3709      36.864  0.004074
+## (Intercept)           3.2873     8.0015    -12.7923      19.367  0.682986
+## poly(intensity, 3)1 204.0394    18.6680    166.5247     241.554 9.689e-15
+## poly(intensity, 3)2   2.2389    14.1857    -26.2685      30.746  0.875244
+## poly(intensity, 3)3  22.1176     7.4718      7.1026      37.133  0.004728
 ##                        
 ## (Intercept)            
 ## poly(intensity, 3)1 ***
@@ -608,12 +608,12 @@ summary(qmm)
 ## 
 ## Fixed effects:
 ##                        Value Std. Error lower bound upper bound  Pr(>|t|)
-## (Intercept)          19.0218     8.2427      2.4575      35.586   0.02528
-## poly(intensity, 3)1 203.2674    25.3092    152.4066     254.128 1.711e-10
-## poly(intensity, 3)2   5.9630    11.4359    -17.0184      28.944   0.60442
-## poly(intensity, 3)3  22.6834     7.3971      7.8185      37.548   0.00352
+## (Intercept)          19.0218     6.4805      5.9988      32.045  0.005062
+## poly(intensity, 3)1 203.2674    19.4864    164.1079     242.427 4.865e-14
+## poly(intensity, 3)2   5.9630    14.5910    -23.3587      35.285  0.684557
+## poly(intensity, 3)3  22.6834     7.4486      7.7149      37.652  0.003735
 ##                        
-## (Intercept)         *  
+## (Intercept)         ** 
 ## poly(intensity, 3)1 ***
 ## poly(intensity, 3)2    
 ## poly(intensity, 3)3 ** 
@@ -623,15 +623,15 @@ summary(qmm)
 ## tau = 0.975
 ## 
 ## Fixed effects:
-##                         Value Std. Error lower bound upper bound  Pr(>|t|)
-## (Intercept)          22.06042   11.26859    -0.58466      44.706   0.05597
-## poly(intensity, 3)1 188.98239   23.60457   141.54723     236.418 1.869e-10
-## poly(intensity, 3)2  22.35978   13.17588    -4.11815      48.838   0.09604
-## poly(intensity, 3)3  12.10052    7.38350    -2.73717      26.938   0.10765
+##                        Value Std. Error lower bound upper bound  Pr(>|t|)
+## (Intercept)          22.0604     9.8931      2.1794      41.941   0.03037
+## poly(intensity, 3)1 188.9824    18.1038    152.6015     225.363 4.746e-14
+## poly(intensity, 3)2  22.3598    14.0797     -5.9345      50.654   0.11870
+## poly(intensity, 3)3  12.1005     8.8796     -5.7437      29.945   0.17920
 ##                        
-## (Intercept)         .  
+## (Intercept)         *  
 ## poly(intensity, 3)1 ***
-## poly(intensity, 3)2 .  
+## poly(intensity, 3)2    
 ## poly(intensity, 3)3    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
@@ -740,7 +740,7 @@ sessionInfo()
 ## [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
 ## 
 ## attached base packages:
-## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## [1] methods   stats     graphics  grDevices utils     datasets  base     
 ## 
 ## other attached packages:
 ##  [1] bindrcpp_0.2       car_2.1-6          sjPlot_2.4.1      

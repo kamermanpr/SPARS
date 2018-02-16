@@ -39,7 +39,7 @@ This script assesses and contrasts the stimulus-response characteristics of the 
 The three scales measure the following ranges of somatic sensation:  
 
 - CNRS_P: 0 _(no pain)_ to 100 _(worst pain you can imagine)_
-_
+
 - NRS_NP: 0 _(no sensation)_ to 100 _(pain)_
 
 - SPARS: -50 _(no sensation)_, 0 _(pain threshold)_, +50 _(worst pain you can imagine)_
@@ -199,7 +199,7 @@ walk(plot_equi$plots, ~ print(.x))
 
 ### Tukey trimean plots (participant-level)
 
-For each participant, we calculated the Tukey trimean of the intensity rating at each stimulus intensity for each of the measurement scales. The -50 to 50 scaled units were used in the calculation for the CNRS_P and NRS_NP. 
+For each participant, we calculated the Tukey trimean of the intensity rating at each stimulus intensity and for each of the measurement scales. The scaled versions of the CNRS_P and NRS_NP were used. 
 
 ```{r trimean_plots}
 # Generate plot
@@ -292,6 +292,16 @@ data %>%
     geom_hline(yintercept = 0, linetype = 2)
 
 ```
+
+----
+
+# Summary
+
+In general, the ratings provided on the SPARS were less than those provided on the CNRS_P (even at higher stimulus intensities), and greater than those provided on the NRS_NP (even at lower stimulus intensities). This indicates that the extra dimensionality of the SPARS compared to the other two scales (the SPARS allowing the ratings of stimulus intensities from _no sensation_ to _worst pain imaginable_) leads to a compression of the numeric value of the ratings into a narrower band around 0 (pain thershold) compared to the two polar scales (measuring either noxious or non-nonxious stimulus ranges). 
+
+However, the trendlines indicate that the SPARS scale is reporting the same information as each of the other two scales in their respective domains (sensation of noxious and non-noxious stimuli), but the sensitivity of the SPARS, in each of the two domains, may be lower than thay achieved from the two domain-specific scales. 
+
+(Please also see: _outputs/6B-scale-agreement.html_)
 
 ----
 
