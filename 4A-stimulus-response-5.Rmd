@@ -148,7 +148,7 @@ data_scale %>%
     scale_y_continuous(limits = c(-70, 70), 
                        breaks = seq(from = -60, to = 60, by = 20),
                                     expand = c(0,0)) +
-    labs(title = 'Group-level plot: Change in SPARS rating vs Change in stimulus intensity between two successive stimuli',
+    labs(title = 'Group-level plot: Change in SPARS rating vs Change in stimulus intensity \nbetween two successive stimuli',
          subtitle = 'Coloured points: Individual responses for all trials | Coloured line: Linear trend for context\nGreen points/line: When a stimulus was of less intensity than the preceding stimulus | Orange points/line: When a stimulus was of greater intensity than the preceding stimulus\nData when successive stimuli were of the same intensity (zero change) have been omitted.',
          x = expression(Delta~stimulus~intensity~(J)),
          y = expression(Delta~SPARS~rating)) +
