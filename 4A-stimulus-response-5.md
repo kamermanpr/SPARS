@@ -2,7 +2,7 @@
 title: "SPARS trial A"
 subtitle: "Sensitivity of the SPARS to changes in stimulus intensity"
 author: "Peter Kamerman"
-date: "23 Mar 2018"
+date: "29 Mar 2018"
 output: 
   html_document:
     keep_md: true
@@ -119,10 +119,9 @@ data_scale %>%
         colour = change_direction) +
     geom_point() +
     geom_smooth(method = 'lm') +
-    scale_color_brewer(name = 'Direction of intensity change: ',
+    scale_color_manual(name = 'Direction of intensity change: ',
                        labels = c('Down', 'Up'),
-                       type = 'qual',
-                       palette = 'Dark2') +
+                       values = c("#56B4E9", "#FC6F00")) +
     scale_x_continuous(limits = c(-3.5, 3.5), 
                        breaks = seq(from = -3, to = 3, by = 1),
                        expand = c(0,0)) +
@@ -130,13 +129,13 @@ data_scale %>%
                        breaks = seq(from = -60, to = 60, by = 20),
                                     expand = c(0,0)) +
     labs(title = 'Group-level plot: Change in SPARS rating vs Change in stimulus intensity \nbetween two successive stimuli',
-         subtitle = 'Coloured points: Individual responses for all trials | Coloured line: Linear trend for context\nGreen points/line: When a stimulus was of less intensity than the preceding stimulus | Orange points/line: When a stimulus was of greater intensity than the preceding stimulus\nData when successive stimuli were of the same intensity (zero change) have been omitted.',
+         subtitle = 'Coloured points: Individual responses for all trials | Coloured line: Linear trend for context\nBlue points/line: When a stimulus was of less intensity than the preceding stimulus | \nOrange points/line: When a stimulus was of greater intensity than the preceding stimulus.\nData have been omitted when successive stimuli were of the same intensity (zero change).',
          x = expression(Delta~stimulus~intensity~(J)),
          y = expression(Delta~SPARS~rating)) +
     theme(legend.position = 'top')
 ```
 
-<img src="figures/4A-stimulus-response-5/exploratory_plots-1.png" width="672" style="display: block; margin: auto;" />
+<img src="figures/4A-stimulus-response-5/exploratory_plots-1.png" width="3500" style="display: block; margin: auto;" />
 
 ### Participant-level
 

@@ -2,7 +2,7 @@
 title: "SPARS trial A"
 subtitle: "Modelling the SPARS stimulus-response relationship"
 author: "Peter Kamerman and Tory Madden"
-date: "23 March 2018"
+date: "29 March 2018"
 output: 
   html_document:
     keep_md: true
@@ -522,16 +522,16 @@ ggplot() +
                    y = median),
                shape = 21,
                size = 4,
-               fill = '#D55E00') +
+               fill = '#FC6F00') +
   labs(title = 'Cubic model (95% CI): Predicted values vs stimulus intensity',
-       subtitle = 'Black circles/line: predicted values | Orange circles: group-level median',
+       subtitle = 'Black circles/line: predicted values | Orange circles: group-level median \nFixed effects (intensity): b[L] = 205.4 (95% CI: 163.7 to 247.0); b[Q] = 2.1 (-10.4 to 14.7); \nb[C] = 21.0 (8.4 to 33.5), p = 0.04',
        x = 'Stimulus intensity (J)',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
-  scale_x_continuous(breaks = seq(from = 1, to = 4, by = 0.5))
+  scale_x_continuous(breaks = seq(from = 1, to = 4, by = 0.25))
 ```
 
-<img src="figures/4A-stimulus-response-2/lmm_plot-1.png" width="672" style="display: block; margin: auto;" />
+<img src="figures/4A-stimulus-response-2/lmm_plot-1.png" width="3500" style="display: block; margin: auto;" />
 
 The cubic model has the best fit. The resulting curvilinear response function is _steepest_ at the extremes and  _flattens out_ in the mid-ranges of stimulus intensity. We performed diagnostics on this model to confirm that the model was properly specified.
 
@@ -560,12 +560,12 @@ summary(qmm)
 ## 
 ## Fixed effects:
 ##                        Value Std. Error lower bound upper bound  Pr(>|t|)
-## (Intercept)         -36.3724     9.7775    -56.0211     -16.724 0.0005131
-## poly(intensity, 3)1 204.7079    22.2637    159.9674     249.448 3.028e-12
-## poly(intensity, 3)2  11.5495    21.8898    -32.4398      55.539 0.6001455
-## poly(intensity, 3)3  26.7629    14.2614     -1.8964      55.422 0.0665347
+## (Intercept)         -36.3724    20.8173    -78.2062      5.4615   0.08686
+## poly(intensity, 3)1 204.7079    23.6534    157.1746    252.2413 1.941e-11
+## poly(intensity, 3)2  11.5495    23.6216    -35.9198     59.0188   0.62707
+## poly(intensity, 3)3  26.7629    13.9658     -1.3024     54.8282   0.06117
 ##                        
-## (Intercept)         ***
+## (Intercept)         .  
 ## poly(intensity, 3)1 ***
 ## poly(intensity, 3)2    
 ## poly(intensity, 3)3 .  
@@ -576,12 +576,12 @@ summary(qmm)
 ## 
 ## Fixed effects:
 ##                         Value Std. Error lower bound upper bound  Pr(>|t|)
-## (Intercept)         -16.06242    8.58738   -33.31941      1.1946  0.067398
-## poly(intensity, 3)1 205.06628   19.78396   165.30893    244.8236 6.036e-14
-## poly(intensity, 3)2   0.84314   10.23534   -19.72556     21.4118  0.934684
-## poly(intensity, 3)3  21.92427    8.14785     5.55056     38.2980  0.009722
+## (Intercept)         -16.06242    7.97184   -32.08243     -0.0424  0.049420
+## poly(intensity, 3)1 205.06628   22.75385   159.34072    250.7919 5.651e-12
+## poly(intensity, 3)2   0.84314   13.08568   -25.45352     27.1398  0.948888
+## poly(intensity, 3)3  21.92427    7.68216     6.48639     37.3622  0.006311
 ##                        
-## (Intercept)         .  
+## (Intercept)         *  
 ## poly(intensity, 3)1 ***
 ## poly(intensity, 3)2    
 ## poly(intensity, 3)3 ** 
@@ -591,47 +591,47 @@ summary(qmm)
 ## tau = 0.5
 ## 
 ## Fixed effects:
-##                        Value Std. Error lower bound upper bound Pr(>|t|)
-## (Intercept)           3.2873     5.5538     -7.8736      14.448  0.55664
-## poly(intensity, 3)1 204.0394    19.8107    164.2284     243.850 7.49e-14
-## poly(intensity, 3)2   2.2389     9.6207    -17.0947      21.572  0.81695
-## poly(intensity, 3)3  22.1176     8.4695      5.0976      39.138  0.01193
+##                        Value Std. Error lower bound upper bound  Pr(>|t|)
+## (Intercept)           3.2873     7.0986    -10.9779      17.552  0.645352
+## poly(intensity, 3)1 204.0394    22.6700    158.4824     249.596 5.887e-12
+## poly(intensity, 3)2   2.2389    12.5247    -22.9304      27.408  0.858867
+## poly(intensity, 3)3  22.1176     7.7380      6.5675      37.668  0.006237
 ##                        
 ## (Intercept)            
 ## poly(intensity, 3)1 ***
 ## poly(intensity, 3)2    
-## poly(intensity, 3)3 *  
+## poly(intensity, 3)3 ** 
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## tau = 0.75
 ## 
 ## Fixed effects:
-##                        Value Std. Error lower bound upper bound Pr(>|t|)
-## (Intercept)          19.0218     8.2139      2.5154      35.528  0.02480
-## poly(intensity, 3)1 203.2674    19.8588    163.3595     243.175 9.24e-14
-## poly(intensity, 3)2   5.9630    10.3723    -14.8809      26.807  0.56799
-## poly(intensity, 3)3  22.6834     9.0227      4.5517      40.815  0.01527
+##                        Value Std. Error lower bound upper bound  Pr(>|t|)
+## (Intercept)          19.0218     6.3512      6.2586      31.785  0.004295
+## poly(intensity, 3)1 203.2674    23.5688    155.9041     250.631 2.154e-11
+## poly(intensity, 3)2   5.9630    12.6298    -19.4176      31.344  0.638925
+## poly(intensity, 3)3  22.6834     8.1316      6.3423      39.025  0.007498
 ##                        
-## (Intercept)         *  
+## (Intercept)         ** 
 ## poly(intensity, 3)1 ***
 ## poly(intensity, 3)2    
-## poly(intensity, 3)3 *  
+## poly(intensity, 3)3 ** 
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## tau = 0.975
 ## 
 ## Fixed effects:
-##                        Value Std. Error lower bound upper bound  Pr(>|t|)
-## (Intercept)          22.0604    18.3405    -14.7961      58.917   0.23482
-## poly(intensity, 3)1 188.9824    18.2675    152.2725     225.692 6.445e-14
-## poly(intensity, 3)2  22.3598    11.3311     -0.4109      45.130   0.05411
-## poly(intensity, 3)3  12.1005     8.8099     -5.6036      29.805   0.17584
+##                        Value Std. Error lower bound upper bound Pr(>|t|)
+## (Intercept)          22.0604    16.1979    -10.4904      54.611   0.1794
+## poly(intensity, 3)1 188.9824    22.8678    143.0279     234.937 7.56e-11
+## poly(intensity, 3)2  22.3598    14.8024     -7.3868      52.106   0.1373
+## poly(intensity, 3)3  12.1005     8.9534     -5.8921      30.093   0.1827
 ##                        
 ## (Intercept)            
 ## poly(intensity, 3)1 ***
-## poly(intensity, 3)2 .  
+## poly(intensity, 3)2    
 ## poly(intensity, 3)3    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
@@ -678,14 +678,14 @@ ggplot(data = data_lqmm) +
   geom_hline(yintercept = 0,
              linetype = 2) +
   labs(title = paste('Quantile regression'),
-       subtitle = 'Open circles: 50th percentile (median) | Blue band: interquartile range | Orange band: 95% prediction interval',
+       subtitle = 'Open circles: 50th percentile (median) | Blue band: interquartile range | \nOrange band: 95% prediction interval',
        x = 'Stimulus intensity (J)',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
   scale_x_continuous(breaks = unique(data_lqmm$intensity)) 
 ```
 
-<img src="figures/4A-stimulus-response-2/quantile-1.png" width="672" style="display: block; margin: auto;" />
+<img src="figures/4A-stimulus-response-2/quantile-1.png" width="3500" style="display: block; margin: auto;" />
 
 ```r
 ## With original data
@@ -694,7 +694,7 @@ ggplot(data = data_lqmm) +
       y = Q50) +
   geom_ribbon(aes(ymin = `Q2.5`,
                   ymax = `Q97.5`),
-              fill = '#E69F00') +
+              fill = '#FC6F00') +
   geom_ribbon(aes(ymin = `Q25`,
                   ymax = `Q75`),
               fill = '#56B4E9') +
@@ -708,14 +708,14 @@ ggplot(data = data_lqmm) +
   geom_hline(yintercept = 0,
              linetype = 2) +
   labs(title = paste('Quantile regression (with original Tukey trimean data)'),
-       subtitle = 'Open circles: 50th percentile (median) | Blue band: interquartile range | Orange band: 95% prediction interval',
+       subtitle = 'Open circles: 50th percentile (median) | Blue band: interquartile range | \nOrange band: 95% prediction interval',
        x = 'Stimulus intensity (J)',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
   scale_x_continuous(breaks = unique(data_lqmm$intensity)) 
 ```
 
-<img src="figures/4A-stimulus-response-2/quantile-2.png" width="672" style="display: block; margin: auto;" />
+<img src="figures/4A-stimulus-response-2/quantile-2.png" width="3500" style="display: block; margin: auto;" />
 
 There is good stability in the shape of the response characteristics across the quantiles. For all stimulus intensities, the distribution is left skewed (long tail towards lower ratings). 
 

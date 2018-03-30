@@ -221,7 +221,7 @@ knitr::kable(broom::tidy(anova(lmm1b, lmm2b, lmm3b)),
 ```
 
 ### PLot the model
-```{r lmm_plot}
+```{r lmm_plot, dpi = 500}
 predicted <- ggeffects::ggpredict(model = lmm3b,
                                   terms = 'intensity',
                                   ci.lvl = 0.95) 
@@ -242,13 +242,13 @@ ggplot() +
                    y = median),
                shape = 21,
                size = 4,
-               fill = '#D55E00') +
+               fill = '#FC6F00') +
   labs(title = 'Cubic model (95% CI): Predicted values vs stimulus intensity',
-       subtitle = 'Black circles/line: predicted values | Orange circles: group-level median',
+       subtitle = 'Black circles/line: predicted values | Orange circles: group-level median \nFixed effects (intensity): b[L] = 205.4 (95% CI: 163.7 to 247.0); b[Q] = 2.1 (-10.4 to 14.7); \nb[C] = 21.0 (8.4 to 33.5), p = 0.04',
        x = 'Stimulus intensity (J)',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
-  scale_x_continuous(breaks = seq(from = 1, to = 4, by = 0.5))
+  scale_x_continuous(breaks = seq(from = 1, to = 4, by = 0.25))
 ```
 
 The cubic model has the best fit. The resulting curvilinear response function is _steepest_ at the extremes and  _flattens out_ in the mid-ranges of stimulus intensity. We performed diagnostics on this model to confirm that the model was properly specified.
@@ -257,7 +257,7 @@ The cubic model has the best fit. The resulting curvilinear response function is
 
 # Quantile mixed model regression
 
-```{r quantile}
+```{r quantile, dpi = 500}
 # Quantile model with 2.5, 25, 50, 75, and 97.5% quantiles
 qmm <- lqmm(fixed = tri_mean ~ poly(intensity, 3),
             random = ~ intensity,
@@ -303,7 +303,7 @@ ggplot(data = data_lqmm) +
   geom_hline(yintercept = 0,
              linetype = 2) +
   labs(title = paste('Quantile regression'),
-       subtitle = 'Open circles: 50th percentile (median) | Blue band: interquartile range | Orange band: 95% prediction interval',
+       subtitle = 'Open circles: 50th percentile (median) | Blue band: interquartile range | \nOrange band: 95% prediction interval',
        x = 'Stimulus intensity (J)',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
@@ -315,7 +315,7 @@ ggplot(data = data_lqmm) +
       y = Q50) +
   geom_ribbon(aes(ymin = `Q2.5`,
                   ymax = `Q97.5`),
-              fill = '#E69F00') +
+              fill = '#FC6F00') +
   geom_ribbon(aes(ymin = `Q25`,
                   ymax = `Q75`),
               fill = '#56B4E9') +
@@ -329,7 +329,7 @@ ggplot(data = data_lqmm) +
   geom_hline(yintercept = 0,
              linetype = 2) +
   labs(title = paste('Quantile regression (with original Tukey trimean data)'),
-       subtitle = 'Open circles: 50th percentile (median) | Blue band: interquartile range | Orange band: 95% prediction interval',
+       subtitle = 'Open circles: 50th percentile (median) | Blue band: interquartile range | \nOrange band: 95% prediction interval',
        x = 'Stimulus intensity (J)',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +

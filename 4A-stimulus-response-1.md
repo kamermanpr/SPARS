@@ -2,7 +2,7 @@
 title: "SPARS trial A"
 subtitle: "Descriptive plots of the SPARS stimulus-response relationship"
 author: "Peter Kamerman and Tory Madden"
-date: "23 March 2018"
+date: "29 March 2018"
 output: 
   html_document:
     keep_md: true
@@ -143,7 +143,7 @@ data_tm %>%
   scale_x_continuous(breaks = seq(from = 1, to = 4, by = 0.5))
 ```
 
-<img src="figures/4A-stimulus-response-1/sr_group-1.png" width="672" style="display: block; margin: auto;" />
+<img src="figures/4A-stimulus-response-1/sr_group-1.png" width="960" style="display: block; margin: auto;" />
 
 ### Participant-level stimulus response curves
 
@@ -151,6 +151,10 @@ data_tm %>%
 
 
 ```r
+theme_update(panel.background = element_rect(fill = "transparent", colour = NA),
+             plot.background = element_rect(fill = "transparent", colour = NA))
+
+
 # Plot
 data %>%
   ggplot(data = .) +
@@ -167,14 +171,17 @@ data %>%
              size = 3,
              fill = '#D55E00') +
   labs(title = 'Participant-level stimulus-response plot',
-       subtitle = 'Black circles: individual experimental blocks | Orange circles: Tukey trimean | Grey line: loess curve',
+       subtitle = 'Black circles: individual experimental blocks | Orange circles: Tukey trimean | \nGrey line: loess curve',
        x = 'Stimulus intensity (J)',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
-  facet_wrap(~ PID, ncol = 4)
+  facet_wrap(~ PID, ncol = 3) +
+  theme_bw() +
+  theme(strip.background =element_rect(fill="#56B4E9"))+
+  theme(strip.text = element_text(colour = 'white'))
 ```
 
-<img src="figures/4A-stimulus-response-1/sr_participants-1.png" width="864" style="display: block; margin: auto;" />
+<img src="figures/4A-stimulus-response-1/sr_participants-1.png" width="3000" style="display: block; margin: auto;" />
 
 #### Trials by experimental block
 
