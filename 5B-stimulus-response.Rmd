@@ -1,6 +1,6 @@
 ---
 title: "SPARS trial B"
-subtitle: "Descriptive plots of the stimulus-response relationship for the SPARS, NRS_NP, and CNRS_P"
+subtitle: "Descriptive plots of the stimulus-response relationship for the SPARS, SRS, and pain NRS"
 author: "Peter Kamerman and Tory Madden"
 date: "`r format(Sys.Date(), '%d %B %Y')`"
 output: 
@@ -34,19 +34,19 @@ knitr::opts_chunk$set(warning = FALSE,
 
 ----
 
-This script assesses and contrasts the stimulus-response characteristics of the SPARS, NRS_NP, and CNRS_P, through the use of descriptive plots.
+This script assesses and contrasts the stimulus-response characteristics of the SPARS, sensation rating scale (SRS), and pain NRS, through the use of descriptive plots.
 
 The three scales measure the following ranges of somatic sensation:  
 
-- CNRS_P: 0 _(no pain)_ to 100 _(worst pain you can imagine)_
+- pain NRS: 0 _(no pain)_ to 100 _(worst pain you can imagine)_
 
-- NRS_NP: 0 _(no sensation)_ to 100 _(pain)_
+- SRS: 0 _(no sensation)_ to 100 _(pain)_
 
 - SPARS: -50 _(no sensation)_, 0 _(pain threshold)_, +50 _(worst pain you can imagine)_
 
 Because the the stimulus range was centred on the pre-determined pain threshold of each participant (compared to the fixed range of intensities used in Trial A), all analyses use the rank order of the nine stimulus intensities each participant was exposed to rather than the absolute intensities of the stimuli used. 
 
-The experimental design involved exposing each participant to four successive experimental blocks of 27 trials (laser stimulations) each for each of the three measurement scales. The sequence of stimulus intensities used within each block was pre-determined, and differed between blocks. The order of in which the measurement scales were assessed was randomized, but for convenience of reporting, the plots are always shwon in the order: CNRS_P, NRS_NP, and SPARS.
+The experimental design involved exposing each participant to four successive experimental blocks of 27 trials (laser stimulations) each for each of the three measurement scales. The sequence of stimulus intensities used within each block was pre-determined, and differed between blocks. The order of in which the measurement scales were assessed was randomized, but for convenience of reporting, the plots are always shwon in the order: pain NRS_P, SRS, and SPARS.
 
 ----
 
@@ -121,7 +121,7 @@ data_tm <- data %>%
 
 ### Raw intensity ratings (participant-level)
 
-Data are shown on their original scales: **CNRS_P:** 0 to 100, **NRS_NP:** 0 to 100, and **SPARS:** -50 to +50.
+Data are shown on their original scales: **pain NRS:** 0 to 100, **SRS:** 0 to 100, and **SPARS:** -50 to +50.
 
 ```{r raw_ratings}
 # Generate plots
@@ -145,8 +145,8 @@ plot_raw <- data %>%
                           scale_colour_brewer(name = 'Scale',
                                               type = 'qual', 
                                               palette = 'Dark2') +
-                          labs(title = paste0(.y, ': Raw participant-level stimulus-response ratings on the CNRS_P, NRS_NP and SPARS'),
-                               subtitle = 'Plots are conditioned on measurement scale and experimental block\nCNRS_P: 0 (no pain) to 100 (worst pain you can imagine)\nNRS_NP: 0 (no sensation) to 100 (pain)\nSPARS: -50 (no sensation), 0 (pain threshold), +50 (worst pain you can imagine)',
+                          labs(title = paste0(.y, ': Raw participant-level stimulus-response ratings on the pain NRS, SRS and SPARS'),
+                               subtitle = 'Plots are conditioned on measurement scale and experimental block\npain NRS: 0 (no pain) to 100 (worst pain you can imagine)\nSRS: 0 (no sensation) to 100 (pain)\nSPARS: -50 (no sensation), 0 (pain threshold), +50 (worst pain you can imagine)',
                                x = 'Stimulus intensity (rank)',
                                y = 'Intensity rating') +
                           geom_hline(yintercept = 0, linetype = 2) +
@@ -158,11 +158,11 @@ walk(plot_raw$plots, ~ print(.x))
 
 ### Equivalent units ratings (participant-level)
 
-Raw scores for the CNRS_P and NRS_NP scales (both rated on 0 to 100 scales) were converted to SPARS equivalent ranges (-50 to +50). The scaling of the CNRS_P and NRS_NP were as follows:
+Raw scores for the pain NRS and SRS scales (both rated on 0 to 100 scales) were converted to SPARS equivalent ranges (-50 to +50). The scaling of the pain NRS and SRS were as follows:
 
-- CNRS_P: raw 0 to 100 scores were converted to a 0 to 50 range by dividing 2, such that after the scaling, 0 = _no pain_ and 50 = _worst pain you can imagine_. This is equivalent to the positive range of the SPARS.
+- pain NRS: raw 0 to 100 scores were converted to a 0 to 50 range by dividing 2, such that after the scaling, 0 = _no pain_ and 50 = _worst pain you can imagine_. This is equivalent to the positive range of the SPARS.
 
-- NRS_NP: raw 0 to 100 scores were converted to a -50 to 0 range by subtracting 100, and then dividing 2, such that after the scaling, -50 = _no sensation_ and 0 = _pain_. This is equivalent to the negative range of the SPARS.
+- SRS: raw 0 to 100 scores were converted to a -50 to 0 range by subtracting 100, and then dividing 2, such that after the scaling, -50 = _no sensation_ and 0 = _pain_. This is equivalent to the negative range of the SPARS.
 
 ```{r equivalent_ratings}
 # Generate plots
@@ -186,8 +186,8 @@ plot_equi <- data %>%
                           scale_colour_brewer(name = 'Scale',
                                               type = 'qual', 
                                               palette = 'Dark2') +
-                          labs(title = paste0(.y, ': Scaled participant-level stimulus-response ratings on the CNRS_P, NRS_NP and SPARS'),
-                               subtitle = 'Plots are conditioned on measurement scale and experimental block\nCNRS_P: 0 (no pain) to 50 (worst pain you can imagine)\nNRS_NP: -50 (no sensation) to 0 (pain)\nSPARS: -50 (no sensation), 0 (pain threshold), +50 (worst pain you can imagine)',
+                          labs(title = paste0(.y, ': Scaled participant-level stimulus-response ratings on the pain NRS, SRS and SPARS'),
+                               subtitle = 'Plots are conditioned on measurement scale and experimental block\npain NRS: 0 (no pain) to 50 (worst pain you can imagine)\nSRS: -50 (no sensation) to 0 (pain)\nSPARS: -50 (no sensation), 0 (pain threshold), +50 (worst pain you can imagine)',
                                x = 'Stimulus intensity (rank)',
                                y = 'Scaled intensity rating (-50 to 50)') +
                           geom_hline(yintercept = 0, linetype = 2) +
@@ -199,7 +199,7 @@ walk(plot_equi$plots, ~ print(.x))
 
 ### Tukey trimean plots (participant-level)
 
-For each participant, we calculated the Tukey trimean of the intensity rating at each stimulus intensity and for each of the measurement scales. The scaled versions of the CNRS_P and NRS_NP were used. 
+For each participant, we calculated the Tukey trimean of the intensity rating at each stimulus intensity and for each of the measurement scales. The scaled versions of the pain NRS and SRS were used. 
 
 ```{r trimean_plots}
 # Generate plot
@@ -227,8 +227,8 @@ plot_tm <- data_tm %>%
                                                palette = 'Dark2') +
                            scale_x_continuous(breaks = c(1, 3, 5, 7, 9)) +
                            scale_y_continuous(limits = c(-50, 50)) +
-                           labs(title = paste0(.y, ': Scaled participant-level stimulus-response rating Tukey trimeans on the CNRS_P, NRS_NP and SPARS'),
-                                subtitle = 'Orange points: Tukey trimeans | Grey curve: loess curve\nPlots are conditioned on the three scales\nCNRS_P: 0 (no pain) to 50 (worst pain you can imagine)\nNRS_NP: -50 (no sensation) to 0 (pain)\nSPARS: -50 (no sensation), 0 (pain threshold), +50 (worst pain you can imagine)',
+                           labs(title = paste0(.y, ': Scaled participant-level stimulus-response rating Tukey trimeans on the pain NRS, SRS and SPARS'),
+                                subtitle = 'Orange points: Tukey trimeans | Grey curve: loess curve\nPlots are conditioned on the three scales\npain NRS: 0 (no pain) to 50 (worst pain you can imagine)\nSRS: -50 (no sensation) to 0 (pain)\nSPARS: -50 (no sensation), 0 (pain threshold), +50 (worst pain you can imagine)',
                                 x = 'Stimulus intensity (rank)',
                                 y = 'Scaled intensity rating (-50 to 50)') +
                            geom_hline(yintercept = 0, linetype = 2) +
@@ -260,8 +260,8 @@ data_tm %>%
                         palette = 'Dark2') +
     scale_y_continuous(limits = c(-50, 50)) +
     scale_x_continuous(breaks = c(1, 3, 5, 7, 9)) +
-    labs(title = 'Scaled group-level stimulus-response ratings on the CNRS_P, NRS_NP and SPARS',
-         subtitle = 'Points (dodged for clarity): Tukey trimeans | Curves: loess lines\nCNRS_P: 0 (no pain) to 50 (worst pain you can imagine)\nNRS_NP: -50 (no sensation) to 0 (pain)\nSPARS: -50 (no sensation), 0 (pain threshold), +50 (worst pain you can imagine)',
+    labs(title = 'Scaled group-level stimulus-response ratings on the pain NRS, SRS and SPARS',
+         subtitle = 'Points (dodged for clarity): Tukey trimeans | Curves: loess lines\npain NRS: 0 (no pain) to 50 (worst pain you can imagine)\nSRS: -50 (no sensation) to 0 (pain)\nSPARS: -50 (no sensation), 0 (pain threshold), +50 (worst pain you can imagine)',
          x = 'Stimulus intensity (rank)',
          y = 'Scaled intensity rating (-50 to 50)') +
     geom_hline(yintercept = 0, linetype = 2) 
@@ -285,8 +285,8 @@ data %>%
                         type = 'qual', 
                         palette = 'Dark2') +
     scale_y_continuous(limits = c(-50, 50)) +
-    labs(title = 'Scaled group-level stimulus-response ratings on the CNRS_P, NRS_NP and SPARS',
-         subtitle = 'CNRS_P: 0 (no pain) to 50 (worst pain you can imagine)\nNRS_NP: -50 (no sensation) to 0 (pain)\nSPARS: -50 (no sensation), 0 (pain threshold), +50 (worst pain you can imagine)',
+    labs(title = 'Scaled group-level stimulus-response ratings on the pain NRS, SRS and SPARS',
+         subtitle = 'pain NRS: 0 (no pain) to 50 (worst pain you can imagine)\nSRS: -50 (no sensation) to 0 (pain)\nSPARS: -50 (no sensation), 0 (pain threshold), +50 (worst pain you can imagine)',
          x = 'Stimulus intensity (rank)',
          y = 'Scaled intensity rating (-50 to 50)') +
     geom_hline(yintercept = 0, linetype = 2)
@@ -297,7 +297,7 @@ data %>%
 
 # Summary
 
-In general, the ratings provided on the SPARS were less than those provided on the CNRS_P (even at higher stimulus intensities), and greater than those provided on the NRS_NP (even at lower stimulus intensities). This indicates that the extra dimensionality of the SPARS compared to the other two scales (the SPARS allowing the ratings of stimulus intensities from _no sensation_ to _worst pain imaginable_) leads to a compression of the numeric value of the ratings into a narrower band around 0 (pain thershold) compared to the two polar scales (measuring either noxious or non-nonxious stimulus ranges). 
+In general, the ratings provided on the SPARS were less than those provided on the pain NRS (even at higher stimulus intensities), and greater than those provided on the SRS (even at lower stimulus intensities). This indicates that the extra dimensionality of the SPARS compared to the other two scales (the SPARS allowing the ratings of stimulus intensities from _no sensation_ to _worst pain imaginable_) leads to a compression of the numeric value of the ratings into a narrower band around 0 (pain thershold) compared to the two polar scales (measuring either noxious or non-nonxious stimulus ranges). 
 
 However, the trendlines indicate that the SPARS scale is reporting the same information as each of the other two scales in their respective domains (sensation of noxious and non-noxious stimuli), but the sensitivity of the SPARS, in each of the two domains, may be lower than thay achieved from the two domain-specific scales. 
 
