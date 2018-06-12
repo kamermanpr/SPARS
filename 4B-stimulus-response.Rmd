@@ -416,7 +416,7 @@ knitr::kable(broom::tidy(anova(lmm1b, lmm2b, lmm3b)),
              caption = 'Linear model vs quadratic model and cubic model')
 ```
 
-### PLot the model
+### Plot the model
 ```{r lmm_plot}
 predicted <- ggeffects::ggpredict(model = lmm2b,
                                   terms = 'intensity_rank',
