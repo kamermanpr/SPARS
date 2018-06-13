@@ -445,11 +445,42 @@ ggplot() +
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
   scale_x_continuous(breaks = seq(from = 1, to = 9, by = 1))
+
+# Plot cubic model
+
+predicted_cubic <- ggeffects::ggpredict(model = lmm3b,
+                                  terms = 'intensity_rank',
+                                  ci.lvl = 0.95)
+
+ggplot() +
+    geom_ribbon(data = predicted_cubic,
+                aes(x = x,
+                    ymin = conf.low,
+                    ymax = conf.high),
+                fill = '#cccccc') + 
+    geom_line(data = predicted,
+              aes(x = x,
+                  y = predicted)) +
+    geom_point(data = predicted,
+              aes(x = x,
+                  y = predicted)) +
+    geom_point(data = data_groupR,
+               aes(x = intensity_rank,
+                   y = median),
+               shape = 21,
+               size = 4,
+               fill = '#D55E00') +
+  labs(title = 'Cubic model (95% CI): Predicted values vs stimulus intensity_rank',
+       subtitle = 'Black circles/line: predicted values | Orange circles: group-level median\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
+       x = 'Relative stimulus intensity',
+       y = 'SPARS rating [-50 to 50]') +
+  scale_y_continuous(limits = c(-50, 50)) +
+  scale_x_continuous(breaks = seq(from = 1, to = 9, by = 1))
 ```
 
 The quadratic model has the best fit. We performed diagnostics on this model to confirm that the model was properly specified.
 
-### Diagnostics on the cubic model
+### Diagnostics on the quadratic model
 
 #### Generate residuals 
 
