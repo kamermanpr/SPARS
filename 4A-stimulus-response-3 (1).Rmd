@@ -1,0 +1,226 @@
+---
+title: "SPARS trial A"
+subtitle: "Scaling: Stimulus-response characteristics of the SPARS"
+author: "Peter Kamerman"
+date: "`r format(Sys.Date(), '%d %b %Y')`"
+output: 
+  html_document:
+    keep_md: true
+    theme: yeti
+    hightlight: pygments
+    toc: true
+    toc_depth: 5
+    toc_float: true
+    code_folding: show
+---
+
+```{r setup, include = FALSE}
+# Load packages
+library(magrittr)
+library(tidyverse)
+library(segmented)
+library(patchwork)
+library(robust)
+
+my.control <- lmRob.control(mxr = 1000, mxf = 1000, mxs = 1000)
+
+# Set ggplot theme
+sjPlot::set_theme(base = theme_bw())
+
+# knitr setup
+knitr::opts_chunk$set(warning = FALSE,
+                      message = FALSE,
+                      fig.retina = 2,
+                      fig.height = 7,
+                      fig.width = 7,
+                      fig.align = 'center',
+                      fig.path = 'figures/4A-stimulus-response-3/')
+```
+
+----
+
+This script is part 3 of our analysis of the stimulus-response characteristics of the SPARS. This script describes the scale charateristics of the relationship between stimulus intensity and SPARS rating. 
+
+Descriptive plots of the data are provided in _4A-stimulus-response-1.html_, modelling of the relationship is described in _4A-stimulus-reponse-2.html_, and diagnostics on the final linear mixed model are described in _4A-stimulus-response-4.html_.
+
+----
+
+# Import and cleaning
+
+For detailed on the importing and cleaning of the data, please refer to: _4A-stimulus-response-1.html_.
+
+```{r import_and_clean, include = FALSE}
+############################################################
+#                                                          #
+#                          Import                          #
+#                                                          #
+############################################################
+data <- read_rds('./data-cleaned/SPARS_A.rds')
+
+############################################################
+#                                                          #
+#                          Clean                           #
+#                                                          #
+############################################################
+data %<>%
+  # Select required columns
+  select(PID, block, block_order, trial_number, intensity, intensity_char, rating) 
+
+############################################################
+#                                                          #
+#               Define Davies test function                #
+#                                                          #
+############################################################
+# 'data' is a daraframe
+# 'x_col' and 'y_col' define the columns to extract from the dataframe
+davies_test <- function(data, x_col, y_col) {
+    x <- data[[x_col]]
+    y <- data[[y_col]]
+    mod <- lm(y ~ x)
+    davies.test(obj = mod, 
+                seg.Z = ~ x)
+}
+
+############################################################
+#                                                          #
+#                 Diagnostic plot function                 #
+#                                                          #
+############################################################
+lm_diagnostics <- function(model) {
+    par(mfrow = c(2, 2))
+    plot(model)
+}
+
+############################################################
+#                                                          #
+#                    Generate core data                    #
+#                                                          #
+############################################################
+# Calculate lagged data 
+data_scale <- data %>%
+  # Get lag-1 stimulus intensity and FEST rating by PID
+  group_by(PID) %>%
+  mutate(intensity_lag = lag(intensity),
+         rating_lag = lag(rating)) %>%
+  # Ungroup and remove incomplete cases greated by lag function
+  ungroup() %>%
+  filter(complete.cases(.))
+
+# Calculate change in stimulus intensity and SPARS rating between successive stimuli
+data_scale %<>%
+    mutate(intensity_delta = intensity - intensity_lag,
+         rating_delta = rating - rating_lag) %>%
+  # Determine the direction of the change in stimulus intensity
+  mutate(change_direction = case_when(
+    intensity_delta > 0 ~ 'up',
+    intensity_delta < 0 ~ 'down',
+    intensity_delta == 0 ~ 'no change'
+    ))
+
+# Create a duplicate set of no change data with 'change_direction' coded as 'up', and 'down'
+## Temp object with change up
+foo_up <- data_scale %>%
+    filter(change_direction == 'no change') %>% 
+    mutate(change_direction = 'up')
+
+## Final combined object (up and down)
+data_nochange <- data_scale %>% 
+    filter(change_direction == 'no change') %>% 
+    mutate(change_direction = 'down') %>%
+    bind_rows(foo_up)
+
+## Remove temp object
+rm(foo_up)
+``` 
+
+----
+
+# Scaling properties
+
+In this analysis we examined whether there is a linear relationship between change in stimulus intensity and change in rating magnitude between two successive stimuli, irrespective of the direction of the change?
+
+### Exploratory plots
+
+```{r response_plots, fig.width = 10, fig.height = 10}
+# Generate the plots for each individual
+scale_plots <- data_scale %>%
+    # Filter out 'no change'
+    filter(change_direction != 'no change') %>% 
+    # Nest data by PID
+    group_by(PID) %>%
+    nest() %>%
+    # Plot data
+    mutate(plot = map2(.x = data,
+                       .y = unique(PID),
+                       ~ ggplot(data = .x) +
+                           aes(y = rating_delta,
+                               x = intensity_delta,
+                               colour = change_direction) +
+                       geom_point() +
+                       geom_smooth(method = 'lm') +
+                       scale_color_brewer(name = 'Direction of\nintensity change',
+                                          labels = c('Down', 'Up'),
+                                          type = 'qual',
+                                          palette = 'Dark2') +
+                       scale_x_continuous(limits = c(-3.5, 3.5), 
+                                          breaks = seq(from = -3, to = 3, by = 1),
+                                          expand = c(0,0)) +
+                       scale_y_continuous(limits = c(-70, 70), 
+                                          breaks = seq(from = -60, to = 60, by = 20),
+                                          expand = c(0,0)) +
+                       labs(subtitle = paste0('[', .y, ']'),
+                            x = expression(Delta~stimulus~intensity~(J)),
+                            y = expression(Delta~SPARS~rating)) +
+                       theme(legend.position = 'none'))) 
+
+# Print plots
+wrap_plots(scale_plots$plot, ncol = 4)
+```
+
+### Linear mixed model regression
+
+To examine whether the relationship between change in rating intenisty and change in stimulus intensity was affected by the direction of the change in stimulus intensity (i.e., whether the preceeding stimulus was greater than or less than the current stimulus), we performed a linear mixed model regression (with random slope and intercept) that included an interaction term between change in stimulus intensity and the direction of the change in stimulus intensity ('up' or 'down'):
+
+$$\Delta~SPARS~rating \thicksim \Delta~stimulus~intenisty~\ast~direction~of~change~+~(1~|~participant)$$
+
+#### Process data
+
+```{r segmented_lmm, results = 'asis'}
+data_reduced <- data_scale %>%
+    # Filter out 'no change'
+    filter(change_direction != 'no change') 
+
+scale_lmm <- lmerTest::lmer(rating_delta ~ intensity_delta * change_direction + (1 | PID),
+                            data = data_reduced)
+
+knitr::kable(broom::tidy(lmerTest::anova(scale_lmm)),
+             caption = 'ANOVA: Linear mixed model')
+```
+
+```{r segmented_lmm2}
+sjPlot::sjt.lmer(scale_lmm,
+                 show.header = TRUE,
+                 string.dv = "Response", 
+                 string.pred = "Coefficients",
+                 depvar.labels = '',
+                 pred.labels = 'intensity',
+                 string.est = 'Estimate',
+                 string.ci = '95% CI',
+                 string.p = 'p-value',
+                 show.icc = FALSE,
+                 show.r2 = FALSE)
+```
+
+#### Basic model diagnostics
+
+```{r segmented_lmm3}
+sjPlot::plot_model(scale_lmm,
+                   type = 'diag')
+```
+
+----
+
+# Session information
+```{r session_info}
+sessionInfo()
+```

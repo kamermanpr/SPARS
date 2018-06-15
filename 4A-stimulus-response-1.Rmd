@@ -30,7 +30,9 @@ knitr::opts_chunk$set(warning = FALSE,
                       fig.height = 7,
                       fig.width = 7,
                       fig.align = 'center',
-                      fig.path = 'figures/4A-stimulus-response-1/')
+                      fig.path = 'figures/4A-stimulus-response-1/',
+                      dev.args=list(bg="transparent"))
+                     
 ```
 
 ----
@@ -109,7 +111,7 @@ data_group <- data_tm %>%
 
 ### Group-level stimulus response curve
 
-```{r sr_group}
+```{r sr_group, fig.width=10, fig.height=11}
 # Plot
 data_tm %>%
   ggplot(data = .) +
@@ -124,8 +126,8 @@ data_tm %>%
              aes(y = median),
              shape = 21,
              size = 4,
-             fill = '#D55E00') +
-  labs(title = 'Group-level stimulus-response plots',
+             fill = '#FC6F00') +
+  labs(title = 'Group-level stimulus-response plot',
        subtitle = 'Black circles: participant-level Tukey trimeans | Orange circles: group-level median | Grey line: loess curve',
        x = 'Stimulus intensity (J)',
        y = 'SPARS rating [-50 to 50]') +
@@ -137,7 +139,12 @@ data_tm %>%
 
 #### All trials
 
-```{r sr_participants, fig.width = 9, fig.height= 9}
+```{r sr_participants, fig.width = 6, fig.height= 9, dpi = 500}
+
+theme_update(panel.background = element_rect(fill = "transparent", colour = NA),
+             plot.background = element_rect(fill = "transparent", colour = NA))
+
+
 # Plot
 data %>%
   ggplot(data = .) +
@@ -154,11 +161,14 @@ data %>%
              size = 3,
              fill = '#D55E00') +
   labs(title = 'Participant-level stimulus-response plot',
-       subtitle = 'Black circles: individual experimental blocks | Orange circles: Tukey trimean | Grey line: loess curve',
+       subtitle = 'Black circles: individual experimental blocks | Orange circles: Tukey trimean | \nGrey line: loess curve',
        x = 'Stimulus intensity (J)',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
-  facet_wrap(~ PID, ncol = 4)
+  facet_wrap(~ PID, ncol = 3) +
+  theme_bw() +
+  theme(strip.background =element_rect(fill="#56B4E9"))+
+  theme(strip.text = element_text(colour = 'white'))
 ```
 
 #### Trials by experimental block

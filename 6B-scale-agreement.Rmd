@@ -1,6 +1,6 @@
 ---
 title: "SPARS trial B"
-subtitle: "Agreement between the SPARS and the CNRS_P/NRS_NP"
+subtitle: "Agreement between the SPARS and the pain NRS/SRS"
 author: "Peter Kamerman and Tory Madden"
 date: "`r format(Sys.Date(), '%d %B %Y')`"
 output: 
@@ -35,7 +35,7 @@ knitr::opts_chunk$set(warning = FALSE,
 
 ----
 
-This script assesses the agreement between the SPARS and the scaled NRS_NP and CNRS_P.[^1]
+This script assesses the agreement between the SPARS and the scaled sesation rating scale (SRS) and pain NRS.[^1]
 
 Because the three measurement scales were not used concurrently to rate each stimulus, we could not assess agreement using the Bland-Altman method. Instead, for each participant, and at each stimulus intensity, we generated 50,000 bootstrap resamples _(sampled with replacement)_ of ratings for each of the scales. We then calculated the median rating for each scale for each of the resamples and subtracted the values as follows: 
 
@@ -45,7 +45,7 @@ These data were then used to calculate a 95% bootstrap confidence interval (bias
 
 To get a feel for rating agreement at the group-level, we used the point estimates of the differences in medians (a side-effect of the above-mentioned confidence interval calculation) to calculate a 95% bootstrap interval _(50,000 resamples, BCa method)_ for the cohort at each stimulus intensity.
 
-[^1]: Raw scores for the CNRS_P and NRS_NP scales (both rated on 0 to 100 scales) were converted to SPARS equivalent ranges (-50 to +50). CNRS_P ratings were a converted to a 0 to 50 range by dividing 2, such that after the scaling, 0 = _no pain_ and 50 = _worst pain you can imagine_. NRS_NP ratings were converted to a -50 to 0 range by subtracting 100, and then dividing 2, such that after the scaling, -50 = _no sensation_ and 0 = _pain_. This is equivalent to the negative range of the SPARS.
+[^1]: Raw scores for the pain NRS and SRS scales (both rated on 0 to 100 scales) were converted to SPARS equivalent ranges (-50 to +50). pain NRS ratings were a converted to a 0 to 50 range by dividing 2, such that after the scaling, 0 = _no pain_ and 50 = _worst pain you can imagine_. SRS ratings were converted to a -50 to 0 range by subtracting 100, and then dividing 2, such that after the scaling, -50 = _no sensation_ and 0 = _pain_. This is equivalent to the negative range of the SPARS.
 
 [^2]: Bias-corrected accelerated intervals work best for larger samples (>25), and therefore we increased our resample rate to 50,000 to help ensure a stable distribution.
 
@@ -108,9 +108,9 @@ boot_deltaG <- function(d, i) {
 
 # Comparison of scale variance
 
-Before assessing scale agreement, we wanted to get an overview the the inherent intra-individual and inter-individual variability in scoring on the SPARS, CNRS_P and NRS_NP at each pain intensity. 
+Before assessing scale agreement, we wanted to get an overview the the inherent intra-individual and inter-individual variability in scoring on the SPARS, pain NRS and SRS at each pain intensity. 
 
-Our analysis of the SPARS data from trial A indicated that the Tukey trimean is a good measure of intra-individual centrality for the scale, but since we also are analysing the CNRS_P and NRS_NP, we chose to use the median as a measure of centrality for both intra- and inter-individual rating variance. To calculate intra-individual variance, for each scale and for each stimulus intensity (rank), we calculated the median absolute deviation (MAD, a robust measure of dispersion) using the ratings from repeated stimuli at each stimulus intensity. We also used the MAD for calculating inter-individual variance for each scale and at each intensity, but used the median ratings by individuals at each intensity as the input.
+Our analysis of the SPARS data from trial A indicated that the Tukey trimean is a good measure of intra-individual centrality for the scale, but since we also are analysing the pain NRS and SRS, we chose to use the median as a measure of centrality for both intra- and inter-individual rating variance. To calculate intra-individual variance, for each scale and for each stimulus intensity (rank), we calculated the median absolute deviation (MAD, a robust measure of dispersion) using the ratings from repeated stimuli at each stimulus intensity. We also used the MAD for calculating inter-individual variance for each scale and at each intensity, but used the median ratings by individuals at each intensity as the input.
 
 **Median absolute deviation**  
 
@@ -136,7 +136,7 @@ ggplot(data = data_varianceP) +
     geom_point(shape = 21,
                size = 4,
                alpha = 0.7) +
-    labs(title = 'Participant-level median absolute deviation (MAD) for the SPARS, CNRS_P, and NRS_NP',
+    labs(title = 'Participant-level median absolute deviation (MAD) for the SPARS, pain NRS, and SRS',
          y = 'Median absolute deviation',
          x = 'Stimulus intensity (rank)') +
     scale_fill_brewer(name = 'Measurement scale: ',
@@ -149,7 +149,7 @@ ggplot(data = data_varianceP) +
     theme(legend.position = 'top')
 ```
 
-There is no clear pattern in intra-individual variance in intensity rating between the three scales or within each scale, and the variance is frequently high. Please note that the CNRS_P only assesses painful stimuli, which may account for the low MAD at lower stimulus intensities, and _visa versa_ for the NRS_P.  
+There is no clear pattern in intra-individual variance in intensity rating between the three scales or within each scale, and the variance is frequently high. Please note that the pain NRS only assesses painful stimuli, which may account for the low MAD at lower stimulus intensities, and _visa versa_ for the NRS_P.  
 
 ### Inter-individual variation (group-level)
 
@@ -177,7 +177,7 @@ ggplot(data = data_varianceG) +
     geom_point(shape = 21,
                size = 4,
                alpha = 0.7) +
-    labs(title = 'Group-level median absolute deviation (MAD) for the SPARS, CNRS_P, and NRS_NP',
+    labs(title = 'Group-level median absolute deviation (MAD) for the SPARS, pain NRS, and SRS',
          y = 'Median absolute deviation',
          x = 'Stimulus intensity (rank)') +
     scale_fill_brewer(name = 'Measurement scale: ',
@@ -189,11 +189,11 @@ ggplot(data = data_varianceG) +
     theme(legend.position = 'top')
 ```
 
-There is no clear pattern in inter-individual variance in intensity rating between the three scales, and the variance can be high. Within the scales, however, the SPARS variance follows a 'U-shaped' response (minimum value at stimulus rank = 7), and the CNRS_P has low variance at low stimulus intensities (see above: Intra-individual variance  for explanation). The NRS_NP does not show a clear pattern.
+There is no clear pattern in inter-individual variance in intensity rating between the three scales, and the variance can be high. Within the scales, however, the SPARS variance follows a 'U-shaped' response (minimum value at stimulus rank = 7), and the pain NRS has low variance at low stimulus intensities (see above: Intra-individual variance  for explanation). The SRS does not show a clear pattern.
 
 ----
 
-# Agreement between SPARS and CNRS_P
+# Agreement between SPARS and pain NRS
 
 ### Participant-level agreement
 
@@ -201,13 +201,13 @@ There is no clear pattern in inter-individual variance in intensity rating betwe
 # Set random seed
 set.seed(1234)
 
-# Generate SPRS vs CNRS_P data
+# Generate SPRS vs pain NRS data
 cnrs_agreement <- data %>%
-    # Remove NRS_NP data
-    filter(scale != 'NRS_NP') %>%
-    # Recode CNRS_P to OTHER
+    # Remove SRS data
+    filter(scale != 'SRS') %>%
+    # Recode pain NRS to OTHER
     mutate(scale = case_when(
-        scale == 'CNRS_P' ~ 'OTHER',
+        scale == 'pain NRS' ~ 'OTHER',
         TRUE ~ 'SPARS'
     )) %>%
     # Group and nest by PID and stimulus intensity
@@ -267,7 +267,7 @@ ggplot(data = cnrs_agreementP) +
                         labels = c('No', 'Yes'),
                         type = 'qual',
                         palette = 'Dark2') +
-    labs(title = 'Participant-level agreement between SPARS and CNRS_P ratings',
+    labs(title = 'Participant-level agreement between SPARS and pain NRS ratings',
          subtitle = 'Bars: 95% confidence interval of the difference in median\nIntervals including zero interpreted as evidence for agreement',
          x = 'Stimulus intensity (rank)',
          y = expression(Delta~median~rating)) +
@@ -275,7 +275,7 @@ ggplot(data = cnrs_agreementP) +
     theme(legend.position = 'top')
 ```
 
-There were significant participant-level discrepancies in agreement, but particularly at the lower stimulus intensities. There was a tendency for the SPARS ratings to be less than the CNRS_P ratings across all stimulus intensities, and this trend is most apparent at the low end of the intensity range. However, this effect at the lower end of the intensity range is likely an artefact of the two instruments, where SPARS continues to record (using a negative range) non-painful stimuli, while the CNRS_P reaches a floor value of zero when the stimulus intensity is no longer perceived as being painful. When there was agreement, it tended to be in the upper ranges of stimulus intensity. There was significant heterogeneity across participants. 
+There were significant participant-level discrepancies in agreement, but particularly at the lower stimulus intensities. There was a tendency for the SPARS ratings to be less than the pain NRS ratings across all stimulus intensities, and this trend is most apparent at the low end of the intensity range. However, this effect at the lower end of the intensity range is likely an artefact of the two instruments, where SPARS continues to record (using a negative range) non-painful stimuli, while the pain NRS reaches a floor value of zero when the stimulus intensity is no longer perceived as being painful. When there was agreement, it tended to be in the upper ranges of stimulus intensity. There was significant heterogeneity across participants. 
 
 ### Group-level
 
@@ -336,20 +336,20 @@ ggplot(data = cnrs_agreementG) +
     scale_colour_brewer(name = 'Interval includes zero: ',
                         type = 'qual',
                         palette = 'Dark2') +
-    labs(title = 'Group-level agreement between SPARS and CNRS_P ratings',
+    labs(title = 'Group-level agreement between SPARS and pain NRS ratings',
          subtitle = 'Bars: 95% confidence interval of the difference in median\nIntervals including zero interpreted as evidence for agreement',
          x = 'Stimulus intensity (rank)',
          y = expression(Delta~median~rating)) +
     theme(legend.position = 'top')
 ```
 
-As expected from the participan-level plots, agreement between the two scales was poor at the low range of stimulus intensities. At higher stimulus intensities, the upper limits of the 95% confidence intervals tend to approach zero, but except for the 8^th^ most intense stimulus, the intervals do not include zero (we believe that the 8^th^ stimulus finding results from sampling variation rather than being a true effect). Across the range of stimulus intensities, the width of the interval was large, and reflects high inter-individual variation in SPARS and CNRS_P ratings at each stimulus intensity. 
+As expected from the participan-level plots, agreement between the two scales was poor at the low range of stimulus intensities. At higher stimulus intensities, the upper limits of the 95% confidence intervals tend to approach zero, but except for the 8^th^ most intense stimulus, the intervals do not include zero (we believe that the 8^th^ stimulus finding results from sampling variation rather than being a true effect). Across the range of stimulus intensities, the width of the interval was large, and reflects high inter-individual variation in SPARS and pain NRS ratings at each stimulus intensity. 
 
 ----
 
-# Agreement between SPARS and NRS_NP
+# Agreement between SPARS and SRS
 
-Please note that ID01 did not have NRS_NP data, and has therefore their data has been omitted from these analyses.
+Please note that ID01 did not have SRS data, and has therefore their data has been omitted from these analyses.
 
 ### Participant-level agreement
 
@@ -357,15 +357,15 @@ Please note that ID01 did not have NRS_NP data, and has therefore their data has
 # Set random seed
 set.seed(1234)
 
-# Generate SPRS vs NRS_NP data
+# Generate SPRS vs SRS data
 nrs_agreement <- data %>%
-    # Remove NRS_NP data
-    filter(scale != 'CNRS_P') %>%
-    # Remove ID01 (no NRS_NP data)
+    # Remove SRS data
+    filter(scale != 'pain NRS') %>%
+    # Remove ID01 (no SRS data)
     filter(PID != 'ID01') %>%
-    # Recode CNRS_P to OTHER
+    # Recode pain NRS to OTHER
     mutate(scale = case_when(
-        scale == 'NRS_NP' ~ 'OTHER',
+        scale == 'SRS' ~ 'OTHER',
         TRUE ~ 'SPARS'
     )) %>%
     # Group and nest by PID and stimulus intensity
@@ -423,7 +423,7 @@ ggplot(data = nrs_agreementP) +
     scale_colour_brewer(name = 'Interval includes zero: ',
                         type = 'qual',
                         palette = 'Dark2') +
-    labs(title = 'Participant-level agreement between SPARS and NRS_NP ratings',
+    labs(title = 'Participant-level agreement between SPARS and SRS ratings',
          subtitle = 'Bars: 95% confidence interval of the difference in median\nIntervals including zero interpreted as evidence for agreement',
          x = 'Stimulus intensity (rank)',
          y = expression(Delta~median~rating)) +
@@ -431,7 +431,7 @@ ggplot(data = nrs_agreementP) +
     theme(legend.position = 'top')
 ```
 
-As with the SPARS / CNRS_P data, and consistent with the participant-level SPARS / NRS_NP data, there were significant participant-level discrepancies in agreement. In this case, however, the problem was most apparent at the higher stimulus intensities. At least at the high end of the intensity range, the consistently greater SPARS ratings compared to NRS_NP ratings was likely the result of the NRS_NP reaches a ceiling value of zero when the stimulus intensity is first perceived as painful, while the SPARS continued providing information stimulus intensity in its positive range. When there was agreement, it tended to be in the lower ranges of stimulus intensity. There was significant heterogeneity across participants. 
+As with the SPARS / pain NRS data, and consistent with the participant-level SPARS / SRS data, there were significant participant-level discrepancies in agreement. In this case, however, the problem was most apparent at the higher stimulus intensities. At least at the high end of the intensity range, the consistently greater SPARS ratings compared to SRS ratings was likely the result of the SRS reaches a ceiling value of zero when the stimulus intensity is first perceived as painful, while the SPARS continued providing information stimulus intensity in its positive range. When there was agreement, it tended to be in the lower ranges of stimulus intensity. There was significant heterogeneity across participants. 
 
 ### Group-level
 
@@ -492,20 +492,20 @@ ggplot(data = nrs_agreementG) +
     scale_colour_brewer(name = 'Interval includes zero: ',
                         type = 'qual',
                         palette = 'Dark2') +
-    labs(title = 'Group-level agreement between SPARS and NRS_NP ratings',
+    labs(title = 'Group-level agreement between SPARS and SRS ratings',
          subtitle = 'Bars: 95% confidence interval of the difference in median\nIntervals including zero interpreted as evidence for agreement',
          x = 'Stimulus intensity (rank)',
          y = expression(Delta~median~rating)) +
     theme(legend.position = 'top')
 ```
 
-Compared to the SPARS / CNRS_P group-level agreement, group-level agreement for the SPARS / NRS_NP was better (more intervals included zero), but the intervals were wide, and the inclusion of zero was quite marginal in most cases. In general, the SPARS ratings tended to be greater than the NRS_NP ratings on average for a given stimulus intensity.
+Compared to the SPARS / pain NRS group-level agreement, group-level agreement for the SPARS / SRS was better (more intervals included zero), but the intervals were wide, and the inclusion of zero was quite marginal in most cases. In general, the SPARS ratings tended to be greater than the SRS ratings on average for a given stimulus intensity.
 
 ----
 
 # Summary
 
-There was significant heterogeneity in rating within each scale and between the scales, at each stimulus intensity. In general, the ratings provided on the SPARS were less than those provided on the CNRS_P (even at higher stimulus intensities), and greater than those provided on the NRS_NP (even at lower stimulus intensities). This indicates that the extra dimensionality of the SPARS compared to the other two scales (the SPARS allowing the ratings of stimulus intensities from _no sensation_ to _worst pain imaginable_) leads to a compression of the numeric value of the ratings into a narrower band around 0 (pain thershold) compared to the two polar scales (measuring either noxious or non-nonxious stimulus ranges).
+There was significant heterogeneity in rating within each scale and between the scales, at each stimulus intensity. In general, the ratings provided on the SPARS were less than those provided on the pain NRS (even at higher stimulus intensities), and greater than those provided on the SRS (even at lower stimulus intensities). This indicates that the extra dimensionality of the SPARS compared to the other two scales (the SPARS allowing the ratings of stimulus intensities from _no sensation_ to _worst pain imaginable_) leads to a compression of the numeric value of the ratings into a narrower band around 0 (pain thershold) compared to the two polar scales (measuring either noxious or non-nonxious stimulus ranges).
 
 (Please also see: _outputs/5B-stimulus-response.html #Summary plots (group-level)_)
 

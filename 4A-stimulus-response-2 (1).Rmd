@@ -1,0 +1,348 @@
+---
+title: "SPARS trial A"
+subtitle: "Modelling the SPARS stimulus-response relationship"
+author: "Peter Kamerman"
+date: "`r format(Sys.Date(), '%d %b %Y')`"
+output: 
+  html_document:
+    keep_md: true
+    theme: yeti
+    hightlight: pygments
+    toc: true
+    toc_depth: 5
+    toc_float: true
+    code_folding: show
+---
+
+```{r setup, include = FALSE}
+# Load packages
+library(magrittr)
+library(tidyverse)
+library(lme4)
+library(lqmm)
+library(HLMdiag)
+library(sjPlot)
+library(car)
+
+# Set ggplot theme
+set_theme(base = theme_bw())
+
+# knitr setup
+knitr::opts_chunk$set(warning = FALSE,
+                      message = FALSE,
+                      fig.retina = 2,
+                      fig.height = 7,
+                      fig.width = 7,
+                      fig.align = 'center',
+                      fig.path = 'figures/4A-stimulus-response-2/')
+```
+
+----
+
+This script is part 2 of our analysis of the stimulus-response characteristics of the SPARS. This script models the relationship between stimulus intensity and SPARS rating using linear mixed models and quantile mixed model regression. 
+
+Descriptive plots of the data are provided in _4A-stimulus-response-1.html_, the scale attributes are described in _4A-stimulus-reponse-3.html_, and diagnostics on the final linear mixed model are described in _4A-stimulus-response-4.html_.
+
+----
+
+# Import and cleaning
+
+For detailed on the importing and cleaning of the data, please refer to: _4A-stimulus-response-1.html_.
+
+```{r import_and_clean, include = FALSE}
+############################################################
+#                                                          #
+#                          Import                          #
+#                                                          #
+############################################################
+data <- read_rds('./data-cleaned/SPARS_A.rds')
+
+############################################################
+#                                                          #
+#                          Clean                           #
+#                                                          #
+############################################################
+data %<>%
+  # Select required columns
+  select(PID, block, block_order, trial_number, intensity, intensity_char, rating) 
+
+############################################################
+#                                                          #
+#                Calculate 'Tukey trimean'                 #
+#                                                          #
+############################################################
+# Define tri.mean function
+tri.mean <- function(x) {
+  # Calculate quantiles
+  q1 <- quantile(x, probs = 0.25, na.rm = TRUE)[[1]]
+  q2 <- median(x, na.rm = TRUE)
+  q3 <- quantile(x, probs = 0.75, na.rm = TRUE)[[1]]
+  # Calculate trimean
+  tm <- (q2 + ((q1 + q3) / 2)) / 2
+  # Convert to integer
+  tm <- as.integer(round(tm))
+  return(tm)
+}
+
+############################################################
+#                                                          #
+#                    Generate core data                    #
+#                                                          #
+############################################################
+# Calculate the participant average 
+data_tm <- data %>% 
+  group_by(PID, intensity) %>%
+  summarise(tri_mean = tri.mean(rating)) %>%
+  ungroup()
+
+# Calculate the group average
+data_group <- data_tm %>%
+  group_by(intensity) %>%
+  summarise(median = median(tri_mean)) %>%
+  ungroup()
+``` 
+
+----
+
+# Linear mixed model regression
+
+To allow for a curvilinear relationship between stimulus intensity and rating, we modelled the data using polynomial regression, with 1^st^ (linear), 2^nd^ (quadratic), and 3^rd^ (cubic) order orthogonal polynomials. For each polynomial expression, we modelled the random effects as random intercept only, and as random intercept and slope. 
+
+The random intercept only and random intercept and slope models were compared using the logliklihood test, and the better model taken foward.
+
+### 1st-order (linear) polynomial
+
+```{r lmm_1}
+# Intercept only
+lmm1 <- lmer(tri_mean ~ intensity + (1 | PID),
+             data = data_tm,
+             REML = TRUE)
+
+# Intercept and slope
+lmm1b <- lmer(tri_mean ~ intensity + (intensity | PID),
+              data = data_tm,
+              REML = TRUE)
+
+# Better model?
+anova(lmm1, lmm1b)
+
+# Anova of better model
+Anova(lmm1b,
+      type = 2,
+      test.statistic = 'F')
+
+# Print better model
+sjt.lmer(lmm1b,
+         show.header = TRUE,
+         string.dv = "Response", 
+         string.pred = "Coefficients",
+         depvar.labels = '',
+         pred.labels = 'intensity',
+         string.est = 'Estimate',
+         string.ci = '95% CI',
+         string.p = 'p-value',
+         show.icc = FALSE,
+         show.r2 = FALSE)
+```
+
+### 2nd-order (quadratic) polynomial
+
+```{r lmm_2}
+# Intercept only
+lmm2 <- lmer(tri_mean ~ poly(intensity, 2) + (1 | PID),
+             data = data_tm,
+             REML = TRUE)
+
+# Intercept and slope
+lmm2b <- lmer(tri_mean ~ poly(intensity, 2) + (intensity | PID),
+              data = data_tm,
+              REML = TRUE)
+
+# Better model?
+anova(lmm2, lmm2b)
+
+# Anova for better model
+Anova(lmm2b,
+      type = 2,
+      test.statistic = 'F')
+
+# Print better model
+sjt.lmer(lmm2b,
+         show.header = TRUE,
+         string.dv = "Response", 
+         string.pred = "Coefficients",
+         depvar.labels = '',
+         pred.labels = 'intensity',
+         string.est = 'Estimate',
+         string.ci = '95% CI',
+         string.p = 'p-value',
+         show.icc = FALSE,
+         show.r2 = FALSE)
+```
+
+### 3rd-order (cubic) polynomial
+
+```{r lmm_3}
+# Intercept only
+lmm3 <- lmer(tri_mean ~ poly(intensity, 3) + (1 | PID),
+             data = data_tm,
+             REML = TRUE)
+
+# Intercept and slope
+lmm3b <- lmer(tri_mean ~ poly(intensity, 3) + (intensity | PID),
+              data = data_tm,
+              REML = TRUE)
+
+# Better model?
+anova(lmm3, lmm3b)
+
+# Anova for better model
+Anova(lmm3b,
+      type = 2,
+      test.statistic = 'F')
+
+# Print better model
+sjt.lmer(lmm3b,
+         show.header = TRUE,
+         string.dv = "Response", 
+         string.pred = "Coefficients",
+         depvar.labels = '',
+         pred.labels = 'intensity',
+         string.est = 'Estimate',
+         string.ci = '95% CI',
+         string.p = 'p-value',
+         show.icc = FALSE,
+         show.r2 = FALSE)
+```
+
+### Compare models
+
+```{r lmm_compare}
+knitr::kable(broom::tidy(anova(lmm1b, lmm2b, lmm3b)),
+             caption = 'Linear model vs quadratic model and cubic model')
+```
+
+### PLot the model
+```{r lmm_plot}
+predicted <- ggeffects::ggpredict(model = lmm3b,
+                                  terms = 'intensity',
+                                  ci.lvl = 0.95) 
+ggplot() +
+    geom_ribbon(data = predicted,
+                aes(x = x,
+                    ymin = conf.low,
+                    ymax = conf.high),
+                fill = '#cccccc') + 
+    geom_line(data = predicted,
+              aes(x = x,
+                  y = predicted)) +
+    geom_point(data = predicted,
+              aes(x = x,
+                  y = predicted)) +
+    geom_point(data = data_group,
+               aes(x = intensity,
+                   y = median),
+               shape = 21,
+               size = 4,
+               fill = '#D55E00') +
+  labs(title = 'Cubic model (95% CI): Predicted values vs stimulus intensity',
+       subtitle = 'Black circles/line: predicted values | Orange circles: group-level median',
+       x = 'Stimulus intensity (J)',
+       y = 'SPARS rating [-50 to 50]') +
+  scale_y_continuous(limits = c(-50, 50)) +
+  scale_x_continuous(breaks = seq(from = 1, to = 4, by = 0.5))
+```
+
+The cubic model has the best fit. The resulting curvilinear response function is _steepest_ at the extremes and  _flattens out_ in the mid-ranges of stumulus intensity. We performed diagnostics on this model to confirm that the model was properly specified.
+
+----
+
+# Quantile mixed model regression
+
+```{r quantile}
+# Quantile model with 2.5, 25, 50, 75, and 97.5% quantiles
+qmm <- lqmm(fixed = tri_mean ~ poly(intensity, 3),
+            random = ~ intensity,
+            group = PID,
+            data = data_tm,
+            tau = c(0.025, 0.25, 0.5, 0.75, 0.975))
+
+# Summary 
+summary(qmm)
+
+# Get predicted values
+## Level 0 (conditional, note difference to the lmer diagnostics)
+quant_predict <- as.data.frame(predict(qmm, level = 0))
+names(quant_predict) <- paste0('Q', c(2.5, 25, 50, 75, 97.5))
+
+# Join with 'central_lmm'
+data_lqmm <- data_tm %>%
+  bind_cols(quant_predict)
+
+# Trim prediction to upper and lower limits of the scale
+data_lqmm %<>%
+  mutate_if(is.numeric,
+            funs(ifelse(. > 50,
+                        yes = 50,
+                        no = ifelse(. < -50,
+                                    yes = -50,
+                                    no = .))))
+
+# Plot
+ggplot(data = data_lqmm) +
+  aes(x = intensity,
+      y = Q50) +
+  geom_ribbon(aes(ymin = `Q2.5`,
+                  ymax = `Q97.5`),
+              fill = '#E69F00') +
+  geom_ribbon(aes(ymin = `Q25`,
+                  ymax = `Q75`),
+              fill = '#56B4E9') +
+  geom_point(size = 3,
+             shape = 21,
+             fill = '#FFFFFF',
+             colour = '#000000') +
+  geom_hline(yintercept = 0,
+             linetype = 2) +
+  labs(title = paste('Quantile regression'),
+       subtitle = 'Open circles: 50th percentile (median) | Blue band: interquartile range | Orange band: 95% prediction interval',
+       x = 'Stimulus intensity (J)',
+       y = 'SPARS rating [-50 to 50]') +
+  scale_y_continuous(limits = c(-50, 50)) +
+  scale_x_continuous(breaks = unique(data_lqmm$intensity)) 
+
+## With original data
+ggplot(data = data_lqmm) +
+  aes(x = intensity,
+      y = Q50) +
+  geom_ribbon(aes(ymin = `Q2.5`,
+                  ymax = `Q97.5`),
+              fill = '#E69F00') +
+  geom_ribbon(aes(ymin = `Q25`,
+                  ymax = `Q75`),
+              fill = '#56B4E9') +
+  geom_point(data = data_tm,
+             aes(y = tri_mean),
+             position = position_jitter(width = 0.03)) +
+  geom_point(size = 3,
+             shape = 21,
+             fill = '#FFFFFF',
+             colour = '#000000') +
+  geom_hline(yintercept = 0,
+             linetype = 2) +
+  labs(title = paste('Quantile regression (with original Tukey trimean data)'),
+       subtitle = 'Open circles: 50th percentile (median) | Blue band: interquartile range | Orange band: 95% prediction interval',
+       x = 'Stimulus intensity (J)',
+       y = 'SPARS rating [-50 to 50]') +
+  scale_y_continuous(limits = c(-50, 50)) +
+  scale_x_continuous(breaks = unique(data_lqmm$intensity)) 
+```
+
+There is good stability in the shape of the response characteristics across the quantiles. For all stimulus intensities, the distribution is left skewed (long tail towards lower ratings). 
+
+----
+
+# Session information
+```{r session_info}
+sessionInfo()
+```
