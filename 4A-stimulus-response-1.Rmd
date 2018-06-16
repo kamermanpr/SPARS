@@ -126,20 +126,64 @@ data_tm %>%
              aes(y = median),
              shape = 21,
              size = 4,
-             fill = '#FC6F00') +
+             fill = '#D55E00') +
   labs(title = 'Group-level stimulus-response plot',
        subtitle = 'Black circles: participant-level Tukey trimeans | Orange circles: group-level median | Grey line: loess curve',
        x = 'Stimulus intensity (J)',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
   scale_x_continuous(breaks = seq(from = 1, to = 4, by = 0.5))
+
+## Publication plot
+p <- data_tm %>%
+    ggplot(data = .) +
+    aes(x = intensity,
+        y = tri_mean) +
+    geom_segment(x = 0.8, xend = 4, 
+                 y = 0, yend = 0, 
+                 size = 0.6,
+                 linetype = 2) +
+    geom_point(position = position_jitter(width = 0.05)) +
+    geom_smooth(method = 'loess',
+                se = FALSE,
+                colour = '#FFA500', 
+                size = 1) +
+    geom_point(data = data_group,
+               aes(y = median),
+               shape = 21,
+               size = 5,
+               fill = '#FFA500') +
+    geom_segment(x = 0.8, xend = 0.8, 
+                 y = -50.25, yend = 50.25, 
+                 size = 1.2) +
+    geom_segment(x = 0.995, xend = 4.006, 
+                 y = -55, yend = -55, 
+                 size = 1.2) +
+    labs(x = 'Stimulus intensity (J)',
+         y = 'SPARS rating (-50 to 50)') +
+    scale_y_continuous(limits = c(-55, 50.25), 
+                       expand = c(0, 0),
+                       breaks = c(-50, -25, 0, 25, 50)) +
+    scale_x_continuous(limits = c(0.8, 4.2), 
+                       expand = c(0, 0),
+                       breaks = seq(from = 1, to = 4, by = 0.5)) +
+    theme(panel.border = element_blank(),
+          panel.grid = element_blank(),
+          axis.text = element_text(size = 16,
+                                   colour = '#000000'),
+          axis.title = element_text(size = 16))
+
+ggsave(filename = 'figures/figure_3.pdf',
+       plot = p,
+       width = 6,
+       height = 5)
 ```
 
 ### Participant-level stimulus response curves
 
 #### All trials
 
-```{r sr_participants, fig.width = 6, fig.height= 9, dpi = 500}
+```{r sr_participants, fig.width = 6, fig.height= 9}
 
 theme_update(panel.background = element_rect(fill = "transparent", colour = NA),
              plot.background = element_rect(fill = "transparent", colour = NA))
@@ -166,9 +210,7 @@ data %>%
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
   facet_wrap(~ PID, ncol = 3) +
-  theme_bw() +
-  theme(strip.background =element_rect(fill="#56B4E9"))+
-  theme(strip.text = element_text(colour = 'white'))
+  theme_bw()
 ```
 
 #### Trials by experimental block

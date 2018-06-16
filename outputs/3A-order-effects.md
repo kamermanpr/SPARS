@@ -2,7 +2,7 @@
 title: "SPARS trial A"
 subtitle: "Effect of stimulus order and blocking on SPARS rating"
 author: "Peter Kamerman"
-date: "16 Feb 2018"
+date: "15 Jun 2018"
 output: 
   html_document:
     keep_md: true
@@ -275,46 +275,46 @@ Visual inspection of the figures shows the loess curve (grey curve) oscillating 
 # Session information
 
 ```
-## R version 3.4.3 (2017-11-30)
+## R version 3.5.0 (2018-04-23)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.3
+## Running under: macOS High Sierra 10.13.5
 ## 
 ## Matrix products: default
-## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
+## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
 ## 
 ## attached base packages:
-## [1] methods   stats     graphics  grDevices utils     datasets  base     
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] bindrcpp_0.2       robustlmm_2.1-4    lme4_1.1-15       
-##  [4] Matrix_1.2-12      forcats_0.2.0      stringr_1.2.0     
-##  [7] dplyr_0.7.4        purrr_0.2.4        readr_1.1.1       
-## [10] tidyr_0.8.0        tibble_1.4.2       ggplot2_2.2.1.9000
+##  [1] bindrcpp_0.2.2     robustlmm_2.2-1    lme4_1.1-17       
+##  [4] Matrix_1.2-14      forcats_0.3.0      stringr_1.3.1     
+##  [7] dplyr_0.7.5        purrr_0.2.5        readr_1.1.1       
+## [10] tidyr_0.8.1        tibble_1.4.2       ggplot2_2.2.1.9000
 ## [13] tidyverse_1.2.1    magrittr_1.5      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_0.2.3  reshape2_1.4.3    splines_3.4.3    
-##  [4] haven_1.1.1       lattice_0.20-35   colorspace_1.3-2 
-##  [7] viridisLite_0.3.0 htmltools_0.3.6   yaml_2.1.16      
-## [10] rlang_0.1.6       nloptr_1.0.4      pillar_1.1.0     
-## [13] foreign_0.8-69    glue_1.2.0        modelr_0.1.1     
-## [16] readxl_1.0.0      bindr_0.1         plyr_1.8.4       
-## [19] robustbase_0.92-8 munsell_0.4.3     gtable_0.2.0     
-## [22] cellranger_1.1.0  rvest_0.3.2       codetools_0.2-15 
-## [25] psych_1.7.8       evaluate_0.10.1   labeling_0.3     
-## [28] knitr_1.19        parallel_3.4.3    DEoptimR_1.0-8   
-## [31] broom_0.4.3       Rcpp_0.12.15      xtable_1.8-2     
-## [34] scales_0.5.0.9000 backports_1.1.2   jsonlite_1.5     
-## [37] mnormt_1.5-5      hms_0.4.1         digest_0.6.15    
-## [40] stringi_1.1.6     grid_3.4.3        rprojroot_1.3-2  
-## [43] cli_1.0.0         tools_3.4.3       lazyeval_0.2.1   
-## [46] crayon_1.3.4      pkgconfig_2.0.1   MASS_7.3-48      
-## [49] xml2_1.2.0        lubridate_1.7.1   minqa_1.2.4      
-## [52] assertthat_0.2.0  rmarkdown_1.8     httr_1.3.1       
-## [55] rstudioapi_0.7    R6_2.2.2          nlme_3.1-131     
-## [58] compiler_3.4.3
+##  [1] Rcpp_0.12.17      lubridate_1.7.4   lattice_0.20-35  
+##  [4] assertthat_0.2.0  rprojroot_1.3-2   digest_0.6.15    
+##  [7] psych_1.8.4       R6_2.2.2          cellranger_1.1.0 
+## [10] plyr_1.8.4        backports_1.1.2   evaluate_0.10.1  
+## [13] httr_1.3.1        pillar_1.2.3      rlang_0.2.1      
+## [16] lazyeval_0.2.1    readxl_1.1.0      rstudioapi_0.7   
+## [19] minqa_1.2.4       nloptr_1.0.4      rmarkdown_1.9    
+## [22] labeling_0.3      splines_3.5.0     foreign_0.8-70   
+## [25] munsell_0.4.3     broom_0.4.4       compiler_3.5.0   
+## [28] modelr_0.1.2      pkgconfig_2.0.1   mnormt_1.5-5     
+## [31] htmltools_0.3.6   fastGHQuad_0.2    tidyselect_0.2.4 
+## [34] codetools_0.2-15  viridisLite_0.3.0 crayon_1.3.4     
+## [37] withr_2.1.2       MASS_7.3-50       grid_3.5.0       
+## [40] nlme_3.1-137      jsonlite_1.5      xtable_1.8-2     
+## [43] gtable_0.2.0      scales_0.5.0.9000 cli_1.0.0        
+## [46] stringi_1.2.2     reshape2_1.4.3    robustbase_0.93-0
+## [49] xml2_1.2.0        tools_3.5.0       glue_1.2.0       
+## [52] DEoptimR_1.0-8    hms_0.4.2         parallel_3.5.0   
+## [55] yaml_2.1.19       colorspace_1.3-2  rvest_0.3.2      
+## [58] knitr_1.20        bindr_0.1.1       haven_1.1.1
 ```

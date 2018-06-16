@@ -2,7 +2,7 @@
 title: "SPARS trial A"
 subtitle: "Sensitivity of the SPARS to changes in stimulus intensity"
 author: "Peter Kamerman"
-date: "16 Feb 2018"
+date: "16 Jun 2018"
 output: 
   html_document:
     keep_md: true
@@ -46,7 +46,7 @@ data %<>%
 
 ############################################################
 #                                                          #
-#          Define Walf CI function for robust LMM          #
+#          Define Wald CI function for robust LMM          #
 #                                                          #
 ############################################################
 # Adapted from code provided Ben Bolker on StackExchange: https://stats.stackexchange.com/questions/233800/how-can-i-get-confidence-intervals-for-fixed-effects-using-the-rlmer-function-r
@@ -119,24 +119,23 @@ data_scale %>%
         colour = change_direction) +
     geom_point() +
     geom_smooth(method = 'lm') +
-    scale_color_brewer(name = 'Direction of intensity change: ',
+    scale_color_manual(name = 'Direction of intensity change: ',
                        labels = c('Down', 'Up'),
-                       type = 'qual',
-                       palette = 'Dark2') +
+                       values = c("#56B4E9", "#FC6F00")) +
     scale_x_continuous(limits = c(-3.5, 3.5), 
                        breaks = seq(from = -3, to = 3, by = 1),
                        expand = c(0,0)) +
     scale_y_continuous(limits = c(-70, 70), 
                        breaks = seq(from = -60, to = 60, by = 20),
                                     expand = c(0,0)) +
-    labs(title = 'Group-level plot: Change in SPARS rating vs Change in stimulus intensity between two successive stimuli',
-         subtitle = 'Coloured points: Individual responses for all trials | Coloured line: Linear trend for context\nGreen points/line: When a stimulus was of less intensity than the preceding stimulus | Orange points/line: When a stimulus was of greater intensity than the preceding stimulus\nData when successive stimuli were of the same intensity (zero change) have been omitted.',
+    labs(title = 'Group-level plot: Change in SPARS rating vs Change in stimulus intensity \nbetween two successive stimuli',
+         subtitle = 'Coloured points: Individual responses for all trials | Coloured line: Linear trend for context\nBlue points/line: When a stimulus was of less intensity than the preceding stimulus | \nOrange points/line: When a stimulus was of greater intensity than the preceding stimulus.\nData have been omitted when successive stimuli were of the same intensity (zero change).',
          x = expression(Delta~stimulus~intensity~(J)),
          y = expression(Delta~SPARS~rating)) +
     theme(legend.position = 'top')
 ```
 
-<img src="figures/4A-stimulus-response-5/exploratory_plots-1.png" width="672" style="display: block; margin: auto;" />
+<img src="figures/4A-stimulus-response-5/exploratory_plots-1.png" width="3500" style="display: block; margin: auto;" />
 
 ### Participant-level
 
@@ -458,63 +457,62 @@ sessionInfo()
 ```
 
 ```
-## R version 3.4.3 (2017-11-30)
+## R version 3.5.0 (2018-04-23)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.3
+## Running under: macOS High Sierra 10.13.5
 ## 
 ## Matrix products: default
-## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
+## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
 ## 
 ## attached base packages:
-## [1] methods   stats     graphics  grDevices utils     datasets  base     
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] bindrcpp_0.2       influence.ME_0.9-9 sjPlot_2.4.1      
-##  [4] robustlmm_2.1-4    lmerTest_2.0-36    lme4_1.1-15       
-##  [7] Matrix_1.2-12      patchwork_0.0.1    forcats_0.2.0     
-## [10] stringr_1.2.0      dplyr_0.7.4        purrr_0.2.4       
-## [13] readr_1.1.1        tidyr_0.8.0        tibble_1.4.2      
+##  [1] bindrcpp_0.2.2     influence.ME_0.9-9 sjPlot_2.4.1      
+##  [4] robustlmm_2.2-1    lmerTest_3.0-1     lme4_1.1-17       
+##  [7] Matrix_1.2-14      patchwork_0.0.1    forcats_0.3.0     
+## [10] stringr_1.3.1      dplyr_0.7.5        purrr_0.2.5       
+## [13] readr_1.1.1        tidyr_0.8.1        tibble_1.4.2      
 ## [16] ggplot2_2.2.1.9000 tidyverse_1.2.1    magrittr_1.5      
 ## 
 ## loaded via a namespace (and not attached):
-##   [1] TH.data_1.0-8       minqa_1.2.4         colorspace_1.3-2   
-##   [4] modeltools_0.2-21   sjlabelled_1.0.7    rprojroot_1.3-2    
-##   [7] estimability_1.2    snakecase_0.8.1     htmlTable_1.11.2   
-##  [10] base64enc_0.1-3     rstudioapi_0.7      glmmTMB_0.2.0      
-##  [13] DT_0.4              mvtnorm_1.0-7       lubridate_1.7.1    
-##  [16] coin_1.2-2          xml2_1.2.0          codetools_0.2-15   
-##  [19] splines_3.4.3       mnormt_1.5-5        robustbase_0.92-8  
-##  [22] knitr_1.19          sjmisc_2.7.0        effects_4.0-0      
-##  [25] bayesplot_1.4.0     Formula_1.2-2       jsonlite_1.5       
-##  [28] nloptr_1.0.4        ggeffects_0.3.1     broom_0.4.3        
-##  [31] cluster_2.0.6       shiny_1.0.5         compiler_3.4.3     
-##  [34] httr_1.3.1          sjstats_0.14.1      emmeans_1.1        
-##  [37] backports_1.1.2     assertthat_0.2.0    lazyeval_0.2.1     
-##  [40] survey_3.33         cli_1.0.0           acepack_1.4.1      
-##  [43] htmltools_0.3.6     tools_3.4.3         coda_0.19-1        
-##  [46] gtable_0.2.0        glue_1.2.0          reshape2_1.4.3     
-##  [49] merTools_0.3.0      Rcpp_0.12.15        carData_3.0-0      
-##  [52] cellranger_1.1.0    nlme_3.1-131        psych_1.7.8        
-##  [55] lmtest_0.9-35       rvest_0.3.2         mime_0.5           
-##  [58] stringdist_0.9.4.6  DEoptimR_1.0-8      MASS_7.3-48        
-##  [61] zoo_1.8-1           scales_0.5.0.9000   hms_0.4.1          
-##  [64] parallel_3.4.3      sandwich_2.4-0      pwr_1.2-1          
-##  [67] TMB_1.7.12          RColorBrewer_1.1-2  yaml_2.1.16        
-##  [70] gridExtra_2.3       rpart_4.1-12        latticeExtra_0.6-28
-##  [73] stringi_1.1.6       highr_0.6           blme_1.0-4         
-##  [76] checkmate_1.8.5     rlang_0.1.6         pkgconfig_2.0.1    
-##  [79] arm_1.9-3           evaluate_0.10.1     lattice_0.20-35    
-##  [82] prediction_0.2.0    bindr_0.1           labeling_0.3       
-##  [85] htmlwidgets_1.0     tidyselect_0.2.3    plyr_1.8.4         
-##  [88] R6_2.2.2            Hmisc_4.1-1         multcomp_1.4-8     
-##  [91] pillar_1.1.0        haven_1.1.1         foreign_0.8-69     
-##  [94] survival_2.41-3     abind_1.4-5         nnet_7.3-12        
-##  [97] modelr_0.1.1        crayon_1.3.4        rmarkdown_1.8      
-## [100] grid_3.4.3          readxl_1.0.0        data.table_1.10.4-3
-## [103] digest_0.6.15       xtable_1.8-2        httpuv_1.3.5       
-## [106] stats4_3.4.3        munsell_0.4.3
+##   [1] TH.data_1.0-8      minqa_1.2.4        colorspace_1.3-2  
+##   [4] modeltools_0.2-21  ggridges_0.5.0     sjlabelled_1.0.11 
+##   [7] rprojroot_1.3-2    estimability_1.3   snakecase_0.9.1   
+##  [10] rstudioapi_0.7     glmmTMB_0.2.1.0    DT_0.4            
+##  [13] mvtnorm_1.0-8      lubridate_1.7.4    coin_1.2-2        
+##  [16] xml2_1.2.0         codetools_0.2-15   splines_3.5.0     
+##  [19] mnormt_1.5-5       robustbase_0.93-0  knitr_1.20        
+##  [22] sjmisc_2.7.2       effects_4.0-1      bayesplot_1.5.0   
+##  [25] jsonlite_1.5       nloptr_1.0.4       ggeffects_0.3.4   
+##  [28] broom_0.4.4        shiny_1.1.0        compiler_3.5.0    
+##  [31] httr_1.3.1         sjstats_0.15.0     emmeans_1.2.1     
+##  [34] backports_1.1.2    assertthat_0.2.0   lazyeval_0.2.1    
+##  [37] survey_3.33-2      cli_1.0.0          later_0.7.3       
+##  [40] htmltools_0.3.6    tools_3.5.0        coda_0.19-1       
+##  [43] gtable_0.2.0       glue_1.2.0         reshape2_1.4.3    
+##  [46] merTools_0.4.1     Rcpp_0.12.17       carData_3.0-1     
+##  [49] cellranger_1.1.0   nlme_3.1-137       psych_1.8.4       
+##  [52] lmtest_0.9-36      rvest_0.3.2        mime_0.5          
+##  [55] stringdist_0.9.5.1 DEoptimR_1.0-8     MASS_7.3-50       
+##  [58] zoo_1.8-1          scales_0.5.0.9000  promises_1.0.1    
+##  [61] hms_0.4.2          parallel_3.5.0     sandwich_2.4-0    
+##  [64] RColorBrewer_1.1-2 pwr_1.2-2          TMB_1.7.13        
+##  [67] yaml_2.1.19        fastGHQuad_0.2     stringi_1.2.2     
+##  [70] highr_0.6          blme_1.0-4         rlang_0.2.1       
+##  [73] pkgconfig_2.0.1    arm_1.10-1         evaluate_0.10.1   
+##  [76] lattice_0.20-35    prediction_0.3.6   bindr_0.1.1       
+##  [79] labeling_0.3       htmlwidgets_1.2    tidyselect_0.2.4  
+##  [82] plyr_1.8.4         R6_2.2.2           multcomp_1.4-8    
+##  [85] pillar_1.2.3       haven_1.1.1        foreign_0.8-70    
+##  [88] withr_2.1.2        survival_2.42-3    abind_1.4-5       
+##  [91] nnet_7.3-12        modelr_0.1.2       crayon_1.3.4      
+##  [94] rmarkdown_1.9      grid_3.5.0         readxl_1.1.0      
+##  [97] data.table_1.11.4  digest_0.6.15      xtable_1.8-2      
+## [100] httpuv_1.4.3       numDeriv_2016.8-1  stats4_3.5.0      
+## [103] munsell_0.4.3
 ```

@@ -2,7 +2,7 @@
 title: "SPARS trial A"
 subtitle: "Measures of central tendency"
 author: "Peter Kamerman"
-date: "16 Feb 2018"
+date: "15 Jun 2018"
 output: 
   html_document:
     keep_md: true
@@ -182,7 +182,7 @@ p_1to6 <- data %>%
              size = 3,
              alpha = 0.8,
              position = position_nudge(y = 0.6)) +
-  ggthemes::scale_fill_tableau(name = 'Centrality measure:',
+  scale_fill_viridis_d(name = 'Centrality measure:',
                     labels = c('Mean', 'Median', 
                                'Geometric mean', 
                                'Tukey trimean')) +
@@ -217,7 +217,7 @@ p_7to12 <- data %>%
              size = 3,
              alpha = 0.8,
              position = position_nudge(y = 0.6)) +
-  ggthemes::scale_fill_tableau(name = 'Centrality measure:',
+  scale_fill_viridis_d(name = 'Centrality measure:',
                     labels = c('Mean', 'Median', 
                                'Geometric mean', 
                                'Tukey trimean')) +
@@ -250,7 +250,7 @@ p_13to18 <- data %>%
              size = 3,
              alpha = 0.8,
              position = position_nudge(y = 0.6)) +
-  ggthemes::scale_fill_tableau(name = 'Centrality measure',
+  scale_fill_viridis_d(name = 'Centrality measure',
                     labels = c('Mean', 'Median', 
                                'Geometric mean', 
                                'Tukey trimean')) +
@@ -274,7 +274,7 @@ p_1to6; p_7to12; p_13to18
 
 ### Conclusion
 
-There was significant heterogeneity in the grouping of ratings within and between individuals, with a tendency for data to be right skewed (a few very low values). The heterogeneity makes selecting a measure of centrality difficult. Of the measures of centrality, the _Tukey trimean_ and _median_ showed the best stability across all stimulus intensities (as expected). The _geometric mean_ performed very poorly when there was a strong right skew in the data. The _arithmetic mean_ was similarly affected by skewed data. When there was a strong skew, the _Tukey mean_ was pulled slightly away from the _median_ and towards the affected tail, but otherwise the two measures yielded similar values. Given that the _Tukey trimean_ incorporates some of the information in the distribution of the data, but is not overly affected by extreme values, we believe that the _Tukey trimean_ should be used for 'averaging' repeated measurements within an individual, at a given stimulus intensity.
+There was significant heterogeneity in the grouping of ratings within and between individuals, with a tendency for data to be left skewed (a few very low values). The heterogeneity makes selecting a measure of centrality difficult. Of the measures of centrality, the _Tukey trimean_ and _median_ showed the best stability across all stimulus intensities (as expected). The _geometric mean_ performed very poorly when there was a strong left skew in the data. The _arithmetic mean_ was similarly affected by skewed data. When there was a strong skew, the _Tukey mean_ was pulled slightly away from the _median_ and towards the affected tail, but otherwise the two measures yielded similar values. Given that the _Tukey trimean_ incorporates some of the information in the distribution of the data, but is not overly affected by extreme values, we believe that the _Tukey trimean_ should be used for 'averaging' repeated measurements within an individual, at a given stimulus intensity.
 
 ----
 
@@ -285,42 +285,42 @@ sessionInfo()
 ```
 
 ```
-## R version 3.4.3 (2017-11-30)
+## R version 3.5.0 (2018-04-23)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.3
+## Running under: macOS High Sierra 10.13.5
 ## 
 ## Matrix products: default
-## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
+## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
 ## 
 ## attached base packages:
-## [1] stats     graphics  grDevices utils     datasets  base     
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] bindrcpp_0.2       ggridges_0.4.1     forcats_0.2.0     
-##  [4] stringr_1.2.0      dplyr_0.7.4        purrr_0.2.4       
-##  [7] readr_1.1.1        tidyr_0.8.0        tibble_1.4.2      
+##  [1] bindrcpp_0.2.2     ggridges_0.5.0     forcats_0.3.0     
+##  [4] stringr_1.3.1      dplyr_0.7.5        purrr_0.2.5       
+##  [7] readr_1.1.1        tidyr_0.8.1        tibble_1.4.2      
 ## [10] ggplot2_2.2.1.9000 tidyverse_1.2.1    magrittr_1.5      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.15      cellranger_1.1.0  pillar_1.1.0     
-##  [4] compiler_3.4.3    plyr_1.8.4        bindr_0.1        
-##  [7] methods_3.4.3     tools_3.4.3       digest_0.6.15    
-## [10] lubridate_1.7.1   jsonlite_1.5      evaluate_0.10.1  
-## [13] nlme_3.1-131      gtable_0.2.0      lattice_0.20-35  
-## [16] pkgconfig_2.0.1   rlang_0.1.6       psych_1.7.8      
-## [19] cli_1.0.0         rstudioapi_0.7    yaml_2.1.16      
-## [22] parallel_3.4.3    haven_1.1.1       xml2_1.2.0       
-## [25] httr_1.3.1        knitr_1.19        hms_0.4.1        
-## [28] tidyselect_0.2.3  rprojroot_1.3-2   grid_3.4.3       
-## [31] glue_1.2.0        R6_2.2.2          readxl_1.0.0     
-## [34] foreign_0.8-69    rmarkdown_1.8     modelr_0.1.1     
-## [37] reshape2_1.4.3    ggthemes_3.4.0    backports_1.1.2  
-## [40] scales_0.5.0.9000 htmltools_0.3.6   rvest_0.3.2      
-## [43] assertthat_0.2.0  mnormt_1.5-5      colorspace_1.3-2 
-## [46] stringi_1.1.6     lazyeval_0.2.1    munsell_0.4.3    
-## [49] broom_0.4.3       crayon_1.3.4
+##  [1] tidyselect_0.2.4  reshape2_1.4.3    haven_1.1.1      
+##  [4] lattice_0.20-35   colorspace_1.3-2  htmltools_0.3.6  
+##  [7] viridisLite_0.3.0 yaml_2.1.19       rlang_0.2.1      
+## [10] pillar_1.2.3      foreign_0.8-70    glue_1.2.0       
+## [13] withr_2.1.2       modelr_0.1.2      readxl_1.1.0     
+## [16] bindr_0.1.1       plyr_1.8.4        munsell_0.4.3    
+## [19] gtable_0.2.0      cellranger_1.1.0  rvest_0.3.2      
+## [22] psych_1.8.4       evaluate_0.10.1   knitr_1.20       
+## [25] parallel_3.5.0    broom_0.4.4       Rcpp_0.12.17     
+## [28] scales_0.5.0.9000 backports_1.1.2   jsonlite_1.5     
+## [31] mnormt_1.5-5      hms_0.4.2         digest_0.6.15    
+## [34] stringi_1.2.2     grid_3.5.0        rprojroot_1.3-2  
+## [37] cli_1.0.0         tools_3.5.0       lazyeval_0.2.1   
+## [40] crayon_1.3.4      pkgconfig_2.0.1   xml2_1.2.0       
+## [43] lubridate_1.7.4   assertthat_0.2.0  rmarkdown_1.9    
+## [46] httr_1.3.1        rstudioapi_0.7    R6_2.2.2         
+## [49] nlme_3.1-137      compiler_3.5.0
 ```

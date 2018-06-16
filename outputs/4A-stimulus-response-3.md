@@ -2,7 +2,7 @@
 title: "SPARS trial A"
 subtitle: "Diagnostics for the best-fit linear mixed model of the SPARS stimulus-response relationship"
 author: "Peter Kamerman and Tory Madden"
-date: "16 February 2018"
+date: "16 June 2018"
 output: 
   html_document:
     keep_md: true
@@ -463,45 +463,45 @@ sessionInfo()
 ```
 
 ```
-## R version 3.4.3 (2017-11-30)
+## R version 3.5.0 (2018-04-23)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.3
+## Running under: macOS High Sierra 10.13.5
 ## 
 ## Matrix products: default
-## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
+## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
 ## 
 ## attached base packages:
-## [1] methods   stats     graphics  grDevices utils     datasets  base     
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] bindrcpp_0.2       patchwork_0.0.1    HLMdiag_0.3.1     
-##  [4] lme4_1.1-15        Matrix_1.2-12      forcats_0.2.0     
-##  [7] stringr_1.2.0      dplyr_0.7.4        purrr_0.2.4       
-## [10] readr_1.1.1        tidyr_0.8.0        tibble_1.4.2      
+##  [1] bindrcpp_0.2.2     patchwork_0.0.1    HLMdiag_0.3.1     
+##  [4] lme4_1.1-17        Matrix_1.2-14      forcats_0.3.0     
+##  [7] stringr_1.3.1      dplyr_0.7.5        purrr_0.2.5       
+## [10] readr_1.1.1        tidyr_0.8.1        tibble_1.4.2      
 ## [13] ggplot2_2.2.1.9000 tidyverse_1.2.1    magrittr_1.5      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] reshape2_1.4.3    splines_3.4.3     haven_1.1.1      
-##  [4] lattice_0.20-35   colorspace_1.3-2  htmltools_0.3.6  
-##  [7] mgcv_1.8-23       yaml_2.1.16       rlang_0.1.6      
-## [10] nloptr_1.0.4      pillar_1.1.0      withr_2.1.1.9000 
-## [13] foreign_0.8-69    glue_1.2.0        modelr_0.1.1     
-## [16] readxl_1.0.0      bindr_0.1         plyr_1.8.4       
-## [19] munsell_0.4.3     gtable_0.2.0      cellranger_1.1.0 
-## [22] rvest_0.3.2       psych_1.7.8       evaluate_0.10.1  
-## [25] labeling_0.3      knitr_1.19        RLRsim_3.1-3     
-## [28] parallel_3.4.3    broom_0.4.3       Rcpp_0.12.15     
-## [31] scales_0.5.0.9000 backports_1.1.2   jsonlite_1.5     
-## [34] mnormt_1.5-5      hms_0.4.1         digest_0.6.15    
-## [37] stringi_1.1.6     grid_3.4.3        rprojroot_1.3-2  
-## [40] cli_1.0.0         tools_3.4.3       lazyeval_0.2.1   
-## [43] crayon_1.3.4      pkgconfig_2.0.1   MASS_7.3-48      
-## [46] xml2_1.2.0        lubridate_1.7.1   minqa_1.2.4      
-## [49] assertthat_0.2.0  rmarkdown_1.8     httr_1.3.1       
-## [52] rstudioapi_0.7    R6_2.2.2          nlme_3.1-131     
-## [55] compiler_3.4.3
+##  [1] tidyselect_0.2.4  reshape2_1.4.3    splines_3.5.0    
+##  [4] haven_1.1.1       lattice_0.20-35   colorspace_1.3-2 
+##  [7] htmltools_0.3.6   mgcv_1.8-23       yaml_2.1.19      
+## [10] rlang_0.2.1       nloptr_1.0.4      pillar_1.2.3     
+## [13] foreign_0.8-70    glue_1.2.0        withr_2.1.2      
+## [16] modelr_0.1.2      readxl_1.1.0      bindr_0.1.1      
+## [19] plyr_1.8.4        munsell_0.4.3     gtable_0.2.0     
+## [22] cellranger_1.1.0  rvest_0.3.2       psych_1.8.4      
+## [25] evaluate_0.10.1   labeling_0.3      knitr_1.20       
+## [28] RLRsim_3.1-3      parallel_3.5.0    broom_0.4.4      
+## [31] Rcpp_0.12.17      scales_0.5.0.9000 backports_1.1.2  
+## [34] jsonlite_1.5      mnormt_1.5-5      hms_0.4.2        
+## [37] digest_0.6.15     stringi_1.2.2     grid_3.5.0       
+## [40] rprojroot_1.3-2   cli_1.0.0         tools_3.5.0      
+## [43] lazyeval_0.2.1    crayon_1.3.4      pkgconfig_2.0.1  
+## [46] MASS_7.3-50       xml2_1.2.0        lubridate_1.7.4  
+## [49] minqa_1.2.4       assertthat_0.2.0  rmarkdown_1.9    
+## [52] httr_1.3.1        rstudioapi_0.7    R6_2.2.2         
+## [55] nlme_3.1-137      compiler_3.5.0
 ```

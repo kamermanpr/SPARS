@@ -1,24 +1,17 @@
-# FEST 
+# The Sensation and Pain Rating Scale (SPARS)
 
-## Study A: FEST 2015
+## Bibliometric information
 
-Background & objectives
-HIV-associated sensory neuropathy (HIV-SN) is a common, frequently painful complication of HIV. We investigated whether psychological factors associated with painful versus non-painful HIV-SN, and if pain and psychological factors affected quality of life (QoL). And, in the painful HIV-SN group only (secondary analysis), we investigated whether psychological factors associated with pain intensity.
 
-Methods
-We recruited 125 patients with painful HIV-SN and 72 patients with non-painful HIV-SN. We assessed anxiety and depression using the Hopkins Symptoms Checklist-25. Pain catastrophizing and QoL was assessed using the Pain Catastrophizing Scale and EQ-5D, respectively.
+## Abstract
 
-Results
-No included psychological factors were associated with having painful HIV-SN. Greater depressive symptoms and presence, but not intensity, of pain was independently associated with lower QoL. In addition, a greater depressive symptom score was associated with increased pain intensity.
+In experiments on pain perception, participants are frequently exposed to non-painful and painful stimuli, yet the conventional pain-rating scales lack a non-painful range and a clear point of transition from non-painful to painful events. The Sensation and Pain Rating Scale (SPARS) is a 0-100 scale that assesses the full stimulus intensity range, extending from no sensation (rating: -50) to worst pain imaginable (rating: +50), and it explicitly identifies pain threshold (rating: 0).  Here, we tested the SPARS in two experiments using laser heat stimuli to establish its stimulus-response characteristics (Experiment 1, n = 19, 13 stimulus intensities applied 26 times each across a 1-4J range), and to compare it to 0-100 scales that access non-painful (0: no sensation, 100: painful) and painful (0: not painful, 100: worst pain imaginable) events (Experiment 2, n = 7, 9 stimulus intensities applied 36 times each across a 1.5-4.5J range). Despite high inter- and intra-individual variation, we found a reasonably consistent curvilinear stimulus-response relationship (the curve flattens around pain threshold), with stable response characteristics across the range of the scale.  SPARS ratings tended to be lower than the 0-100 pain rating scale in the noxious stimulus intensity range, and greater than the 0-100 non-painful sensation scale in the non-noxious stimulus range; likely reflecting differences in scale dimensionality. The SPARS overcomes limitations of scale range inherent in conventional pain rating scales and, as such, is well suited to experimental studies in which distinguishing between painful and non-painful events is a priority.
 
-Conclusion
-Our findings demonstrate a high pain burden in this cohort, of which HIV-SN was only one part, and emphasises the importance of psychological factors, particularly depression, in the assessment of HIV-SN. Our data also confirm that results from studies in developed countries cannot be generalised to African cohorts.
-
-# Analysis outputs
+## Analysis outputs
 The outputs from all analysis scripts are located in the outputs directory. The outputs are formatted as markdown and html. The markdown documents are intemediate outputs generated during the production of the html documents, and while they allow quick browsing of the analysis outputs on GitHub, MathJax formulae and tables are not formatted. 
 
-# Build the document
-While the outputs have been provided, you can build the analysis from scratch on your local machine by following the steps below. The analysis was performed on _R version 3.4.3 (2017-11-30) -- "Kite-Eating Tree"_, and to aid reproducibility, we have used `packrat` to maintain a local snapshot of package dependencies used in this project. 
+## Build the document
+While the outputs have been provided, you can build the analysis from scratch on your local machine by following the steps below. The analysis was performed on _R version 3.5.0 (2018-04-23) -- "Joy in Playing"_.
 
 Before building the analysis, _Microsoft Windows_ users must first download and install:
 

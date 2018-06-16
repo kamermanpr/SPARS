@@ -2,7 +2,7 @@
 title: "SPARS trial A"
 subtitle: "Stability of the SPARS stimulus-response relationship"
 author: "Peter Kamerman"
-date: "16 Feb 2018"
+date: "16 Jun 2018"
 output: 
   html_document:
     keep_md: true
@@ -18,7 +18,7 @@ output:
 
 ----
 
-This script is part 4 of our analysis of the stimulus-response characteristics of the SPARS. In this analysis we examine the _'stability'_ of the stimulus-response relationship of the SPARS. It is a descriptive analysis (see plots). We assessed stability by examining the stimulus-response relationship of SPARS under five study sample size senarios (n: 6, 9, 12, 15, 18). Under each sample size senario, we generated 500 random samples (with replacement), and fit linear mixed models to each of the 500 samples with the predictor (stimulus intensity) modelled as a 1^st^ (linear), 2^nd^ (quadratic), and 3^rd^ (cubic)-order orthogonal polynomial. The likelihood test was then used to decide which of the three models had the best fit for each sample, and the proportion of best models fitting each of the polynomial forms was plotted for each study sample size senario.   
+This script is part 4 of our analysis of the stimulus-response characteristics of the SPARS. In this analysis we examine the _'stability'_ of the stimulus-response relationship of the SPARS. It is a descriptive analysis (see plots). We assessed stability by examining the stimulus-response relationship of SPARS under five study sample size scenarios (n: 6, 9, 12, 15, 18). Under each sample size scenario, we generated 500 random samples (with replacement), and fit linear mixed models to each of the 500 samples with the predictor (stimulus intensity) modelled as a 1^st^ (linear), 2^nd^ (quadratic), and 3^rd^ (cubic)-order orthogonal polynomial. The likelihood test was then used to decide which of the three models had the best fit for each sample, and the proportion of best models fitting each of the polynomial forms was plotted for each study sample size scenario.   
 
 Descriptive plots of the data are provided in _"outputs/4A-stimulus-response-1.html"_, modelling of the stimulus-response relationship is described in _"outputs/4A-stimulus-response-2.html"_, the diagnostics on the final linear mixed model are described in _"outputs/4A-stimulus-response-3.html"_, the sensitivity of the scale to changes in stimulus intensity are described in _"outputs/4A-stimulus-reponse-5.html"_, and the variance in ratings at each stimulus intensity is described in _"outputs/4A-stimulus-reponse-6.html"_.
 
@@ -145,7 +145,7 @@ n06 %<>% map2(.x = .,
                  group_by(sample) %>%
                  nest())
 
-# Convert n5 to a single dataframe
+# Convert to a single dataframe
 n06 %<>% map_df(~ data.frame(.x))
 
 # Add linear, quadratic and cubic model
@@ -209,7 +209,7 @@ n09 %<>% map2(.x = .,
                  group_by(sample) %>%
                  nest())
 
-# Convert n5 to a single dataframe
+# Convert to a single dataframe
 n09 %<>% map_df(~ data.frame(.x))
 
 # Add linear, quadratic and cubic model
@@ -273,7 +273,7 @@ n12 %<>% map2(.x = .,
                  group_by(sample) %>%
                  nest())
 
-# Convert n5 to a single dataframe
+# Convert to a single dataframe
 n12 %<>% map_df(~ data.frame(.x))
 
 # Add linear, quadratic and cubic model
@@ -337,7 +337,7 @@ n15 %<>% map2(.x = .,
                  group_by(sample) %>%
                  nest())
 
-# Convert n5 to a single dataframe
+# Convert to a single dataframe
 n15 %<>% map_df(~ data.frame(.x))
 
 # Add linear, quadratic and cubic model
@@ -401,7 +401,7 @@ n18 %<>% map2(.x = .,
                   group_by(sample) %>%
                   nest())
 
-# Convert n5 to a single dataframe
+# Convert to a single dataframe
 n18 %<>% map_df(~ data.frame(.x))
 
 # Add linear, quadratic and cubic model
@@ -477,6 +477,41 @@ ggplot(data = model_combined) +
 
 <img src="figures/4A-stimulus-response-4/summary-1.png" width="672" style="display: block; margin: auto;" />
 
+```r
+## Publication plot
+p <- model_combined %>%
+    ggplot(data = .) +
+    aes(n_sample,
+        fill = best_model) +
+    geom_bar(position = position_fill()) +
+    geom_segment(x = 0.4, xend = 0.4, 
+                 y = -0.0014, yend = 1.001, 
+                 size = 1.2) +
+    geom_segment(x = 0.998, xend = 5.0025, 
+                 y = -0.05, yend = -0.05, 
+                 size = 0.6) +
+    labs(x = 'Sample size',
+         y = 'Proportion of models') +
+    scale_fill_manual(name = 'Best model',
+                      values = pal) +
+    scale_y_continuous(limits = c(-0.002, 1.002),
+                       breaks = seq(from = 0, to = 1, by = 0.2)) +
+    scale_x_discrete(labels = c(6, 9, 12, 15, 18)) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid = element_blank(),
+          legend.title = element_blank(),
+          legend.text = element_text(size = 14),
+          axis.text = element_text(size = 16,
+                                   colour = '#000000'),
+          axis.title = element_text(size = 16))
+
+ggsave(filename = 'figures/figure_6.pdf',
+       plot = p,
+       width = 7,
+       height = 5)
+```
+
 Across all sample sizes, the cubic model is the best fit model the majority of the time. However the proportion of times when the cubic model is the best fit model is dependent on sample size, such that for n = 6, the cubic model was the best model in only about 40% of cases, but at when n = 18, the cubic model was the best model in about 80% of cases. The next most commonly best fit model across all samples sizes was a linear (1^st^-order) model. 
 
 ----
@@ -488,44 +523,44 @@ sessionInfo()
 ```
 
 ```
-## R version 3.4.3 (2017-11-30)
+## R version 3.5.0 (2018-04-23)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.3
+## Running under: macOS High Sierra 10.13.5
 ## 
 ## Matrix products: default
-## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
+## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
 ## 
 ## attached base packages:
-## [1] methods   stats     graphics  grDevices utils     datasets  base     
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] bindrcpp_0.2       patchwork_0.0.1    lme4_1.1-15       
-##  [4] Matrix_1.2-12      forcats_0.2.0      stringr_1.2.0     
-##  [7] dplyr_0.7.4        purrr_0.2.4        readr_1.1.1       
-## [10] tidyr_0.8.0        tibble_1.4.2       ggplot2_2.2.1.9000
+##  [1] bindrcpp_0.2.2     patchwork_0.0.1    lme4_1.1-17       
+##  [4] Matrix_1.2-14      forcats_0.3.0      stringr_1.3.1     
+##  [7] dplyr_0.7.5        purrr_0.2.5        readr_1.1.1       
+## [10] tidyr_0.8.1        tibble_1.4.2       ggplot2_2.2.1.9000
 ## [13] tidyverse_1.2.1    magrittr_1.5      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_0.2.3  reshape2_1.4.3    splines_3.4.3    
+##  [1] tidyselect_0.2.4  reshape2_1.4.3    splines_3.5.0    
 ##  [4] haven_1.1.1       lattice_0.20-35   colorspace_1.3-2 
-##  [7] htmltools_0.3.6   yaml_2.1.16       rlang_0.1.6      
-## [10] nloptr_1.0.4      pillar_1.1.0      foreign_0.8-69   
-## [13] glue_1.2.0        modelr_0.1.1      readxl_1.0.0     
-## [16] bindr_0.1         plyr_1.8.4        munsell_0.4.3    
-## [19] gtable_0.2.0      cellranger_1.1.0  rvest_0.3.2      
-## [22] psych_1.7.8       evaluate_0.10.1   knitr_1.19       
-## [25] parallel_3.4.3    broom_0.4.3       Rcpp_0.12.15     
-## [28] scales_0.5.0.9000 backports_1.1.2   jsonlite_1.5     
-## [31] mnormt_1.5-5      hms_0.4.1         digest_0.6.15    
-## [34] stringi_1.1.6     grid_3.4.3        rprojroot_1.3-2  
-## [37] cli_1.0.0         tools_3.4.3       lazyeval_0.2.1   
-## [40] crayon_1.3.4      pkgconfig_2.0.1   MASS_7.3-48      
-## [43] xml2_1.2.0        lubridate_1.7.1   minqa_1.2.4      
-## [46] assertthat_0.2.0  rmarkdown_1.8     httr_1.3.1       
-## [49] rstudioapi_0.7    R6_2.2.2          nlme_3.1-131     
-## [52] compiler_3.4.3
+##  [7] htmltools_0.3.6   yaml_2.1.19       rlang_0.2.1      
+## [10] nloptr_1.0.4      pillar_1.2.3      foreign_0.8-70   
+## [13] glue_1.2.0        withr_2.1.2       modelr_0.1.2     
+## [16] readxl_1.1.0      bindr_0.1.1       plyr_1.8.4       
+## [19] munsell_0.4.3     gtable_0.2.0      cellranger_1.1.0 
+## [22] rvest_0.3.2       psych_1.8.4       evaluate_0.10.1  
+## [25] knitr_1.20        parallel_3.5.0    broom_0.4.4      
+## [28] Rcpp_0.12.17      scales_0.5.0.9000 backports_1.1.2  
+## [31] jsonlite_1.5      mnormt_1.5-5      hms_0.4.2        
+## [34] digest_0.6.15     stringi_1.2.2     grid_3.5.0       
+## [37] rprojroot_1.3-2   cli_1.0.0         tools_3.5.0      
+## [40] lazyeval_0.2.1    crayon_1.3.4      pkgconfig_2.0.1  
+## [43] MASS_7.3-50       xml2_1.2.0        lubridate_1.7.4  
+## [46] minqa_1.2.4       assertthat_0.2.0  rmarkdown_1.9    
+## [49] httr_1.3.1        rstudioapi_0.7    R6_2.2.2         
+## [52] nlme_3.1-137      compiler_3.5.0
 ```

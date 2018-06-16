@@ -2,7 +2,7 @@
 title: "SPARS trial A"
 subtitle: "Descriptive plots of the SPARS stimulus-response relationship"
 author: "Peter Kamerman and Tory Madden"
-date: "16 February 2018"
+date: "16 June 2018"
 output: 
   html_document:
     keep_md: true
@@ -135,7 +135,7 @@ data_tm %>%
              shape = 21,
              size = 4,
              fill = '#D55E00') +
-  labs(title = 'Group-level stimulus-response plots',
+  labs(title = 'Group-level stimulus-response plot',
        subtitle = 'Black circles: participant-level Tukey trimeans | Orange circles: group-level median | Grey line: loess curve',
        x = 'Stimulus intensity (J)',
        y = 'SPARS rating [-50 to 50]') +
@@ -143,7 +143,53 @@ data_tm %>%
   scale_x_continuous(breaks = seq(from = 1, to = 4, by = 0.5))
 ```
 
-<img src="figures/4A-stimulus-response-1/sr_group-1.png" width="672" style="display: block; margin: auto;" />
+<img src="figures/4A-stimulus-response-1/sr_group-1.png" width="960" style="display: block; margin: auto;" />
+
+```r
+## Publication plot
+p <- data_tm %>%
+    ggplot(data = .) +
+    aes(x = intensity,
+        y = tri_mean) +
+    geom_segment(x = 0.8, xend = 4, 
+                 y = 0, yend = 0, 
+                 size = 0.6,
+                 linetype = 2) +
+    geom_point(position = position_jitter(width = 0.05)) +
+    geom_smooth(method = 'loess',
+                se = FALSE,
+                colour = '#FFA500', 
+                size = 1) +
+    geom_point(data = data_group,
+               aes(y = median),
+               shape = 21,
+               size = 5,
+               fill = '#FFA500') +
+    geom_segment(x = 0.8, xend = 0.8, 
+                 y = -50.25, yend = 50.25, 
+                 size = 1.2) +
+    geom_segment(x = 0.995, xend = 4.006, 
+                 y = -55, yend = -55, 
+                 size = 1.2) +
+    labs(x = 'Stimulus intensity (J)',
+         y = 'SPARS rating (-50 to 50)') +
+    scale_y_continuous(limits = c(-55, 50.25), 
+                       expand = c(0, 0),
+                       breaks = c(-50, -25, 0, 25, 50)) +
+    scale_x_continuous(limits = c(0.8, 4.2), 
+                       expand = c(0, 0),
+                       breaks = seq(from = 1, to = 4, by = 0.5)) +
+    theme(panel.border = element_blank(),
+          panel.grid = element_blank(),
+          axis.text = element_text(size = 16,
+                                   colour = '#000000'),
+          axis.title = element_text(size = 16))
+
+ggsave(filename = 'figures/figure_3.pdf',
+       plot = p,
+       width = 6,
+       height = 5)
+```
 
 ### Participant-level stimulus response curves
 
@@ -151,6 +197,10 @@ data_tm %>%
 
 
 ```r
+theme_update(panel.background = element_rect(fill = "transparent", colour = NA),
+             plot.background = element_rect(fill = "transparent", colour = NA))
+
+
 # Plot
 data %>%
   ggplot(data = .) +
@@ -167,14 +217,15 @@ data %>%
              size = 3,
              fill = '#D55E00') +
   labs(title = 'Participant-level stimulus-response plot',
-       subtitle = 'Black circles: individual experimental blocks | Orange circles: Tukey trimean | Grey line: loess curve',
+       subtitle = 'Black circles: individual experimental blocks | Orange circles: Tukey trimean | \nGrey line: loess curve',
        x = 'Stimulus intensity (J)',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
-  facet_wrap(~ PID, ncol = 4)
+  facet_wrap(~ PID, ncol = 3) +
+  theme_bw()
 ```
 
-<img src="figures/4A-stimulus-response-1/sr_participants-1.png" width="864" style="display: block; margin: auto;" />
+<img src="figures/4A-stimulus-response-1/sr_participants-1.png" width="576" style="display: block; margin: auto;" />
 
 #### Trials by experimental block
 
@@ -220,42 +271,42 @@ sessionInfo()
 ```
 
 ```
-## R version 3.4.3 (2017-11-30)
+## R version 3.5.0 (2018-04-23)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.3
+## Running under: macOS High Sierra 10.13.5
 ## 
 ## Matrix products: default
-## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
+## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
 ## 
 ## attached base packages:
-## [1] stats     graphics  grDevices utils     datasets  base     
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] bindrcpp_0.2       patchwork_0.0.1    forcats_0.2.0     
-##  [4] stringr_1.2.0      dplyr_0.7.4        purrr_0.2.4       
-##  [7] readr_1.1.1        tidyr_0.8.0        tibble_1.4.2      
+##  [1] bindrcpp_0.2.2     patchwork_0.0.1    forcats_0.3.0     
+##  [4] stringr_1.3.1      dplyr_0.7.5        purrr_0.2.5       
+##  [7] readr_1.1.1        tidyr_0.8.1        tibble_1.4.2      
 ## [10] ggplot2_2.2.1.9000 tidyverse_1.2.1    magrittr_1.5      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_0.2.3  reshape2_1.4.3    haven_1.1.1      
+##  [1] tidyselect_0.2.4  reshape2_1.4.3    haven_1.1.1      
 ##  [4] lattice_0.20-35   colorspace_1.3-2  htmltools_0.3.6  
-##  [7] yaml_2.1.16       rlang_0.1.6       pillar_1.1.0     
-## [10] foreign_0.8-69    glue_1.2.0        withr_2.1.1.9000 
-## [13] modelr_0.1.1      readxl_1.0.0      bindr_0.1        
+##  [7] yaml_2.1.19       rlang_0.2.1       pillar_1.2.3     
+## [10] foreign_0.8-70    glue_1.2.0        withr_2.1.2      
+## [13] modelr_0.1.2      readxl_1.1.0      bindr_0.1.1      
 ## [16] plyr_1.8.4        munsell_0.4.3     gtable_0.2.0     
-## [19] cellranger_1.1.0  rvest_0.3.2       psych_1.7.8      
-## [22] evaluate_0.10.1   labeling_0.3      knitr_1.19       
-## [25] parallel_3.4.3    broom_0.4.3       methods_3.4.3    
-## [28] Rcpp_0.12.15      scales_0.5.0.9000 backports_1.1.2  
-## [31] jsonlite_1.5      mnormt_1.5-5      hms_0.4.1        
-## [34] digest_0.6.15     stringi_1.1.6     grid_3.4.3       
-## [37] rprojroot_1.3-2   cli_1.0.0         tools_3.4.3      
-## [40] lazyeval_0.2.1    crayon_1.3.4      pkgconfig_2.0.1  
-## [43] xml2_1.2.0        lubridate_1.7.1   assertthat_0.2.0 
-## [46] rmarkdown_1.8     httr_1.3.1        rstudioapi_0.7   
-## [49] R6_2.2.2          nlme_3.1-131      compiler_3.4.3
+## [19] cellranger_1.1.0  rvest_0.3.2       psych_1.8.4      
+## [22] evaluate_0.10.1   labeling_0.3      knitr_1.20       
+## [25] parallel_3.5.0    broom_0.4.4       Rcpp_0.12.17     
+## [28] scales_0.5.0.9000 backports_1.1.2   jsonlite_1.5     
+## [31] mnormt_1.5-5      hms_0.4.2         digest_0.6.15    
+## [34] stringi_1.2.2     grid_3.5.0        rprojroot_1.3-2  
+## [37] cli_1.0.0         tools_3.5.0       lazyeval_0.2.1   
+## [40] crayon_1.3.4      pkgconfig_2.0.1   xml2_1.2.0       
+## [43] lubridate_1.7.4   assertthat_0.2.0  rmarkdown_1.9    
+## [46] httr_1.3.1        rstudioapi_0.7    R6_2.2.2         
+## [49] nlme_3.1-137      compiler_3.5.0
 ```

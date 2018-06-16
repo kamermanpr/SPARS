@@ -2,7 +2,7 @@
 title: "SPARS trial A"
 subtitle: "Modelling the SPARS stimulus-response relationship"
 author: "Peter Kamerman and Tory Madden"
-date: "16 February 2018"
+date: "16 June 2018"
 output: 
   html_document:
     keep_md: true
@@ -312,7 +312,7 @@ sjt.lmer(lmm2b,
 <td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td>
 <td style="padding:0.2cm; text-align:center; ">2.06</td>
 <td style="padding:0.2cm; text-align:center; ">&#45;10.78&nbsp;&ndash;&nbsp;14.91</td>
-<td style="padding:0.2cm; text-align:center; ">.757</td>
+<td style="padding:0.2cm; text-align:center; ">.753</td>
 </tr><tr>
 <td colspan="5" style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; font-weight:bold; text-align:left; padding-top:0.5em;">Random Parts</td>
 </tr>
@@ -443,14 +443,14 @@ sjt.lmer(lmm3b,
 <td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td>
 <td style="padding:0.2cm; text-align:center; ">2.12</td>
 <td style="padding:0.2cm; text-align:center; ">&#45;10.42&nbsp;&ndash;&nbsp;14.67</td>
-<td style="padding:0.2cm; text-align:center; ">.744</td>
+<td style="padding:0.2cm; text-align:center; ">.740</td>
 </tr>
 <tr>
 <td style="padding:0.2cm; text-align:left;">poly(intensity, 3)3</td>
 <td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td>
 <td style="padding:0.2cm; text-align:center; ">20.95</td>
 <td style="padding:0.2cm; text-align:center; ">8.40&nbsp;&ndash;&nbsp;33.49</td>
-<td style="padding:0.2cm; text-align:center; ">.004</td>
+<td style="padding:0.2cm; text-align:center; ">.001</td>
 </tr><tr>
 <td colspan="5" style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; font-weight:bold; text-align:left; padding-top:0.5em;">Random Parts</td>
 </tr>
@@ -505,33 +505,81 @@ lmm3b     8   1726.958   1754.936   -855.4791   1710.958   10.5285980        1  
 predicted <- ggeffects::ggpredict(model = lmm3b,
                                   terms = 'intensity',
                                   ci.lvl = 0.95) 
-ggplot() +
-    geom_ribbon(data = predicted,
-                aes(x = x,
+ggplot(data = predicted) +
+    geom_ribbon(aes(x = x,
                     ymin = conf.low,
                     ymax = conf.high),
                 fill = '#cccccc') + 
-    geom_line(data = predicted,
-              aes(x = x,
+    geom_line(aes(x = x,
                   y = predicted)) +
-    geom_point(data = predicted,
-              aes(x = x,
+    geom_point(aes(x = x,
                   y = predicted)) +
     geom_point(data = data_group,
                aes(x = intensity,
                    y = median),
                shape = 21,
                size = 4,
-               fill = '#D55E00') +
+               fill = '#FFA500') +
   labs(title = 'Cubic model (95% CI): Predicted values vs stimulus intensity',
-       subtitle = 'Black circles/line: predicted values | Orange circles: group-level median',
+       subtitle = 'Black circles/line: predicted values | Orange circles: group-level median \nFixed effects (intensity): b[L] = 205.4 (95% CI: 163.7 to 247.0); b[Q] = 2.1 (-10.4 to 14.7); \nb[C] = 21.0 (8.4 to 33.5), p = 0.04',
        x = 'Stimulus intensity (J)',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
-  scale_x_continuous(breaks = seq(from = 1, to = 4, by = 0.5))
+  scale_x_continuous(breaks = seq(from = 1, to = 4, by = 0.25))
 ```
 
 <img src="figures/4A-stimulus-response-2/lmm_plot-1.png" width="672" style="display: block; margin: auto;" />
+
+```r
+# Publication plot
+p <- ggplot(data = predicted) +
+    geom_ribbon(aes(x = x,
+                    ymin = conf.low,
+                    ymax = conf.high),
+                fill = '#CCCCCC') + 
+    geom_segment(x = 0.8, xend = 4, 
+                 y = 0, yend = 0, 
+                 size = 0.6,
+                 linetype = 2) +
+    geom_line(aes(x = x,
+                  y = predicted),
+              size = 0.8) +
+    geom_point(aes(x = x,
+                  y = predicted),
+               size = 1.5) +
+    geom_point(data = data_group,
+               aes(x = intensity,
+                   y = median),
+               shape = 21,
+               size = 5,
+               fill = '#FFA500') +
+    geom_segment(x = 0.8, xend = 0.8, 
+                 y = -50.15, yend = 50.15, 
+                 size = 1.2) +
+    geom_segment(x = 0.995, xend = 4.006, 
+                 y = -55, yend = -55, 
+                 size = 1.2) +
+    labs(x = 'Stimulus intensity (J)',
+         y = 'SPARS rating (-50 to 50)') +
+    scale_y_continuous(limits = c(-55, 50.25), 
+                       expand = c(0, 0),
+                       breaks = c(-50, -25, 0, 25, 50)) +
+    scale_x_continuous(limits = c(0.8, 4.2), 
+                       expand = c(0, 0),
+                       breaks = seq(from = 1, to = 4, by = 0.5)) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid = element_blank(),
+          axis.text = element_text(size = 16,
+                                   colour = '#000000'),
+          axis.title = element_text(size = 16,
+                                    colour = '#000000'))
+
+ggsave(filename = 'figures/figure_4.pdf',
+       plot = p,
+       width = 6,
+       height = 5)
+```
 
 The cubic model has the best fit. The resulting curvilinear response function is _steepest_ at the extremes and  _flattens out_ in the mid-ranges of stimulus intensity. We performed diagnostics on this model to confirm that the model was properly specified.
 
@@ -559,29 +607,29 @@ summary(qmm)
 ## tau = 0.025
 ## 
 ## Fixed effects:
-##                        Value Std. Error lower bound upper bound  Pr(>|t|)
-## (Intercept)         -36.3724    30.7098    -98.0859      25.341   0.24197
-## poly(intensity, 3)1 204.7079    18.3780    167.7760     241.640 4.975e-15
-## poly(intensity, 3)2  11.5495    24.0393    -36.7593      59.858   0.63305
-## poly(intensity, 3)3  26.7629    14.7302     -2.8385      56.364   0.07536
-##                        
-## (Intercept)            
-## poly(intensity, 3)1 ***
-## poly(intensity, 3)2    
-## poly(intensity, 3)3 .  
+##                          Value Std. Error lower bound upper bound
+## (Intercept)          -36.37236   42.22979  -121.23630      48.492
+## poly(intensity, 3)1  204.70791   21.21881   162.06712     247.349
+## poly(intensity, 3)2   11.54948   20.85733   -30.36489      53.464
+## poly(intensity, 3)3   26.76290   13.20883     0.21876      53.307
+##                      Pr(>|t|)    
+## (Intercept)           0.39327    
+## poly(intensity, 3)1 6.536e-13 ***
+## poly(intensity, 3)2   0.58228    
+## poly(intensity, 3)3   0.04821 *  
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## tau = 0.25
 ## 
 ## Fixed effects:
-##                         Value Std. Error lower bound upper bound  Pr(>|t|)
-## (Intercept)         -16.06242    8.02620   -32.19169      0.0668  0.050920
-## poly(intensity, 3)1 205.06628   18.79350   167.29934    242.8332 1.028e-14
-## poly(intensity, 3)2   0.84314   15.16737   -29.63682     31.3231  0.955895
-## poly(intensity, 3)3  21.92427    7.20174     7.45184     36.3967  0.003745
+##                         Value Std. Error lower bound upper bound Pr(>|t|)
+## (Intercept)         -16.06242    6.68357   -29.49357     -2.6313 0.020079
+## poly(intensity, 3)1 205.06628   20.51488   163.84010    246.2925 2.04e-13
+## poly(intensity, 3)2   0.84314   12.62893   -24.53565     26.2219 0.947043
+## poly(intensity, 3)3  21.92427    6.67402     8.51232     35.3362 0.001888
 ##                        
-## (Intercept)         .  
+## (Intercept)         *  
 ## poly(intensity, 3)1 ***
 ## poly(intensity, 3)2    
 ## poly(intensity, 3)3 ** 
@@ -592,10 +640,10 @@ summary(qmm)
 ## 
 ## Fixed effects:
 ##                        Value Std. Error lower bound upper bound  Pr(>|t|)
-## (Intercept)           3.2873     8.0015    -12.7923      19.367  0.682986
-## poly(intensity, 3)1 204.0394    18.6680    166.5247     241.554 9.689e-15
-## poly(intensity, 3)2   2.2389    14.1857    -26.2685      30.746  0.875244
-## poly(intensity, 3)3  22.1176     7.4718      7.1026      37.133  0.004728
+## (Intercept)           3.2873     7.6401    -12.0661      18.641  0.668889
+## poly(intensity, 3)1 204.0394    20.6028    162.6364     245.442 2.775e-13
+## poly(intensity, 3)2   2.2389    12.2934    -22.4656      26.943  0.856241
+## poly(intensity, 3)3  22.1176     6.5863      8.8819      35.353  0.001525
 ##                        
 ## (Intercept)            
 ## poly(intensity, 3)1 ***
@@ -607,13 +655,13 @@ summary(qmm)
 ## tau = 0.75
 ## 
 ## Fixed effects:
-##                        Value Std. Error lower bound upper bound  Pr(>|t|)
-## (Intercept)          19.0218     6.4805      5.9988      32.045  0.005062
-## poly(intensity, 3)1 203.2674    19.4864    164.1079     242.427 4.865e-14
-## poly(intensity, 3)2   5.9630    14.5910    -23.3587      35.285  0.684557
-## poly(intensity, 3)3  22.6834     7.4486      7.7149      37.652  0.003735
+##                        Value Std. Error lower bound upper bound Pr(>|t|)
+## (Intercept)          19.0218     7.4900      3.9702      34.074 0.014319
+## poly(intensity, 3)1 203.2674    20.8849    161.2975     245.237 4.91e-13
+## poly(intensity, 3)2   5.9630    12.0159    -18.1839      30.110 0.621930
+## poly(intensity, 3)3  22.6834     6.7996      9.0192      36.348 0.001627
 ##                        
-## (Intercept)         ** 
+## (Intercept)         *  
 ## poly(intensity, 3)1 ***
 ## poly(intensity, 3)2    
 ## poly(intensity, 3)3 ** 
@@ -624,20 +672,18 @@ summary(qmm)
 ## 
 ## Fixed effects:
 ##                        Value Std. Error lower bound upper bound  Pr(>|t|)
-## (Intercept)          22.0604     9.8931      2.1794      41.941   0.03037
-## poly(intensity, 3)1 188.9824    18.1038    152.6015     225.363 4.746e-14
-## poly(intensity, 3)2  22.3598    14.0797     -5.9345      50.654   0.11870
-## poly(intensity, 3)3  12.1005     8.8796     -5.7437      29.945   0.17920
+## (Intercept)          22.0604    29.4285    -37.0783      81.199   0.45706
+## poly(intensity, 3)1 188.9824    21.9290    144.9143     233.050 2.204e-11
+## poly(intensity, 3)2  22.3598    12.4019     -2.5627      47.282   0.07755
+## poly(intensity, 3)3  12.1005     9.2864     -6.5613      30.762   0.19865
 ##                        
-## (Intercept)         *  
+## (Intercept)            
 ## poly(intensity, 3)1 ***
-## poly(intensity, 3)2    
+## poly(intensity, 3)2 .  
 ## poly(intensity, 3)3    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## Null model (likelihood ratio):
-## [1] 132.7 (p = 0) 270.8 (p = 0) 271.1 (p = 0) 247.2 (p = 0) 188.1 (p = 0)
 ## AIC:
 ## [1] 2304 (df = 7) 1892 (df = 7) 1858 (df = 7) 1913 (df = 7) 2212 (df = 7)
 ```
@@ -667,7 +713,7 @@ ggplot(data = data_lqmm) +
       y = Q50) +
   geom_ribbon(aes(ymin = `Q2.5`,
                   ymax = `Q97.5`),
-              fill = '#E69F00') +
+              fill = '#FFA500') +
   geom_ribbon(aes(ymin = `Q25`,
                   ymax = `Q75`),
               fill = '#56B4E9') +
@@ -678,7 +724,7 @@ ggplot(data = data_lqmm) +
   geom_hline(yintercept = 0,
              linetype = 2) +
   labs(title = paste('Quantile regression'),
-       subtitle = 'Open circles: 50th percentile (median) | Blue band: interquartile range | Orange band: 95% prediction interval',
+       subtitle = 'Open circles: 50th percentile (median) | Blue band: interquartile range | \nOrange band: 95% prediction interval',
        x = 'Stimulus intensity (J)',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
@@ -694,7 +740,7 @@ ggplot(data = data_lqmm) +
       y = Q50) +
   geom_ribbon(aes(ymin = `Q2.5`,
                   ymax = `Q97.5`),
-              fill = '#E69F00') +
+              fill = '#FFA500') +
   geom_ribbon(aes(ymin = `Q25`,
                   ymax = `Q75`),
               fill = '#56B4E9') +
@@ -708,7 +754,7 @@ ggplot(data = data_lqmm) +
   geom_hline(yintercept = 0,
              linetype = 2) +
   labs(title = paste('Quantile regression (with original Tukey trimean data)'),
-       subtitle = 'Open circles: 50th percentile (median) | Blue band: interquartile range | Orange band: 95% prediction interval',
+       subtitle = 'Open circles: 50th percentile (median) | Blue band: interquartile range | \nOrange band: 95% prediction interval',
        x = 'Stimulus intensity (J)',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
@@ -716,6 +762,56 @@ ggplot(data = data_lqmm) +
 ```
 
 <img src="figures/4A-stimulus-response-2/quantile-2.png" width="672" style="display: block; margin: auto;" />
+
+```r
+# Publication plot
+p <- ggplot(data = data_lqmm) +
+    aes(x = intensity,
+        y = Q50) +
+    geom_ribbon(aes(ymin = `Q2.5`,
+                    ymax = `Q97.5`),
+                fill = '#FFA500') +
+    geom_ribbon(aes(ymin = `Q25`,
+                    ymax = `Q75`),
+                fill = '#56B4E9') +
+    geom_segment(x = 0.8, xend = 4, 
+                 y = 0, yend = 0, 
+                 size = 0.6,
+                 linetype = 2) +
+    geom_point(data = data_tm,
+               aes(y = tri_mean),
+               position = position_jitter(width = 0.03)) +
+    geom_point(size = 5,
+               shape = 21,
+               fill = '#FFFFFF',
+               colour = '#000000') +
+    geom_segment(x = 0.8, xend = 0.8, 
+                 y = -50.15, yend = 50.15, 
+                 size = 1.2) +
+    geom_segment(x = 0.995, xend = 4.006, 
+                 y = -55, yend = -55, 
+                 size = 1.2) +
+    labs(x = 'Stimulus intensity (J)',
+         y = 'SPARS rating (-50 to 50)') +
+    scale_y_continuous(limits = c(-55, 50.25), 
+                       expand = c(0, 0),
+                       breaks = c(-50, -25, 0, 25, 50)) +
+    scale_x_continuous(limits = c(0.8, 4.2), 
+                       expand = c(0, 0),
+                       breaks = seq(from = 1, to = 4, by = 0.5)) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid = element_blank(),
+          axis.text = element_text(size = 16,
+                                   colour = '#000000'),
+          axis.title = element_text(size = 16,
+                                    colour = '#000000'))
+
+ggsave(filename = 'figures/figure_5.pdf',
+       plot = p,
+       width = 6,
+       height = 5)
+```
 
 There is good stability in the shape of the response characteristics across the quantiles. For all stimulus intensities, the distribution is left skewed (long tail towards lower ratings). 
 
@@ -728,61 +824,62 @@ sessionInfo()
 ```
 
 ```
-## R version 3.4.3 (2017-11-30)
+## R version 3.5.0 (2018-04-23)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.3
+## Running under: macOS High Sierra 10.13.5
 ## 
 ## Matrix products: default
-## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
+## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
 ## 
 ## attached base packages:
-## [1] methods   stats     graphics  grDevices utils     datasets  base     
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] bindrcpp_0.2       car_2.1-6          sjPlot_2.4.1      
-##  [4] HLMdiag_0.3.1      lqmm_1.5.3         lme4_1.1-15       
-##  [7] Matrix_1.2-12      forcats_0.2.0      stringr_1.2.0     
-## [10] dplyr_0.7.4        purrr_0.2.4        readr_1.1.1       
-## [13] tidyr_0.8.0        tibble_1.4.2       ggplot2_2.2.1.9000
-## [16] tidyverse_1.2.1    magrittr_1.5      
+##  [1] bindrcpp_0.2.2     car_3.0-0          carData_3.0-1     
+##  [4] sjPlot_2.4.1       HLMdiag_0.3.1      lqmm_1.5.4        
+##  [7] lme4_1.1-17        Matrix_1.2-14      forcats_0.3.0     
+## [10] stringr_1.3.1      dplyr_0.7.5        purrr_0.2.5       
+## [13] readr_1.1.1        tidyr_0.8.1        tibble_1.4.2      
+## [16] ggplot2_2.2.1.9000 tidyverse_1.2.1    magrittr_1.5      
 ## 
 ## loaded via a namespace (and not attached):
 ##   [1] TH.data_1.0-8      minqa_1.2.4        colorspace_1.3-2  
-##   [4] modeltools_0.2-21  sjlabelled_1.0.7   rprojroot_1.3-2   
-##   [7] estimability_1.2   snakecase_0.8.1    rstudioapi_0.7    
-##  [10] glmmTMB_0.2.0      MatrixModels_0.4-1 DT_0.4            
-##  [13] mvtnorm_1.0-7      lubridate_1.7.1    coin_1.2-2        
-##  [16] xml2_1.2.0         codetools_0.2-15   splines_3.4.3     
-##  [19] mnormt_1.5-5       knitr_1.19         sjmisc_2.7.0      
-##  [22] effects_4.0-0      bayesplot_1.4.0    jsonlite_1.5      
-##  [25] nloptr_1.0.4       ggeffects_0.3.1    pbkrtest_0.4-7    
-##  [28] broom_0.4.3        shiny_1.0.5        compiler_3.4.3    
-##  [31] httr_1.3.1         sjstats_0.14.1     emmeans_1.1       
-##  [34] backports_1.1.2    assertthat_0.2.0   lazyeval_0.2.1    
-##  [37] survey_3.33        cli_1.0.0          quantreg_5.34     
-##  [40] htmltools_0.3.6    tools_3.4.3        SparseGrid_0.8.2  
-##  [43] coda_0.19-1        gtable_0.2.0       glue_1.2.0        
-##  [46] reshape2_1.4.3     merTools_0.3.0     Rcpp_0.12.15      
-##  [49] carData_3.0-0      cellranger_1.1.0   nlme_3.1-131      
-##  [52] psych_1.7.8        lmtest_0.9-35      rvest_0.3.2       
-##  [55] mime_0.5           stringdist_0.9.4.6 MASS_7.3-48       
-##  [58] zoo_1.8-1          scales_0.5.0.9000  hms_0.4.1         
-##  [61] parallel_3.4.3     sandwich_2.4-0     SparseM_1.77      
-##  [64] pwr_1.2-1          TMB_1.7.12         yaml_2.1.16       
-##  [67] stringi_1.1.6      highr_0.6          blme_1.0-4        
-##  [70] rlang_0.1.6        pkgconfig_2.0.1    arm_1.9-3         
-##  [73] evaluate_0.10.1    lattice_0.20-35    prediction_0.2.0  
-##  [76] bindr_0.1          labeling_0.3       htmlwidgets_1.0   
-##  [79] tidyselect_0.2.3   plyr_1.8.4         R6_2.2.2          
-##  [82] multcomp_1.4-8     RLRsim_3.1-3       withr_2.1.1.9000  
-##  [85] pillar_1.1.0       haven_1.1.1        foreign_0.8-69    
-##  [88] mgcv_1.8-23        survival_2.41-3    abind_1.4-5       
-##  [91] nnet_7.3-12        modelr_0.1.1       crayon_1.3.4      
-##  [94] rmarkdown_1.8      grid_3.4.3         readxl_1.0.0      
-##  [97] digest_0.6.15      xtable_1.8-2       httpuv_1.3.5      
-## [100] stats4_3.4.3       munsell_0.4.3
+##   [4] rio_0.5.10         modeltools_0.2-21  ggridges_0.5.0    
+##   [7] sjlabelled_1.0.11  rprojroot_1.3-2    estimability_1.3  
+##  [10] snakecase_0.9.1    rstudioapi_0.7     glmmTMB_0.2.1.0   
+##  [13] DT_0.4             mvtnorm_1.0-8      lubridate_1.7.4   
+##  [16] coin_1.2-2         xml2_1.2.0         codetools_0.2-15  
+##  [19] splines_3.5.0      mnormt_1.5-5       knitr_1.20        
+##  [22] sjmisc_2.7.2       effects_4.0-1      bayesplot_1.5.0   
+##  [25] jsonlite_1.5       nloptr_1.0.4       ggeffects_0.3.4   
+##  [28] pbkrtest_0.4-7     broom_0.4.4        shiny_1.1.0       
+##  [31] compiler_3.5.0     httr_1.3.1         sjstats_0.15.0    
+##  [34] emmeans_1.2.1      backports_1.1.2    assertthat_0.2.0  
+##  [37] lazyeval_0.2.1     survey_3.33-2      cli_1.0.0         
+##  [40] later_0.7.3        htmltools_0.3.6    tools_3.5.0       
+##  [43] SparseGrid_0.8.2   coda_0.19-1        gtable_0.2.0      
+##  [46] glue_1.2.0         reshape2_1.4.3     merTools_0.4.1    
+##  [49] Rcpp_0.12.17       cellranger_1.1.0   nlme_3.1-137      
+##  [52] psych_1.8.4        lmtest_0.9-36      openxlsx_4.1.0    
+##  [55] rvest_0.3.2        mime_0.5           stringdist_0.9.5.1
+##  [58] MASS_7.3-50        zoo_1.8-1          scales_0.5.0.9000 
+##  [61] promises_1.0.1     hms_0.4.2          parallel_3.5.0    
+##  [64] sandwich_2.4-0     pwr_1.2-2          TMB_1.7.13        
+##  [67] curl_3.2           yaml_2.1.19        stringi_1.2.2     
+##  [70] highr_0.6          blme_1.0-4         zip_1.0.0         
+##  [73] rlang_0.2.1        pkgconfig_2.0.1    arm_1.10-1        
+##  [76] evaluate_0.10.1    lattice_0.20-35    prediction_0.3.6  
+##  [79] bindr_0.1.1        labeling_0.3       htmlwidgets_1.2   
+##  [82] tidyselect_0.2.4   plyr_1.8.4         R6_2.2.2          
+##  [85] multcomp_1.4-8     RLRsim_3.1-3       pillar_1.2.3      
+##  [88] haven_1.1.1        foreign_0.8-70     withr_2.1.2       
+##  [91] mgcv_1.8-23        survival_2.42-3    abind_1.4-5       
+##  [94] nnet_7.3-12        modelr_0.1.2       crayon_1.3.4      
+##  [97] rmarkdown_1.9      grid_3.5.0         readxl_1.1.0      
+## [100] data.table_1.11.4  digest_0.6.15      xtable_1.8-2      
+## [103] httpuv_1.4.3       stats4_3.5.0       munsell_0.4.3
 ```

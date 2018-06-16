@@ -2,7 +2,7 @@
 title: "SPARS trial A"
 subtitle: "Participants: Descriptive statistics"
 author: "Peter Kamerman"
-date: "16 Feb 2018"
+date: "15 Jun 2018"
 output: 
   html_document:
     keep_md: true
@@ -64,12 +64,12 @@ head(data)
 ## # A tibble: 6 x 19
 ##   PID   block block_order trial_number intensity intensity_char rating
 ##   <chr> <chr>       <dbl>        <dbl>     <dbl> <chr>           <dbl>
-## 1 ID01  A            1.00         1.00      3.75 3.75            -10.0
-## 2 ID01  A            1.00         2.00      1.50 1.50            -40.0
-## 3 ID01  A            1.00         3.00      3.25 3.25            -10.0
-## 4 ID01  A            1.00         4.00      1.50 1.50            -25.0
-## 5 ID01  A            1.00         5.00      3.00 3.00            -20.0
-## 6 ID01  A            1.00         6.00      2.75 2.75            -25.0
+## 1 ID01  A               1            1      3.75 3.75              -10
+## 2 ID01  A               1            2      1.5  1.50              -40
+## 3 ID01  A               1            3      3.25 3.25              -10
+## 4 ID01  A               1            4      1.5  1.50              -25
+## 5 ID01  A               1            5      3    3.00              -20
+## 6 ID01  A               1            6      2.75 2.75              -25
 ## # ... with 12 more variables: rating_positive <dbl>, EDA <dbl>, age <dbl>,
 ## #   sex <dbl>, panas_positive <dbl>, panas_negative <dbl>,
 ## #   dass42_depression <dbl>, dass42_anxiety <dbl>, dass42_stress <dbl>,
@@ -84,12 +84,12 @@ tail(data)
 ## # A tibble: 6 x 19
 ##   PID   block block_order trial_number intensity intensity_char rating
 ##   <chr> <chr>       <dbl>        <dbl>     <dbl> <chr>           <dbl>
-## 1 ID19  C            4.00         99.0      2.00 2.00           -25.0 
-## 2 ID19  C            4.00        100        3.25 3.25           - 3.00
-## 3 ID19  C            4.00        101        3.50 3.50           - 8.00
-## 4 ID19  C            4.00        102        1.50 1.50           -17.0 
-## 5 ID19  C            4.00        103        1.50 1.50           - 7.00
-## 6 ID19  C            4.00        104        2.75 2.75           - 8.00
+## 1 ID19  C               4           99      2    2.00              -25
+## 2 ID19  C               4          100      3.25 3.25               -3
+## 3 ID19  C               4          101      3.5  3.50               -8
+## 4 ID19  C               4          102      1.5  1.50              -17
+## 5 ID19  C               4          103      1.5  1.50               -7
+## 6 ID19  C               4          104      2.75 2.75               -8
 ## # ... with 12 more variables: rating_positive <dbl>, EDA <dbl>, age <dbl>,
 ## #   sex <dbl>, panas_positive <dbl>, panas_negative <dbl>,
 ## #   dass42_depression <dbl>, dass42_anxiety <dbl>, dass42_stress <dbl>,
@@ -147,25 +147,25 @@ data
 ## # A tibble: 19 x 11
 ##    PID     age   sex panas_positive panas_negative dass42_depression
 ##    <chr> <dbl> <dbl>          <dbl>          <dbl>             <dbl>
-##  1 ID01   21.0  2.00           36.0           10.0              0   
-##  2 ID02   20.0  1.00           34.0           11.0              3.00
-##  3 ID03   19.0  1.00           22.0           12.0              3.00
-##  4 ID04   21.0  2.00           17.0           10.0              0   
-##  5 ID05   25.0  2.00           17.0           10.0              0   
-##  6 ID06   22.0  2.00           30.0           10.0              0   
-##  7 ID07   27.0  1.00           33.0           10.0              1.00
-##  8 ID08   24.0  2.00           23.0           11.0              0   
-##  9 ID09   26.0  2.00           26.0           13.0              6.00
-## 10 ID10   20.0  2.00           24.0           10.0              0   
-## 11 ID11   24.0  2.00           18.0           11.0              1.00
-## 12 ID12   18.0  2.00           29.0           10.0             18.0 
-## 13 ID13   25.0  2.00           34.0           10.0              4.00
-## 14 ID14   29.0  2.00           24.0           14.0              7.00
-## 15 ID15   24.0  1.00           25.0           12.0              2.00
-## 16 ID16   30.0  2.00           29.0           16.0              5.00
-## 17 ID17   24.0  1.00           25.0           12.0              2.00
-## 18 ID18   31.0  1.00           24.0           10.0              7.00
-## 19 ID19   22.0  1.00           19.0           14.0             13.0 
+##  1 ID01     21     2             36             10                 0
+##  2 ID02     20     1             34             11                 3
+##  3 ID03     19     1             22             12                 3
+##  4 ID04     21     2             17             10                 0
+##  5 ID05     25     2             17             10                 0
+##  6 ID06     22     2             30             10                 0
+##  7 ID07     27     1             33             10                 1
+##  8 ID08     24     2             23             11                 0
+##  9 ID09     26     2             26             13                 6
+## 10 ID10     20     2             24             10                 0
+## 11 ID11     24     2             18             11                 1
+## 12 ID12     18     2             29             10                18
+## 13 ID13     25     2             34             10                 4
+## 14 ID14     29     2             24             14                 7
+## 15 ID15     24     1             25             12                 2
+## 16 ID16     30     2             29             16                 5
+## 17 ID17     24     1             25             12                 2
+## 18 ID18     31     1             24             10                 7
+## 19 ID19     22     1             19             14                13
 ## # ... with 5 more variables: dass42_anxiety <dbl>, dass42_stress <dbl>,
 ## #   pcs_magnification <dbl>, pcs_rumination <dbl>, pcs_helplessness <dbl>
 ```
@@ -583,43 +583,43 @@ sessionInfo()
 ```
 
 ```
-## R version 3.4.3 (2017-11-30)
+## R version 3.5.0 (2018-04-23)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.3
+## Running under: macOS High Sierra 10.13.5
 ## 
 ## Matrix products: default
-## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
+## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
 ## 
 ## attached base packages:
-## [1] stats     graphics  grDevices utils     datasets  base     
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] bindrcpp_0.2       patchwork_0.0.1    forcats_0.2.0     
-##  [4] stringr_1.2.0      dplyr_0.7.4        purrr_0.2.4       
-##  [7] readr_1.1.1        tidyr_0.8.0        tibble_1.4.2      
+##  [1] bindrcpp_0.2.2     patchwork_0.0.1    forcats_0.3.0     
+##  [4] stringr_1.3.1      dplyr_0.7.5        purrr_0.2.5       
+##  [7] readr_1.1.1        tidyr_0.8.1        tibble_1.4.2      
 ## [10] ggplot2_2.2.1.9000 tidyverse_1.2.1    magrittr_1.5      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_0.2.3  reshape2_1.4.3    haven_1.1.1      
+##  [1] tidyselect_0.2.4  reshape2_1.4.3    haven_1.1.1      
 ##  [4] lattice_0.20-35   colorspace_1.3-2  htmltools_0.3.6  
-##  [7] yaml_2.1.16       utf8_1.1.3        rlang_0.1.6      
-## [10] pillar_1.1.0      foreign_0.8-69    glue_1.2.0       
-## [13] withr_2.1.1.9000  modelr_0.1.1      readxl_1.0.0     
-## [16] bindr_0.1         plyr_1.8.4        munsell_0.4.3    
+##  [7] yaml_2.1.19       utf8_1.1.4        rlang_0.2.1      
+## [10] pillar_1.2.3      foreign_0.8-70    glue_1.2.0       
+## [13] withr_2.1.2       modelr_0.1.2      readxl_1.1.0     
+## [16] bindr_0.1.1       plyr_1.8.4        munsell_0.4.3    
 ## [19] gtable_0.2.0      cellranger_1.1.0  rvest_0.3.2      
-## [22] psych_1.7.8       evaluate_0.10.1   labeling_0.3     
-## [25] knitr_1.19        parallel_3.4.3    highr_0.6        
-## [28] broom_0.4.3       methods_3.4.3     Rcpp_0.12.15     
-## [31] scales_0.5.0.9000 backports_1.1.2   jsonlite_1.5     
-## [34] mnormt_1.5-5      hms_0.4.1         digest_0.6.15    
-## [37] stringi_1.1.6     grid_3.4.3        rprojroot_1.3-2  
-## [40] cli_1.0.0         tools_3.4.3       lazyeval_0.2.1   
-## [43] crayon_1.3.4      pkgconfig_2.0.1   xml2_1.2.0       
-## [46] lubridate_1.7.1   assertthat_0.2.0  rmarkdown_1.8    
-## [49] httr_1.3.1        rstudioapi_0.7    R6_2.2.2         
-## [52] nlme_3.1-131      compiler_3.4.3
+## [22] psych_1.8.4       evaluate_0.10.1   labeling_0.3     
+## [25] knitr_1.20        parallel_3.5.0    highr_0.6        
+## [28] broom_0.4.4       Rcpp_0.12.17      scales_0.5.0.9000
+## [31] backports_1.1.2   jsonlite_1.5      mnormt_1.5-5     
+## [34] hms_0.4.2         digest_0.6.15     stringi_1.2.2    
+## [37] grid_3.5.0        rprojroot_1.3-2   cli_1.0.0        
+## [40] tools_3.5.0       lazyeval_0.2.1    crayon_1.3.4     
+## [43] pkgconfig_2.0.1   xml2_1.2.0        lubridate_1.7.4  
+## [46] assertthat_0.2.0  rmarkdown_1.9     httr_1.3.1       
+## [49] rstudioapi_0.7    R6_2.2.2          nlme_3.1-137     
+## [52] compiler_3.5.0
 ```
