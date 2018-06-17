@@ -13,7 +13,7 @@ In experiments on pain perception, participants are frequently exposed to non-pa
 
 The outputs from all analysis scripts are located in the _/outputs_ directory. The outputs are formatted as markdown and html. The markdown documents are intermediate outputs generated during the production of the html documents, and while they allow quick browsing of the analysis outputs on GitHub, MathJax formulae and tables are not formatted. 
 
-All inputs (root directory) and outputs (_/outputs_) prefixed with _suppl\_\*\*\__ are analysis scripts cited in the text of the manuscript as supplementary files. For convenience, PDF versions of these files have been included in the _supplements\_pdf_ folder. These PDF files were produced by the scripts contained in the _supplementary\_pdfs_ branch of the SPARS repo (URL: [https://github.com/kamermanpr/SPARS/tree/supplementary_pdfs](https://github.com/kamermanpr/SPARS/tree/supplementary_pdfs)).
+All inputs (root directory) and outputs (_/outputs_) prefixed with _suppl\_\*\*\__ are analysis scripts cited in the text of the manuscript as supplementary files. 
 
 ## Build the document
 While the outputs have been provided, you can build the analysis from scratch on your local machine by following the steps below. The analysis was performed on _R version 3.5.0 (2018-04-23) -- "Joy in Playing"_.
