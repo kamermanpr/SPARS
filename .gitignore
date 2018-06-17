@@ -4,6 +4,8 @@
 .Ruserdata
 .DS_Store
 *_cache/
+data/
+data-cleaned/
 README.html
 DELETED-*
 .dropbox
