@@ -1,17 +1,16 @@
 ---
-title: "SPARS trial B"
-subtitle: "Agreement between the SPARS and the pain NRS/SRS"
+title: "Supplement 11"
+subtitle: "Experiment 2 -- Agreement between the SPARS and the pain NRS/SRS"
 author: "Peter Kamerman and Tory Madden"
 date: "`r format(Sys.Date(), '%d %B %Y')`"
-output: 
-  html_document:
-    keep_md: true
-    theme: yeti
-    hightlight: pygments
-    toc: true
-    toc_depth: 5
-    toc_float: true
-    code_folding: show
+output:
+  pdf_document:
+      toc: true
+      toc_depth: 2
+      latex_engine: xelatex
+mainfont: Helvetica
+fontsize: 12pt
+geometry: a4paper, margin=15mm
 ---
 
 ```{r setup, include = FALSE}
@@ -26,11 +25,8 @@ theme_set(new = theme_bw())
 # knitr setup
 knitr::opts_chunk$set(warning = FALSE,
                       message = FALSE,
-                      fig.retina = 2,
                       fig.height = 7,
-                      fig.width = 7,
-                      fig.align = 'center',
-                      fig.path = 'figures/6B-scale-agreement/')
+                      fig.width = 7)
 ```
 
 ----

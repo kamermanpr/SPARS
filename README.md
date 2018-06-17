@@ -1,16 +1,25 @@
 # The Sensation and Pain Rating Scale (SPARS)
 
+### Generate PDF copies of supplementary files 
+
+## Information
+
+**Do not merge this branch with _master_**
+
+This branch of the SPARS repo was used to generate the supplementary files referenced in the SPARS mansucript as PDF documents. Minor changes were made to the YAML and the body of _*.Rmd_ scripts to generate well-formatted PDF outputs. The names of these files use the format: _supplement\_\*.pdf_, where _\*_ is an integer numbering the file. 
+
+Auxillary analyses that were not directly referenced as supplementary materials in the mansucript, but which were part of the analysis process, have also been converted tp PDF documents. The names of these files use the format: _experiment\_\*\_details.pdf_, where _\*_ is an integer numbering the experiment (1 or 2), and _details_ provides additional information on the type of analysis contained within the script.
+
 ## Bibliometric information
 
+URL for master: [https://github.com/kamermanpr/SPARS](https://github.com/kamermanpr/SPARS)
 
-## Abstract
-
-In experiments on pain perception, participants are frequently exposed to non-painful and painful stimuli, yet the conventional pain-rating scales lack a non-painful range and a clear point of transition from non-painful to painful events. The Sensation and Pain Rating Scale (SPARS) is a 0-100 scale that assesses the full stimulus intensity range, extending from no sensation (rating: -50) to worst pain imaginable (rating: +50), and it explicitly identifies pain threshold (rating: 0).  Here, we tested the SPARS in two experiments using laser heat stimuli to establish its stimulus-response characteristics (Experiment 1, n = 19, 13 stimulus intensities applied 26 times each across a 1-4J range), and to compare it to 0-100 scales that access non-painful (0: no sensation, 100: painful) and painful (0: not painful, 100: worst pain imaginable) events (Experiment 2, n = 7, 9 stimulus intensities applied 36 times each across a 1.5-4.5J range). Despite high inter- and intra-individual variation, we found a reasonably consistent curvilinear stimulus-response relationship (the curve flattens around pain threshold), with stable response characteristics across the range of the scale.  SPARS ratings tended to be lower than the 0-100 pain rating scale in the noxious stimulus intensity range, and greater than the 0-100 non-painful sensation scale in the non-noxious stimulus range; likely reflecting differences in scale dimensionality. The SPARS overcomes limitations of scale range inherent in conventional pain rating scales and, as such, is well suited to experimental studies in which distinguishing between painful and non-painful events is a priority.
-
-## Analysis outputs
-The outputs from all analysis scripts are located in the outputs directory. The outputs are formatted as markdown and html. The markdown documents are intemediate outputs generated during the production of the html documents, and while they allow quick browsing of the analysis outputs on GitHub, MathJax formulae and tables are not formatted. 
+URL for this branch: [https://github.com/kamermanpr/SPARS/tree/supplementary_pdfs](https://github.com/kamermanpr/SPARS/tree/supplementary_pdfs)
 
 ## Build the document
+
+**Requires data from the authors. Participants did not consent to public release of their data, but the data are available on request from the corresponding author listed on the published manuscript (see: _bibliometric information_).**
+
 While the outputs have been provided, you can build the analysis from scratch on your local machine by following the steps below. The analysis was performed on _R version 3.5.0 (2018-04-23) -- "Joy in Playing"_.
 
 Before building the analysis, _Microsoft Windows_ users must first download and install:

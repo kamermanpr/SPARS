@@ -1,17 +1,16 @@
 ---
-title: "SPARS trial A"
+title: "Experiment 1: sensitivity"
 subtitle: "Sensitivity of the SPARS to changes in stimulus intensity"
 author: "Peter Kamerman"
 date: "`r format(Sys.Date(), '%d %b %Y')`"
-output: 
-  html_document:
-    keep_md: true
-    theme: yeti
-    hightlight: pygments
-    toc: true
-    toc_depth: 5
-    toc_float: true
-    code_folding: show
+output:
+  pdf_document:
+      toc: true
+      toc_depth: 2
+      latex_engine: xelatex
+mainfont: Helvetica
+fontsize: 12pt
+geometry: a4paper, margin=15mm
 ---
 
 ```{r setup, include = FALSE}
@@ -30,18 +29,17 @@ theme_set(new = theme_bw())
 # knitr setup
 knitr::opts_chunk$set(warning = FALSE,
                       message = FALSE,
-                      fig.retina = 2,
                       fig.height = 7,
-                      fig.width = 7,
-                      fig.align = 'center',
-                      fig.path = 'figures/4A-stimulus-response-5/')
+                      fig.width = 7)
 ```
 
 ----
 
 This script is part 5 of our analysis of the stimulus-response characteristics of the SPARS. In this analysis we examined whether there is a linear relationship between change in stimulus intensity and change in rating magnitude between two successive stimuli, irrespective of the direction of the change?
 
-Descriptive plots of the data are provided in _"outputs/4A-stimulus-response-1.html"_, modelling of the stimulus-response relationship is described in _"outputs/4A-stimulus-response-2.html"_, the diagnostics on the final linear mixed model are described in _"outputs/4A-stimulus-response-3.html"_, the stability of the model is described in _"outputs/4A-stimulus-response-4.html"_, and the variance in ratings at each stimulus intensity is described in _"outputs/4A-stimulus-reponse-6.html"_.
+Source URL: [https://github.com/kamermanpr/SPARS/tree/supplementary_pdfs](https://github.com/kamermanpr/SPARS/tree/supplementary_pdfs)  
+
+Descriptive plots of the data are provided in _"outputs/supplement\_4.pdf"_, modelling of the stimulus-response relationship is described in _"outputs/supplement\_5.pdf"_, the diagnostics on the final linear mixed model are described in _"outputs/supplement\_6.pdf"_, the stability of the model is described in _"outputs/supplement\_7.pdf"_, and the variance in ratings at each stimulus intensity is described in _"outputs/experiment\_1\_variance.pdf"_.
 
 ----
 

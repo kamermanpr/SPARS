@@ -1,17 +1,16 @@
 ---
-title: "SPARS trial A"
-subtitle: "Diagnostics for the best-fit linear mixed model of the SPARS stimulus-response relationship"
+title: "Supplement 6"
+subtitle: "Experiment 1 -- Diagnostics for the best-fit linear mixed model of the SPARS stimulus-response relationship"
 author: "Peter Kamerman and Tory Madden"
 date: "`r format(Sys.Date(), '%d %B %Y')`"
-output: 
-  html_document:
-    keep_md: true
-    theme: yeti
-    hightlight: pygments
-    toc: true
-    toc_depth: 5
-    toc_float: true
-    code_folding: show
+output:
+  pdf_document:
+      toc: true
+      toc_depth: 2
+      latex_engine: xelatex
+mainfont: Helvetica
+fontsize: 12pt
+geometry: a4paper, margin=15mm
 ---
 
 ```{r setup, include = FALSE}
@@ -28,18 +27,17 @@ theme_set(new = theme_bw())
 # knitr setup
 knitr::opts_chunk$set(warning = FALSE,
                       message = FALSE,
-                      fig.retina = 2,
                       fig.height = 7,
-                      fig.width = 7,
-                      fig.align = 'center',
-                      fig.path = 'figures/4A-stimulus-response-3/')
+                      fig.width = 7)
 ```
 
 ----
 
 This script is part 3 of our analysis of the stimulus-response characteristics of the SPARS. This script generates diagnostics on the final (best) linear mixed model of the relationship between stimulus intensity and SPARS rating.
 
-Descriptive plots of the data are provided in _"outputs/4A-stimulus-response-1.html"_, modelling of the stimulus-response relationship is described in _"outputs/4A-stimulus-response-2.html"_, the stability of the model is described in _"outputs/4A-stimulus-response-4.html"_, the sensitivity of the scale to changes in stimulus intensity are described in _"outputs/4A-stimulus-reponse-5.html"_, and the variance in ratings at each stimulus intensity is described in _"outputs/4A-stimulus-reponse-6.html"_.
+Source URL: [https://github.com/kamermanpr/SPARS/tree/supplementary_pdfs](https://github.com/kamermanpr/SPARS/tree/supplementary_pdfs)  
+
+Descriptive plots of the data are provided in _"outputs/supplement\_4.pdf"_, modelling of the stimulus-response relationship is described in _"outputs/supplement\_5.pdf"_, the stability of the model is described in _"outputs/supplement\_7.pdf"_, the sensitivity of the scale to changes in stimulus intensity are described in _"outputs/experiment\_1\_sensitivity.pdf"_, and the variance in ratings at each stimulus intensity is described in _"outputs/experiment\_1\_variance.pdf"_.
 
 ----
 

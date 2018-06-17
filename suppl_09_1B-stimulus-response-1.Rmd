@@ -1,17 +1,16 @@
 ---
-title: "SPARS trial B"
-subtitle: "Stimulus-response characteristics of the SPARS"
+title: "Supplement 9"
+subtitle: "Experiment 2 -- Stimulus-response characteristics of the SPARS"
 author: "Peter Kamerman"
 date: "`r format(Sys.Date(), '%d %b %Y')`"
-output: 
-  html_document:
-    keep_md: true
-    theme: yeti
-    hightlight: pygments
-    toc: true
-    toc_depth: 5
-    toc_float: true
-    code_folding: show
+output:
+  pdf_document:
+      toc: true
+      toc_depth: 2
+      latex_engine: xelatex
+mainfont: Helvetica
+fontsize: 12pt
+geometry: a4paper, margin=15mm
 ---
 
 ```{r setup, include = FALSE}
@@ -32,11 +31,8 @@ set_theme(base = theme_bw())
 # knitr setup
 knitr::opts_chunk$set(warning = FALSE,
                       message = FALSE,
-                      fig.retina = 2,
                       fig.height = 7,
-                      fig.width = 7,
-                      fig.align = 'center',
-                      fig.path = 'figures/5B-stimulus-response-1/')
+                      fig.width = 7)
 ```
 
 ----
@@ -183,52 +179,6 @@ data_tmR %>%
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
   scale_x_continuous(breaks = seq(from = 1, to = 9, by = 1))
-
-# Publication plot
-p <- data_tmR %>%
-    ggplot(data = .) +
-    aes(x = intensity_rank,
-        y = tri_mean) +
-    geom_segment(x = 0.8, xend = 9, 
-                 y = 0, yend = 0, 
-                 size = 0.6,
-                 linetype = 2) +
-    geom_point(position = position_jitter(width = 0.05)) +
-    geom_smooth(method = 'loess',
-                se = FALSE,
-                colour = '#FFA500', 
-                size = 1) +
-    geom_point(data = data_groupR,
-               aes(y = median),
-               shape = 21,
-               size = 5,
-               fill = '#FFA500') +
-    geom_segment(x = 0.8, xend = 0.8, 
-                 y = -50.15, yend = 50.15, 
-                 size = 1.2) +
-    geom_segment(x = 0.995, xend = 9.006, 
-                 y = -55, yend = -55, 
-                 size = 1.2) +
-    labs(x = 'Relative stimulus intensity',
-         y = 'SPARS rating (-50 to 50)') +
-    scale_y_continuous(limits = c(-55, 50.25), 
-                       expand = c(0, 0),
-                       breaks = c(-50, -25, 0, 25, 50)) +
-    scale_x_continuous(limits = c(0.8, 9.2), 
-                       expand = c(0, 0),
-                       breaks = seq(from = 1, to = 9, by = 1)) +
-    theme_bw() +
-    theme(panel.border = element_blank(),
-          panel.grid = element_blank(),
-          axis.text = element_text(size = 16,
-                                    colour = '#000000'),
-          axis.title = element_text(size = 16,
-                                    colour = '#000000'))
-
-ggsave(filename = 'figures/figure_8.pdf',
-       plot = p,
-       width = 6,
-       height = 5)
 ```
 
 ### Participant-level stimulus response curves
@@ -373,17 +323,19 @@ Anova(lmm1b,
       test.statistic = 'F')
 
 # Print better model
-sjt.lmer(lmm1b,
-         show.header = TRUE,
-         string.dv = "Response", 
-         string.pred = "Coefficients",
-         depvar.labels = '',
-         pred.labels = 'intensity_rank',
-         string.est = 'Estimate',
-         string.ci = '95% CI',
-         string.p = 'p-value',
-         show.icc = FALSE,
-         show.r2 = FALSE)
+summary(lmm1b)
+# Does not work on LaTex
+# sjt.lmer(lmm1b,
+#          show.header = TRUE,
+#          string.dv = "Response", 
+#          string.pred = "Coefficients",
+#          depvar.labels = '',
+#          pred.labels = 'intensity_rank',
+#          string.est = 'Estimate',
+#          string.ci = '95% CI',
+#          string.p = 'p-value',
+#          show.icc = FALSE,
+#          show.r2 = FALSE)
 ```
 
 ### 2nd-order (quadratic) polynomial
@@ -408,17 +360,19 @@ Anova(lmm2b,
       test.statistic = 'F')
 
 # Print better model
-sjt.lmer(lmm2b,
-         show.header = TRUE,
-         string.dv = "Response", 
-         string.pred = "Coefficients",
-         depvar.labels = '',
-         pred.labels = 'intensity_rank',
-         string.est = 'Estimate',
-         string.ci = '95% CI',
-         string.p = 'p-value',
-         show.icc = FALSE,
-         show.r2 = FALSE)
+summary(lmm2b)
+# Doesn't work on LaTex
+# sjt.lmer(lmm2b,
+#          show.header = TRUE,
+#          string.dv = "Response", 
+#          string.pred = "Coefficients",
+#          depvar.labels = '',
+#          pred.labels = 'intensity_rank',
+#          string.est = 'Estimate',
+#          string.ci = '95% CI',
+#          string.p = 'p-value',
+#          show.icc = FALSE,
+#          show.r2 = FALSE)
 ```
 
 ### 3rd-order (cubic) polynomial
@@ -443,17 +397,19 @@ Anova(lmm3b,
       test.statistic = 'F')
 
 # Print better model
-sjt.lmer(lmm3b,
-         show.header = TRUE,
-         string.dv = "Response", 
-         string.pred = "Coefficients",
-         depvar.labels = '',
-         pred.labels = 'intensity_rank',
-         string.est = 'Estimate',
-         string.ci = '95% CI',
-         string.p = 'p-value',
-         show.icc = FALSE,
-         show.r2 = FALSE)
+summary(lmm3b)
+# Doesn't wotk with LaTex
+# sjt.lmer(lmm3b,
+#          show.header = TRUE,
+#          string.dv = "Response", 
+#          string.pred = "Coefficients",
+#          depvar.labels = '',
+#          pred.labels = 'intensity_rank',
+#          string.est = 'Estimate',
+#          string.ci = '95% CI',
+#          string.p = 'p-value',
+#          show.icc = FALSE,
+#          show.r2 = FALSE)
 ```
 
 ### Compare models
@@ -494,55 +450,6 @@ ggplot() +
   scale_y_continuous(limits = c(-50, 50)) +
   scale_x_continuous(breaks = seq(from = 1, to = 9, by = 1))
 
-# Publication plot
-quad <- ggplot(data = predicted) +
-    geom_ribbon(aes(x = x,
-                    ymin = conf.low,
-                    ymax = conf.high),
-                fill = '#CCCCCC') + 
-    geom_segment(x = 0.8, xend = 9, 
-                 y = 0, yend = 0, 
-                 size = 0.6,
-                 linetype = 2) +
-    geom_line(aes(x = x,
-                  y = predicted),
-              size = 0.8) +
-    geom_point(aes(x = x,
-                  y = predicted),
-               size = 1.5) +
-    geom_point(data = data_groupR,
-               aes(x = intensity_rank,
-                   y = median),
-               shape = 21,
-               size = 5,
-               fill = '#FFA500') +
-    geom_segment(x = 0.8, xend = 0.8, 
-                 y = -50.15, yend = 50.15, 
-                 size = 1.2) +
-    geom_segment(x = 0.995, xend = 9.006, 
-                 y = -55, yend = -55, 
-                 size = 1.2) +
-    annotate(geom = 'text', 
-             x = 1, y = 47, 
-             label = 'Quadratic model', 
-             size = 7, 
-             hjust = 0) +
-    labs(x = 'Relative stimulus intensity',
-         y = 'SPARS rating (-50 to 50)') +
-    scale_y_continuous(limits = c(-55, 50.25), 
-                       expand = c(0, 0),
-                       breaks = c(-50, -25, 0, 25, 50)) +
-    scale_x_continuous(limits = c(0.8, 9.2), 
-                       expand = c(0, 0),
-                       breaks = seq(from = 1, to = 9, by = 1)) +
-    theme_bw() +
-    theme(panel.border = element_blank(),
-          panel.grid = element_blank(),
-          axis.text = element_text(size = 16,
-                                   colour = '#000000'),
-          axis.title = element_text(size = 16,
-                                    colour = '#000000'))
-
 # Plot cubic model
 predicted_cubic <- ggeffects::ggpredict(model = lmm3b,
                                   terms = 'intensity_rank',
@@ -572,67 +479,6 @@ ggplot() +
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
   scale_x_continuous(breaks = seq(from = 1, to = 9, by = 1))
-
-# Publication plot
-cubic <- ggplot(data = predicted_cubic) +
-    geom_ribbon(aes(x = x,
-                    ymin = conf.low,
-                    ymax = conf.high),
-                fill = '#CCCCCC') + 
-    geom_segment(x = 0.8, xend = 9, 
-                 y = 0, yend = 0, 
-                 size = 0.6,
-                 linetype = 2) +
-    geom_line(aes(x = x,
-                  y = predicted),
-              size = 0.8) +
-    geom_point(aes(x = x,
-                  y = predicted),
-               size = 1.5) +
-    geom_point(data = data_groupR,
-               aes(x = intensity_rank,
-                   y = median),
-               shape = 21,
-               size = 5,
-               fill = '#FFA500') +
-    geom_segment(x = 0.8, xend = 0.8, 
-                 y = -50.15, yend = 50.15, 
-                 size = 1.2) +
-    geom_segment(x = 0.995, xend = 9.006, 
-                 y = -55, yend = -55, 
-                 size = 1.2) +
-    annotate(geom = 'text', 
-             x = 1, y = 47, 
-             label = 'Cubic model', 
-             size = 7, 
-             hjust = 0) +
-    labs(x = 'Relative stimulus intensity',
-         y = 'SPARS rating (-50 to 50)') +
-    scale_y_continuous(limits = c(-55, 50.25), 
-                       expand = c(0, 0),
-                       breaks = c(-50, -25, 0, 25, 50)) +
-    scale_x_continuous(limits = c(0.8, 9.2), 
-                       expand = c(0, 0),
-                       breaks = seq(from = 1, to = 9, by = 1)) +
-    theme_bw() +
-    theme(panel.border = element_blank(),
-          panel.grid = element_blank(),
-          axis.text.x = element_text(size = 16,
-                                     colour = '#000000'),
-          axis.title.x = element_text(size = 16,
-                                      colour = '#000000'),
-          axis.text.y = element_text(size = 16,
-                                     colour = '#FFFFFF'),
-          axis.title.y = element_text(size = 16,
-                                      colour = '#FFFFFF'))
-
-p <- quad + cubic
-
-ggsave(filename = 'figures/figure_9.pdf',
-       plot = p,
-       width = 12,
-       height = 5)
-
 ```
 
 The quadratic and cubic models were better fits than the linear model, and did not differ significantly from each other. Therefore we took the simpler of the two models (quadratic) for further inspection, performing diagnostics on the model to confirm that the model was properly specified.
@@ -971,54 +817,6 @@ ggplot(data = data_lqmm) +
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
   scale_x_continuous(breaks = unique(data_lqmm$intensity_rank)) 
-
-# Publication plot
-p <- ggplot(data = data_lqmm) +
-    aes(x = intensity_rank,
-        y = Q50) +
-    geom_ribbon(aes(ymin = `Q2.5`,
-                    ymax = `Q97.5`),
-                fill = '#FFA500') +
-    geom_ribbon(aes(ymin = `Q25`,
-                    ymax = `Q75`),
-                fill = '#56B4E9') +
-    geom_segment(x = 0.8, xend = 9, 
-                 y = 0, yend = 0, 
-                 size = 0.6,
-                 linetype = 2) +
-    geom_point(data = data_tmR,
-               aes(y = tri_mean),
-               position = position_jitter(width = 0.03)) +
-    geom_point(size = 5,
-               shape = 21,
-               fill = '#FFFFFF',
-               colour = '#000000') +
-    geom_segment(x = 0.8, xend = 0.8, 
-                 y = -50.15, yend = 50.15, 
-                 size = 1.2) +
-    geom_segment(x = 0.995, xend = 9.006, 
-                 y = -55, yend = -55, 
-                 size = 1.2) +
-    labs(x = 'Relative stimulus intensity',
-         y = 'SPARS rating (-50 to 50)') +
-    scale_y_continuous(limits = c(-55, 50.25), 
-                       expand = c(0, 0),
-                       breaks = c(-50, -25, 0, 25, 50)) +
-    scale_x_continuous(limits = c(0.8, 9.2), 
-                       expand = c(0, 0),
-                       breaks = seq(from = 1, to = 9, by = 1)) +
-    theme_bw() +
-    theme(panel.border = element_blank(),
-          panel.grid = element_blank(),
-          axis.text = element_text(size = 16,
-                                   colour = '#000000'),
-          axis.title = element_text(size = 16,
-                                    colour = '#000000'))
-
-ggsave(filename = 'figures/figure_10.pdf',
-       plot = p,
-       width = 6,
-       height = 5)
 ```
 
 The response is consistent across the range of stimulus intensities, but the prediction interval is extremely broad. 

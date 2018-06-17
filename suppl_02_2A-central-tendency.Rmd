@@ -1,17 +1,16 @@
 ---
-title: "SPARS trial A"
-subtitle: "Measures of central tendency"
+title: "Supplement 2"
+subtitle: "Experiment 1 -- Measures of central tendency"
 author: "Peter Kamerman"
-date: "`r format(Sys.Date(), '%d %b %Y')`"
-output: 
-  html_document:
-    keep_md: true
-    theme: yeti
-    hightlight: pygments
-    toc: true
-    toc_depth: 5
-    toc_float: true
-    code_folding: show
+date: "`r format(Sys.Date(), '%d %B %Y')`"
+output:
+  pdf_document:
+      toc: true
+      toc_depth: 2
+      latex_engine: xelatex
+mainfont: Helvetica
+fontsize: 12pt
+geometry: a4paper, margin=15mm
 ---
 
 ```{r setup, include = FALSE}
@@ -23,11 +22,8 @@ library(ggridges)
 # knitr setup
 knitr::opts_chunk$set(warning = FALSE,
                       message = FALSE,
-                      fig.retina = 2,
-                      fig.height = 8,
-                      fig.width = 9,
-                      fig.align = 'center',
-                      fig.path = 'figures/2A-central-tendency/')
+                      fig.height = 7,
+                      fig.width = 7)
 ```
 
 ----
@@ -176,13 +172,11 @@ p_1to6 <- data %>%
                      expand = c(0,0)) +
   labs(title = 'Participant-level density distribution of SPARS ratings at each stimulus intensity',
        subtitle = 'White points: individual data points | Coloured points: measures of centrality',
+       x = 'SPARS rating [0-100, positive-corrected scale]',
        y = 'Stimulus intensity (J)') +
   facet_wrap(~PID, ncol = 3) +
   theme_bw() +
-  theme(axis.title.x = element_blank(),
-        axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        legend.position = 'top')
+  theme(legend.position = 'top')
 
 # Plot participants 7-12
 p_7to12 <- data %>%
@@ -209,13 +203,13 @@ p_7to12 <- data %>%
   scale_x_continuous(limits = c(-5, 105), 
                      breaks = seq(from = 0, to = 100, by = 20),
                      expand = c(0,0)) +
-  labs(y = 'Stimulus intensity (J)') +
+  labs(title = 'Participant-level density distribution of SPARS ratings at each stimulus intensity',
+       subtitle = 'White points: individual data points | Coloured points: measures of centrality',
+       x = 'SPARS rating [0-100, positive-corrected scale]',
+       y = 'Stimulus intensity (J)') +
   facet_wrap(~PID, ncol = 3) +
   theme_bw() +
-  theme(axis.title.x = element_blank(),
-        axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        legend.position = 'none')
+  theme(legend.position = 'top')
 
 # Plot participants 13-18
 p_13to18 <- data %>%
@@ -242,16 +236,25 @@ p_13to18 <- data %>%
   scale_x_continuous(limits = c(-5, 105), 
                      breaks = seq(from = 0, to = 100, by = 20),
                      expand = c(0,0)) +
-  labs(x = 'SPARS rating [0-100, positive-corrected scale]',
+  labs(title = 'Participant-level density distribution of SPARS ratings at each stimulus intensity',
+       subtitle = 'White points: individual data points | Coloured points: measures of centrality',
+       x = 'SPARS rating [0-100, positive-corrected scale]',
        y = 'Stimulus intensity (J)') +
   facet_wrap(~PID, ncol = 3) +
   theme_bw() +
-  theme(legend.position = 'none')
+  theme(legend.position = 'top')
+
+
+
 ```
 
 ```{r plots_1b}
 # Print plots
-p_1to6; p_7to12; p_13to18
+p_1to6
+
+p_7to12
+
+p_13to18
 ```
 
 ### Conclusion

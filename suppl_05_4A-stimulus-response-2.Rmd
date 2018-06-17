@@ -1,17 +1,16 @@
 ---
-title: "SPARS trial A"
-subtitle: "Modelling the SPARS stimulus-response relationship"
+title: "Supplement 5"
+subtitle: "Experiment 1 -- Modelling the SPARS stimulus-response relationship"
 author: "Peter Kamerman and Tory Madden"
 date: "`r format(Sys.Date(), '%d %B %Y')`"
-output: 
-  html_document:
-    keep_md: true
-    theme: yeti
-    hightlight: pygments
-    toc: true
-    toc_depth: 5
-    toc_float: true
-    code_folding: show
+output:
+  pdf_document:
+      toc: true
+      toc_depth: 2
+      latex_engine: xelatex
+mainfont: Helvetica
+fontsize: 12pt
+geometry: a4paper, margin=15mm
 ---
 
 ```{r setup, include = FALSE}
@@ -30,18 +29,17 @@ set_theme(base = theme_bw())
 # knitr setup
 knitr::opts_chunk$set(warning = FALSE,
                       message = FALSE,
-                      fig.retina = 2,
                       fig.height = 7,
-                      fig.width = 7,
-                      fig.align = 'center',
-                      fig.path = 'figures/4A-stimulus-response-2/')
+                      fig.width = 7)
 ```
 
 ----
 
 This script is part 2 of our analysis of the stimulus-response characteristics of the SPARS. This script models the relationship between stimulus intensity and SPARS rating using linear mixed models and quantile mixed model regression.
 
-Descriptive plots of the data are provided in _"outputs/4A-stimulus-response-1.html"_, the diagnostics on the final linear mixed model are described in _"outputs/4A-stimulus-response-3.html"_, the stability of the model is described in _"outputs/4A-stimulus-response-4.html"_, the sensitivity of the scale to changes in stimulus intensity are described in _"outputs/4A-stimulus-reponse-5.html"_, and the variance in ratings at each stimulus intensity is described in _"outputs/4A-stimulus-reponse-6.html"_.
+Source URL: [https://github.com/kamermanpr/SPARS/tree/supplementary_pdfs](https://github.com/kamermanpr/SPARS/tree/supplementary_pdfs)  
+
+Descriptive plots of the data are provided in _"outputs/supplement\_4.pdf"_, the diagnostics on the final linear mixed model are described in _"outputs/supplement\_6.pdf"_, the stability of the model is described in _"outputs/supplement\_7.pdf"_, the sensitivity of the scale to changes in stimulus intensity are described in _"outputs/experiment\_1\_sensitivity.pdf"_, and the variance in ratings at each stimulus intensity is described in _"outputs/experiment\_1\_variance.pdf"_.
 
 ----
 
@@ -130,17 +128,19 @@ Anova(lmm1b,
       test.statistic = 'F')
 
 # Print better model
-sjt.lmer(lmm1b,
-         show.header = TRUE,
-         string.dv = "Response", 
-         string.pred = "Coefficients",
-         depvar.labels = '',
-         pred.labels = 'intensity',
-         string.est = 'Estimate',
-         string.ci = '95% CI',
-         string.p = 'p-value',
-         show.icc = FALSE,
-         show.r2 = FALSE)
+summary(lmm1b)
+# Doesn't work with LaTex
+# sjt.lmer(lmm1b,
+#          show.header = TRUE,
+#          string.dv = "Response", 
+#          string.pred = "Coefficients",
+#          depvar.labels = '',
+#          pred.labels = 'intensity',
+#          string.est = 'Estimate',
+#          string.ci = '95% CI',
+#          string.p = 'p-value',
+#          show.icc = FALSE,
+#          show.r2 = FALSE)
 ```
 
 ### 2nd-order (quadratic) polynomial
@@ -165,17 +165,19 @@ Anova(lmm2b,
       test.statistic = 'F')
 
 # Print better model
-sjt.lmer(lmm2b,
-         show.header = TRUE,
-         string.dv = "Response", 
-         string.pred = "Coefficients",
-         depvar.labels = '',
-         pred.labels = 'intensity',
-         string.est = 'Estimate',
-         string.ci = '95% CI',
-         string.p = 'p-value',
-         show.icc = FALSE,
-         show.r2 = FALSE)
+summary(lmm2b)
+# Doesn't work with LaTex
+# sjt.lmer(lmm2b,
+#          show.header = TRUE,
+#          string.dv = "Response", 
+#          string.pred = "Coefficients",
+#          depvar.labels = '',
+#          pred.labels = 'intensity',
+#          string.est = 'Estimate',
+#          string.ci = '95% CI',
+#          string.p = 'p-value',
+#          show.icc = FALSE,
+#          show.r2 = FALSE)
 ```
 
 ### 3rd-order (cubic) polynomial
@@ -200,17 +202,19 @@ Anova(lmm3b,
       test.statistic = 'F')
 
 # Print better model
-sjt.lmer(lmm3b,
-         show.header = TRUE,
-         string.dv = "Response", 
-         string.pred = "Coefficients",
-         depvar.labels = '',
-         pred.labels = 'intensity',
-         string.est = 'Estimate',
-         string.ci = '95% CI',
-         string.p = 'p-value',
-         show.icc = FALSE,
-         show.r2 = FALSE)
+summary(lmm3b)
+# Doeasn't work with LaTex
+# sjt.lmer(lmm3b,
+#          show.header = TRUE,
+#          string.dv = "Response", 
+#          string.pred = "Coefficients",
+#          depvar.labels = '',
+#          pred.labels = 'intensity',
+#          string.est = 'Estimate',
+#          string.ci = '95% CI',
+#          string.p = 'p-value',
+#          show.icc = FALSE,
+#          show.r2 = FALSE)
 ```
 
 ### Compare models
@@ -246,55 +250,6 @@ ggplot(data = predicted) +
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
   scale_x_continuous(breaks = seq(from = 1, to = 4, by = 0.25))
-
-# Publication plot
-p <- ggplot(data = predicted) +
-    geom_ribbon(aes(x = x,
-                    ymin = conf.low,
-                    ymax = conf.high),
-                fill = '#CCCCCC') + 
-    geom_segment(x = 0.8, xend = 4, 
-                 y = 0, yend = 0, 
-                 size = 0.6,
-                 linetype = 2) +
-    geom_line(aes(x = x,
-                  y = predicted),
-              size = 0.8) +
-    geom_point(aes(x = x,
-                  y = predicted),
-               size = 1.5) +
-    geom_point(data = data_group,
-               aes(x = intensity,
-                   y = median),
-               shape = 21,
-               size = 5,
-               fill = '#FFA500') +
-    geom_segment(x = 0.8, xend = 0.8, 
-                 y = -50.15, yend = 50.15, 
-                 size = 1.2) +
-    geom_segment(x = 0.995, xend = 4.006, 
-                 y = -55, yend = -55, 
-                 size = 1.2) +
-    labs(x = 'Stimulus intensity (J)',
-         y = 'SPARS rating (-50 to 50)') +
-    scale_y_continuous(limits = c(-55, 50.25), 
-                       expand = c(0, 0),
-                       breaks = c(-50, -25, 0, 25, 50)) +
-    scale_x_continuous(limits = c(0.8, 4.2), 
-                       expand = c(0, 0),
-                       breaks = seq(from = 1, to = 4, by = 0.5)) +
-    theme_bw() +
-    theme(panel.border = element_blank(),
-          panel.grid = element_blank(),
-          axis.text = element_text(size = 16,
-                                   colour = '#000000'),
-          axis.title = element_text(size = 16,
-                                    colour = '#000000'))
-
-ggsave(filename = 'figures/figure_4.pdf',
-       plot = p,
-       width = 6,
-       height = 5)
 ```
 
 The cubic model has the best fit. The resulting curvilinear response function is _steepest_ at the extremes and  _flattens out_ in the mid-ranges of stimulus intensity. We performed diagnostics on this model to confirm that the model was properly specified.
@@ -380,54 +335,6 @@ ggplot(data = data_lqmm) +
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
   scale_x_continuous(breaks = unique(data_lqmm$intensity)) 
-
-# Publication plot
-p <- ggplot(data = data_lqmm) +
-    aes(x = intensity,
-        y = Q50) +
-    geom_ribbon(aes(ymin = `Q2.5`,
-                    ymax = `Q97.5`),
-                fill = '#FFA500') +
-    geom_ribbon(aes(ymin = `Q25`,
-                    ymax = `Q75`),
-                fill = '#56B4E9') +
-    geom_segment(x = 0.8, xend = 4, 
-                 y = 0, yend = 0, 
-                 size = 0.6,
-                 linetype = 2) +
-    geom_point(data = data_tm,
-               aes(y = tri_mean),
-               position = position_jitter(width = 0.03)) +
-    geom_point(size = 5,
-               shape = 21,
-               fill = '#FFFFFF',
-               colour = '#000000') +
-    geom_segment(x = 0.8, xend = 0.8, 
-                 y = -50.15, yend = 50.15, 
-                 size = 1.2) +
-    geom_segment(x = 0.995, xend = 4.006, 
-                 y = -55, yend = -55, 
-                 size = 1.2) +
-    labs(x = 'Stimulus intensity (J)',
-         y = 'SPARS rating (-50 to 50)') +
-    scale_y_continuous(limits = c(-55, 50.25), 
-                       expand = c(0, 0),
-                       breaks = c(-50, -25, 0, 25, 50)) +
-    scale_x_continuous(limits = c(0.8, 4.2), 
-                       expand = c(0, 0),
-                       breaks = seq(from = 1, to = 4, by = 0.5)) +
-    theme_bw() +
-    theme(panel.border = element_blank(),
-          panel.grid = element_blank(),
-          axis.text = element_text(size = 16,
-                                   colour = '#000000'),
-          axis.title = element_text(size = 16,
-                                    colour = '#000000'))
-
-ggsave(filename = 'figures/figure_5.pdf',
-       plot = p,
-       width = 6,
-       height = 5)
 ```
 
 There is good stability in the shape of the response characteristics across the quantiles. For all stimulus intensities, the distribution is left skewed (long tail towards lower ratings). 

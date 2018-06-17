@@ -1,125 +1,89 @@
 # Create directories if required
-$(shell mkdir -p data-cleaned outputs outputs/figures/)
+$(shell mkdir -p data-cleaned outputs)
 
 # Dummy outputs
-DATA_A = 	data-cleaned/SPARS_A.csv \
-			data-cleaned/SPARS_A.rds
+2A = 	outputs/supplement_2.pdf
 
-DATA_B = 	data-cleaned/SPARS_B.csv \
-			data-cleaned/SPARS_B.rds
+3A = 	outputs/supplement_3.pdf
 
-1A = 	outputs/1A-participants-descriptive.md \
-		outputs/1A-participants-descriptive.html
+4A1 = 	outputs/supplement_4.pdf
 
-2A = 	outputs/2A-central-tendency.md \
-		outputs/2A-central-tendency.html
+4A2 = 	outputs/supplement_5.pdf
 
-3A = 	outputs/3A-order-effects.md \
-		outputs/3A-order-effects.html
+4A3 = 	outputs/supplement_6.pdf
 
-4A1 = 	outputs/4A-stimulus-response-1.md \
-		outputs/4A-stimulus-response-1.html
+4A4 = 	outputs/supplement_7.pdf
 
-4A2 = 	outputs/4A-stimulus-response-2.md \
-		outputs/4A-stimulus-response-2.html
+4A5 = 	outputs/experiment_1_sensitivity.pdf
 
-4A3 = 	outputs/4A-stimulus-response-3.md \
-		outputs/4A-stimulus-response-3.html
+4A6 = 	outputs/experiment_1_variance.pdf
 
-4A4 = 	outputs/4A-stimulus-response-4.md \
-		outputs/4A-stimulus-response-4.html
+1B1 = 	outputs/supplement_9.pdf
 
-4A5 = 	outputs/4A-stimulus-response-5.md \
-		outputs/4A-stimulus-response-5.html
+1B2 = 	outputs/supplement_10.pdf
 
-4A6 = 	outputs/4A-stimulus-response-6.md \
-		outputs/4A-stimulus-response-6.html
-
-1B1 = 	outputs/1B-stimulus-response-1.md \
-		outputs/1B-stimulus-response-1.html
-
-1B2 = 	outputs/1B-stimulus-response-2.md \
-		outputs/1B-stimulus-response-2.html
-
-2B = 	outputs/2B-scale-agreement.md \
-		outputs/2B-scale-agreement.html
+2B = 	outputs/supplement_11.pdf
 
 .PHONY: all
 
-all: 	$(DATA_A) $(DATA_B) $(1A) $(2A) $(3A) \
-		$(4A1) $(4A2) $(4A3) $(4A4) $(4A5) $(4A6) \
-		$(5B1) $(5B2) $(6B)
+all: 	$(2A) $(3A) $(4A1) $(4A2) $(4A3) $(4A4) $(4A5) $(4A6) $(1B1) $(1B2) $(2B)
 
 # Clean
 clean:
 	rm -r ./outputs ./data-cleaned
 
-# Generate data
-data-cleaned/SPARS_A.csv data-cleaned/SPARS_A.rds: \
-0A-clean-data.R data/*.xlsx
-	Rscript "$<"
-
-data-cleaned/SPARS_B.csv data-cleaned/SPARS_B.rds: \
-0B-clean-data.R data/*.txt
-	Rscript "$<"
-
 # Generate outputs
-outputs/1A-participants-descriptive.html outputs/1A-participants-descriptive.md: \
-1A-participants-descriptive.Rmd data-cleaned/SPARS_A.rds
+outputs/supplement_2.pdf: \
+suppl_02_2A-central-tendency.Rmd data-cleaned/SPARS_A.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
-	mv figures/1A-participants-descriptive outputs/figures/
+	mv outputs/suppl_02_2A-central-tendency.pdf outputs/supplement_2.pdf
 
-outputs/2A-central-tendency.html outputs/2A-central-tendency.md: \
-2A-central-tendency.Rmd data-cleaned/SPARS_A.rds
+outputs/supplement_3.pdf: \
+suppl_03_3A-order-effects.Rmd data-cleaned/SPARS_A.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
-	mv figures/2A-central-tendency outputs/figures/
+	mv outputs/suppl_03_3A-order-effects.pdf outputs/supplement_3.pdf
 
-outputs/3A-order-effects.html outputs/3A-order-effects.md: \
-3A-order-effects.Rmd data-cleaned/SPARS_A.rds
+outputs/supplement_4.pdf: \
+suppl_04_4A-stimulus-response-1.Rmd data-cleaned/SPARS_A.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
-	mv figures/3A-order-effects outputs/figures/
+	mv outputs/suppl_04_4A-stimulus-response-1.pdf outputs/supplement_4.pdf
 
-outputs/4A-stimulus-response-1.html outputs/4A-stimulus-response-1.md: \
-4A-stimulus-response-1.Rmd data-cleaned/SPARS_A.rds
+outputs/supplement_5.pdf: \
+suppl_05_4A-stimulus-response-2.Rmd data-cleaned/SPARS_A.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
-	mv figures/4A-stimulus-response-1 outputs/figures/
+	mv outputs/suppl_05_4A-stimulus-response-2.pdf outputs/supplement_5.pdf
 
-outputs/4A-stimulus-response-2.html outputs/4A-stimulus-response-2.md: \
-4A-stimulus-response-2.Rmd data-cleaned/SPARS_A.rds
+outputs/supplement_6.pdf: \
+suppl_06_4A-stimulus-response-3.Rmd data-cleaned/SPARS_A.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
-	mv figures/4A-stimulus-response-2 outputs/figures/
+	mv outputs/suppl_06_4A-stimulus-response-3.pdf outputs/supplement_6.pdf
 
-outputs/4A-stimulus-response-3.html outputs/4A-stimulus-response-3.md: \
-4A-stimulus-response-3.Rmd data-cleaned/SPARS_A.rds
+outputs/supplement_7.pdf: \
+suppl_07_4A-stimulus-response-4.Rmd data-cleaned/SPARS_A.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
-	mv figures/4A-stimulus-response-3 outputs/figures/
+	mv outputs/suppl_07_4A-stimulus-response-4.pdf outputs/supplement_7.pdf
 
-outputs/4A-stimulus-response-4.html outputs/4A-stimulus-response-4.md: \
-4A-stimulus-response-4.Rmd data-cleaned/SPARS_A.rds
-	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
-	mv figures/4A-stimulus-response-4 outputs/figures/
-
-outputs/4A-stimulus-response-5.html outputs/4A-stimulus-response-5.md: \
+outputs/experiment_1_sensitivity.pdf: \
 4A-stimulus-response-5.Rmd data-cleaned/SPARS_A.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
-	mv figures/4A-stimulus-response-5 outputs/figures/
+	mv outputs/4A-stimulus-response-5.pdf outputs/experiment_1_sensitivity.pdf
 
-outputs/4A-stimulus-response-6.html outputs/4A-stimulus-response-6.md: \
+outputs/experiment_1_variance.pdf: \
 4A-stimulus-response-6.Rmd data-cleaned/SPARS_A.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
-	mv figures/4A-stimulus-response-6 outputs/figures/
+	mv outputs/4A-stimulus-response-6.pdf outputs/experiment_1_variance.pdf
 
-outputs/1B-stimulus-response-1.html outputs/1B-stimulus-response-1.md: \
-1B-stimulus-response-1.Rmd data-cleaned/SPARS_B.rds
+outputs/supplement_9.pdf: \
+suppl_09_1B-stimulus-response-1.Rmd data-cleaned/SPARS_B.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
-	mv figures/1B-stimulus-response-1 outputs/figures/
+	mv outputs/suppl_09_1B-stimulus-response-1.pdf outputs/supplement_9.pdf
 
-outputs/1B-stimulus-response-2.html outputs/1B-stimulus-response-2.md: \
-1B-stimulus-response-2.Rmd data-cleaned/SPARS_B.rds
+outputs/supplement_10.pdf: \
+suppl_10_1B-stimulus-response-2.Rmd data-cleaned/SPARS_B.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
-	mv figures/1B-stimulus-response-2 outputs/figures/
+	mv outputs/suppl_10_1B-stimulus-response-2.pdf outputs/supplement_10.pdf
 
-outputs/2B-scale-agreement.html outputs/2B-scale-agreement.md: \
-2B-scale-agreement.Rmd data-cleaned/SPARS_B.rds
+outputs/supplement_11.pdf: \
+suppl_11_2B-scale-agreement.Rmd data-cleaned/SPARS_B.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
-	mv figures/2B-scale-agreement outputs/figures/
+	mv outputs/suppl_11_2B-scale-agreement.pdf outputs/supplement_11.pdf

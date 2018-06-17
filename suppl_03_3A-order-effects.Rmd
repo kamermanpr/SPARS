@@ -1,17 +1,16 @@
 ---
-title: "SPARS trial A"
-subtitle: "Effect of stimulus order and blocking on SPARS rating"
+title: "Supplement 3"
+subtitle: "Experiment 1 -- Effect of stimulus order and blocking on SPARS rating"
 author: "Peter Kamerman"
-date: "`r format(Sys.Date(), '%d %b %Y')`"
-output: 
-  html_document:
-    keep_md: true
-    theme: yeti
-    hightlight: pygments
-    toc: true
-    toc_depth: 5
-    toc_float: true
-    code_folding: show
+date: "`r format(Sys.Date(), '%d %B %Y')`"
+output:
+  pdf_document:
+      toc: true
+      toc_depth: 2
+      latex_engine: xelatex
+mainfont: Helvetica
+fontsize: 12pt
+geometry: a4paper, margin=15mm
 ---
 
 ```{r setup, include = FALSE}
@@ -23,11 +22,8 @@ library(robustlmm)
 # knitr setup
 knitr::opts_chunk$set(warning = FALSE,
                       message = FALSE,
-                      fig.retina = 2,
                       fig.height = 7,
-                      fig.width = 7,
-                      fig.align = 'center',
-                      fig.path = 'figures/3A-order-effects/')
+                      fig.width = 7)
 ```
 
 ----
@@ -37,7 +33,7 @@ The experimental protocol called for participants to be exposed to 13 stimuli, e
 Despite using a randomized block approach, we still wanted to assess whether there were any:
 
 - Trial order effects (does the intensity of the preceding stimulus affect the rating of a stimulus?)  
-- Block order effects (does the rating of a given stimulus intenisty change across experimental blocks?)
+- Block order effects (does the rating of a given stimulus intensity change across experimental blocks?)
 
 ----
 
