@@ -30,7 +30,7 @@ all: 	$(2A) $(3A) $(4A1) $(4A2) $(4A3) $(4A4) $(4A5) $(4A6) $(1B1) $(1B2) $(2B)
 
 # Clean
 clean:
-	rm -r ./outputs ./data-cleaned
+	rm -rfv outputs/*.*
 
 # Generate outputs
 outputs/supplement_3.pdf: \
