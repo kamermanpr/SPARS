@@ -1,6 +1,6 @@
 ---
-title: "SPARS trial A"
-subtitle: "Participants: Descriptive statistics"
+title: "SPARS"
+subtitle: "Experiment 1 -- Participants: Descriptive statistics"
 author: "Peter Kamerman"
 date: "`r format(Sys.Date(), '%d %b %Y')`"
 output: 

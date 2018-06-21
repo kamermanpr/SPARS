@@ -1,8 +1,8 @@
 ---
-title: "SPARS trial A"
-subtitle: "Participants: Descriptive statistics"
+title: "SPARS"
+subtitle: "Experiment 1 -- Participants: Descriptive statistics"
 author: "Peter Kamerman"
-date: "15 Jun 2018"
+date: "21 Jun 2018"
 output: 
   html_document:
     keep_md: true
