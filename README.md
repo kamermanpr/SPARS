@@ -6,9 +6,7 @@
 
 **Do not merge this branch with _master_**
 
-This branch of the SPARS repo was used to generate the supplementary files referenced in the SPARS mansucript as PDF documents. Minor changes were made to the YAML and the body of _*.Rmd_ scripts to generate well-formatted PDF outputs. The names of these files use the format: _supplement\_\*.pdf_, where _\*_ is an integer numbering the file. 
-
-Auxillary analyses that were not directly referenced as supplementary materials in the mansucript, but which were part of the analysis process, have also been converted tp PDF documents. The names of these files use the format: _experiment\_\*\_details.pdf_, where _\*_ is an integer numbering the experiment (1 or 2), and _details_ provides additional information on the type of analysis contained within the script.
+This branch of the SPARS repo was used to generate PDF copies of the supplementary files referenced in the SPARS mansucript. Minor changes were made to the YAML and the body of _*.Rmd_ scripts to generate PDF outputs. The names of these files use the format: _supplement\_\*.pdf_, where _\*_ is an integer numbering the file. 
 
 ## Bibliometric information
 
