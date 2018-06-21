@@ -1,6 +1,6 @@
 ---
-title: "Experiment 1: variance"
-subtitle: "Rating variance in the SPARS"
+title: "Supplement 10"
+subtitle: "Experiment 1 -- Rating variance in the SPARS"
 author: "Peter Kamerman"
 date: "`r format(Sys.Date(), '%d %b %Y')`"
 output:
@@ -40,7 +40,7 @@ $$MAD = median(|X_i - median(X)|)$$
 
 Source URL: [https://github.com/kamermanpr/SPARS/tree/supplementary_pdfs](https://github.com/kamermanpr/SPARS/tree/supplementary_pdfs)  
 
-Descriptive plots of the data are provided in _"outputs/supplement\_4.pdf"_, modelling of the stimulus-response relationship is described in _"outputs/supplement\_5.pdf"_, the diagnostics on the final linear mixed model are described in _"outputs/supplement\_6.pdf"_, the stability of the model is described in _"outputs/supplement\_7.pdf"_, and the sensitivity of the scale to changes in stimulus intensity are described in _"outputs/experiment\_1\_sensitivity.pdf"_.
+Descriptive plots of the data are provided in _"outputs/supplement\_5.pdf"_, modelling of the stimulus-response relationship is described in _"outputs/supplement\_6.pdf"_, the diagnostics on the final linear mixed model are described in _"outputs/supplement\_7.pdf"_, the stability of the model is described in _"outputs/supplement\_8.pdf"_, and the sensitivity of the scale to changes in stimulus intensity are described in _"outputs/supplement\_9.pdf"_.
 
 ----
 

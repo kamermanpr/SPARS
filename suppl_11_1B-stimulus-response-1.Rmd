@@ -1,5 +1,5 @@
 ---
-title: "Supplement 9"
+title: "Supplement 11"
 subtitle: "Experiment 2 -- Stimulus-response characteristics of the SPARS"
 author: "Peter Kamerman"
 date: "`r format(Sys.Date(), '%d %b %Y')`"

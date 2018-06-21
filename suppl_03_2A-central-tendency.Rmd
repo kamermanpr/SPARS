@@ -1,5 +1,5 @@
 ---
-title: "Supplement 2"
+title: "Supplement 3"
 subtitle: "Experiment 1 -- Measures of central tendency"
 author: "Peter Kamerman"
 date: "`r format(Sys.Date(), '%d %B %Y')`"

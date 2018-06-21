@@ -1,5 +1,5 @@
 ---
-title: "Supplement 10"
+title: "Supplement 12"
 subtitle: "Experiment 2 -- Descriptive plots of the stimulus-response relationship for the SPARS, SRS, and pain NRS"
 author: "Peter Kamerman and Tory Madden"
 date: "`r format(Sys.Date(), '%d %B %Y')`"

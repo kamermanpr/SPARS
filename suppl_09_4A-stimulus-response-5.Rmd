@@ -1,6 +1,6 @@
 ---
-title: "Experiment 1: sensitivity"
-subtitle: "Sensitivity of the SPARS to changes in stimulus intensity"
+title: "Supplement 9"
+subtitle: "Experiment 1 -- Sensitivity of the SPARS to changes in stimulus intensity"
 author: "Peter Kamerman"
 date: "`r format(Sys.Date(), '%d %b %Y')`"
 output:
@@ -39,7 +39,7 @@ This script is part 5 of our analysis of the stimulus-response characteristics o
 
 Source URL: [https://github.com/kamermanpr/SPARS/tree/supplementary_pdfs](https://github.com/kamermanpr/SPARS/tree/supplementary_pdfs)  
 
-Descriptive plots of the data are provided in _"outputs/supplement\_4.pdf"_, modelling of the stimulus-response relationship is described in _"outputs/supplement\_5.pdf"_, the diagnostics on the final linear mixed model are described in _"outputs/supplement\_6.pdf"_, the stability of the model is described in _"outputs/supplement\_7.pdf"_, and the variance in ratings at each stimulus intensity is described in _"outputs/experiment\_1\_variance.pdf"_.
+Descriptive plots of the data are provided in _"outputs/supplement\_5.pdf"_, modelling of the stimulus-response relationship is described in _"outputs/supplement\_6.pdf"_, the diagnostics on the final linear mixed model are described in _"outputs/supplement\_7.pdf"_, the stability of the model is described in _"outputs/supplement\_8.pdf"_, and the variance in ratings at each stimulus intensity is described in _"outputs/supplement\_10.pdf"_.
 
 ----
 

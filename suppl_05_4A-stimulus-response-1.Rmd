@@ -1,5 +1,5 @@
 ---
-title: "Supplement 4"
+title: "Supplement 5"
 subtitle: "Experiment 1 -- Descriptive plots of the SPARS stimulus-response relationship"
 author: "Peter Kamerman and Tory Madden"
 date: "`r format(Sys.Date(), '%d %B %Y')`"
@@ -36,8 +36,7 @@ This script is part 1 of our analysis of the stimulus-response characteristics o
 
 Source URL: [https://github.com/kamermanpr/SPARS/tree/supplementary_pdfs](https://github.com/kamermanpr/SPARS/tree/supplementary_pdfs)  
 
-Modelling of the stimulus-response relationship is described in _"outputs/supplement\_5.pdf"_, the diagnostics on the final linear mixed model are described in _"outputs/supplement\_6.pdf"_, the stability of the model is described in _"outputs/supplement\_7.pdf"_, the sensitivity of the scale to changes in stimulus intensity are described in _"outputs/experiment\_1\_sensitivity.pdf"_, and the variance in ratings at each stimulus intensity is described in _"outputs/experiment\_1\_variance.pdf"_.
-
+Modelling of the stimulus-response relationship is described in _"outputs/supplement\_6.pdf"_, the diagnostics on the final linear mixed model are described in _"outputs/supplement\_7.pdf"_, the stability of the model is described in _"outputs/supplement\_8.pdf"_, the sensitivity of the scale to changes in stimulus intensity are described in _"outputs/supplement\_9.pdf"_, and the variance in ratings at each stimulus intensity is described in _"outputs/supplement\_10.pdf"_.
 ----
 
 # Import and inspect data
