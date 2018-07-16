@@ -46,7 +46,7 @@ suppl_01_3B-instructions-for-participants.Rmd
 outputs/supplement_2.pdf: \
 suppl_02_2A-central-tendency-summary.Rmd data-cleaned/SPARS_A.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
-	mv outputs/suppl_03_2A-central-tendency-summary.pdf outputs/supplement_2.pdf
+	mv outputs/suppl_02_2A-central-tendency-summary.pdf outputs/supplement_2.pdf
 
 outputs/supplement_3.pdf: \
 suppl_03_2A-central-tendency.Rmd data-cleaned/SPARS_A.rds
