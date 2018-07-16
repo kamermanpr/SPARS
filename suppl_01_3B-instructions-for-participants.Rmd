@@ -1,0 +1,50 @@
+---
+title: "Supplement 1"
+subtitle: "Experiment 2 -- Instructions on how to use each rating scale"
+author: "Tory Madden"
+date: "`r format(Sys.Date(), '%d %B %Y')`"
+output: 
+  html_document:
+    keep_md: true
+    theme: yeti
+    hightlight: pygments
+    toc: true
+    toc_depth: 5
+    toc_float: true
+    code_folding: show
+---
+
+```{r setup, include = FALSE}
+# knitr setup
+knitr::opts_chunk$set(fig.align = 'center')
+```
+
+----
+
+This document displays the information given to participants before each block of Experiment 2. 
+
+----
+
+# Rating scale
+
+## Sensation and Pain Rating Scale (SPARS)
+
+![](supplementary-files/spars.png)
+
+
+## Numerical Pain Rating Scale (NRS)
+
+![](supplementary-files/nrs.png)
+
+
+## Numerical Sensation Rating Scale (SRS)
+
+![](supplementary-files/srs.png)
+
+----
+
+# Session information
+
+```{r session_info}
+sessionInfo()
+```
