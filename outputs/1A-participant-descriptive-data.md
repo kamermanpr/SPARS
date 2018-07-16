@@ -1,8 +1,8 @@
 ---
 title: "SPARS"
-subtitle: "Experiment 1 -- Participants: Descriptive statistics"
+subtitle: "Experiment 1 -- Participant descriptive statistics"
 author: "Peter Kamerman"
-date: "21 Jun 2018"
+date: "16 Jul 2018"
 output: 
   html_document:
     keep_md: true
@@ -222,7 +222,7 @@ data %>%
   theme(axis.title.x = element_blank())
 ```
 
-<img src="figures/1A-participants-descriptive/age-1.png" width="336" style="display: block; margin: auto;" />
+<img src="figures/1A-participant-descriptive-data/age-1.png" width="336" style="display: block; margin: auto;" />
 
 ----
 
@@ -271,7 +271,7 @@ ggplot(data = sex) +
   theme(axis.title.x = element_blank())
 ```
 
-<img src="figures/1A-participants-descriptive/sex-1.png" width="336" style="display: block; margin: auto;" />
+<img src="figures/1A-participant-descriptive-data/sex-1.png" width="336" style="display: block; margin: auto;" />
 
 ----
 
@@ -395,7 +395,7 @@ helplessness <- pcs %>%
 total + {magnification + rumination + helplessness} + plot_layout(nrow = 2)
 ```
 
-<img src="figures/1A-participants-descriptive/pcs-1.png" width="672" style="display: block; margin: auto;" />
+<img src="figures/1A-participant-descriptive-data/pcs-1.png" width="672" style="display: block; margin: auto;" />
 
 ----
 
@@ -460,7 +460,7 @@ ggplot(data = panas) +
   theme_bw()
 ```
 
-<img src="figures/1A-participants-descriptive/panas-1.png" width="672" style="display: block; margin: auto;" />
+<img src="figures/1A-participant-descriptive-data/panas-1.png" width="672" style="display: block; margin: auto;" />
 
 ----
 
@@ -572,7 +572,7 @@ stress <- data %>%
 depression + anxiety + stress + plot_layout(ncol = 3)
 ```
 
-<img src="figures/1A-participants-descriptive/dass-1.png" width="672" style="display: block; margin: auto;" />
+<img src="figures/1A-participant-descriptive-data/dass-1.png" width="672" style="display: block; margin: auto;" />
 
 ----
 
@@ -598,28 +598,27 @@ sessionInfo()
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] bindrcpp_0.2.2     patchwork_0.0.1    forcats_0.3.0     
-##  [4] stringr_1.3.1      dplyr_0.7.5        purrr_0.2.5       
-##  [7] readr_1.1.1        tidyr_0.8.1        tibble_1.4.2      
-## [10] ggplot2_2.2.1.9000 tidyverse_1.2.1    magrittr_1.5      
+##  [1] bindrcpp_0.2.2  patchwork_0.0.1 forcats_0.3.0   stringr_1.3.1  
+##  [5] dplyr_0.7.6     purrr_0.2.5     readr_1.1.1     tidyr_0.8.1    
+##  [9] tibble_1.4.2    ggplot2_3.0.0   tidyverse_1.2.1 magrittr_1.5   
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_0.2.4  reshape2_1.4.3    haven_1.1.1      
+##  [1] tidyselect_0.2.4  reshape2_1.4.3    haven_1.1.2      
 ##  [4] lattice_0.20-35   colorspace_1.3-2  htmltools_0.3.6  
 ##  [7] yaml_2.1.19       utf8_1.1.4        rlang_0.2.1      
 ## [10] pillar_1.2.3      foreign_0.8-70    glue_1.2.0       
 ## [13] withr_2.1.2       modelr_0.1.2      readxl_1.1.0     
-## [16] bindr_0.1.1       plyr_1.8.4        munsell_0.4.3    
+## [16] bindr_0.1.1       plyr_1.8.4        munsell_0.5.0    
 ## [19] gtable_0.2.0      cellranger_1.1.0  rvest_0.3.2      
 ## [22] psych_1.8.4       evaluate_0.10.1   labeling_0.3     
-## [25] knitr_1.20        parallel_3.5.0    highr_0.6        
-## [28] broom_0.4.4       Rcpp_0.12.17      scales_0.5.0.9000
+## [25] knitr_1.20        parallel_3.5.0    highr_0.7        
+## [28] broom_0.4.5       Rcpp_0.12.17      scales_0.5.0.9000
 ## [31] backports_1.1.2   jsonlite_1.5      mnormt_1.5-5     
-## [34] hms_0.4.2         digest_0.6.15     stringi_1.2.2    
+## [34] hms_0.4.2         digest_0.6.15     stringi_1.2.3    
 ## [37] grid_3.5.0        rprojroot_1.3-2   cli_1.0.0        
 ## [40] tools_3.5.0       lazyeval_0.2.1    crayon_1.3.4     
 ## [43] pkgconfig_2.0.1   xml2_1.2.0        lubridate_1.7.4  
-## [46] assertthat_0.2.0  rmarkdown_1.9     httr_1.3.1       
+## [46] assertthat_0.2.0  rmarkdown_1.10    httr_1.3.1       
 ## [49] rstudioapi_0.7    R6_2.2.2          nlme_3.1-137     
 ## [52] compiler_3.5.0
 ```
