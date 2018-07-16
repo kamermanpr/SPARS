@@ -2,7 +2,11 @@
 $(shell mkdir -p data-cleaned outputs)
 
 # Dummy outputs
-2A = 	outputs/supplement_3.pdf
+3B = 	outputs/supplement_1.pdf
+
+2Ai = 	outputs/supplement_2.pdf
+
+2Aii = 	outputs/supplement_3.pdf
 
 3A = 	outputs/supplement_4.pdf
 
@@ -26,13 +30,24 @@ $(shell mkdir -p data-cleaned outputs)
 
 .PHONY: all
 
-all: 	$(2A) $(3A) $(4A1) $(4A2) $(4A3) $(4A4) $(4A5) $(4A6) $(1B1) $(1B2) $(2B)
+all: 	$(2Ai) $(2Aii) $(3A) $(4A1) $(4A2) $(4A3) $(4A4) $(4A5) $(4A6) \
+		$(1B1) $(1B2) $(2B) $(3B)
 
 # Clean
 clean:
 	rm -rfv outputs/*.*
 
 # Generate outputs
+outputs/supplement_1.pdf: \
+suppl_01_3B-instructions-for-participants.Rmd
+	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
+	mv outputs/suppl_01_3B-instructions-for-participants.pdf outputs/supplement_1.pdf
+
+outputs/supplement_2.pdf: \
+suppl_02_2A-central-tendency-summary.Rmd data-cleaned/SPARS_A.rds
+	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
+	mv outputs/suppl_03_2A-central-tendency-summary.pdf outputs/supplement_2.pdf
+
 outputs/supplement_3.pdf: \
 suppl_03_2A-central-tendency.Rmd data-cleaned/SPARS_A.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
