@@ -1,0 +1,123 @@
+---
+title: "Supplement 2"
+subtitle: "Experiment 1 -- Group-level summary of measures of central tendency"
+author: "Tory Madden and Peter Kamerman"
+date: "`r format(Sys.Date(), '%d %b %Y')`"
+output: 
+  html_document:
+    keep_md: true
+    theme: yeti
+    hightlight: pygments
+    toc: true
+    toc_depth: 5
+    toc_float: true
+    code_folding: show
+---
+
+```{r setup, include = FALSE}
+# Load packages
+library(magrittr)
+library(tidyverse)
+library(ggridges)
+library(kableExtra)
+
+# knitr setup
+knitr::opts_chunk$set(warning = FALSE,
+                      message = FALSE,
+                      fig.retina = 2,
+                      fig.height = 8,
+                      fig.width = 9,
+                      fig.align = 'center',
+                      fig.path = 'figures/suppl_02_2A-central-tendency-summary/')
+```
+
+----
+
+Here we provide group-level summary values for measures of central tendency and variance for SPARS ratings at each laser stimulus intensity. Please see Supplement 3 for definitions of these measures.
+
+----
+
+# Import and inspect data
+
+```{r import}
+# Import
+data <- read_rds('./data-cleaned/SPARS_A.rds')
+
+# Inspect
+glimpse(data)
+```
+
+----
+
+# Clean data
+
+```{r clean}
+# Basic clean-up
+data %<>%
+  # Select required columns
+  select(PID, block, block_order, intensity, 
+         intensity_char, rating, rating_positive) 
+```
+
+----
+
+# Tabulate measures of central tendency and variance
+
+```{r trimean_function}
+# Specify tri.mean function (average of the median and mid-hinge)
+tri.mean <- function(x) {
+  # Calculate quantiles
+  q1 <- quantile(x, probs = 0.25, na.rm = TRUE)[[1]]
+  q2 <- median(x, na.rm = TRUE)
+  q3 <- quantile(x, probs = 0.75, na.rm = TRUE)[[1]]
+  # Calculate trimean
+  tm <- (q2 + ((q1 + q3) / 2)) / 2
+  # Convert to integer
+  tm <- as.integer(round(tm))
+  return(tm)
+}
+```
+
+```{r central}
+# Calculate group-level centrality and variance measures 
+central <- data %>% 
+  group_by(intensity_char) %>%
+  summarise(mean = round(mean(rating_positive, 
+                              na.rm = TRUE), 1),
+            median = round(median(rating_positive, 
+                                 na.rm = TRUE), 1),
+            geometric_mean = round(psych::geometric.mean(rating_positive,
+                                                         na.rm=TRUE), 1),
+            tri_mean = round(tri.mean(rating_positive), 1),
+            sd = round(sd(rating_positive, 
+                          na.rm = TRUE), 1),
+            Q25 = round(quantile(rating_positive,
+                                 probs =  0.25, 
+                                 na.rm = TRUE), 1),
+            Q75 = round(quantile(rating_positive, 
+                                 probs = 0.75, 
+                                 na.rm = TRUE), 1)) %>%
+  ungroup()
+
+# Pretty column names
+colnames(central) <- c("Intensity", "Arithmetic mean", "Median", 
+                       "Geometric mean", "Tukey trimean", 
+                       "Standard deviation", "Lower quartile boundary", 
+                       "Upper quartile boundary")
+
+# Print table
+knitr::kable(central, 
+      align = rep('c', 8),
+      caption = "Group-level measures of central tendency and variance for SPARS ratings at each laser intensity (J)") %>%
+  kable_styling("striped") %>%
+  row_spec(1:13, 
+           align = "c", 
+           color = "black")
+``` 
+
+----
+
+# Session information
+```{r session_info}
+sessionInfo()
+```
