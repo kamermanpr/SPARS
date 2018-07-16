@@ -3,15 +3,14 @@ title: "Supplement 1"
 subtitle: "Experiment 2 -- Instructions on how to use each rating scale"
 author: "Tory Madden"
 date: "`r format(Sys.Date(), '%d %B %Y')`"
-output: 
-  html_document:
-    keep_md: true
-    theme: yeti
-    hightlight: pygments
-    toc: true
-    toc_depth: 5
-    toc_float: true
-    code_folding: show
+output:
+  pdf_document:
+      toc: true
+      toc_depth: 2
+      latex_engine: xelatex
+mainfont: Helvetica
+fontsize: 12pt
+geometry: a4paper, margin=15mm
 ---
 
 ```{r setup, include = FALSE}
@@ -29,17 +28,26 @@ This document displays the information given to participants before each block o
 
 ## Sensation and Pain Rating Scale (SPARS)
 
-![](supplementary-files/spars.png)
+\begin{figure}[h]
+\centering
+\includegraphics{supplementary-files/spars.png}
+\end{figure}
 
+\pagebreak
 
 ## Numerical Pain Rating Scale (NRS)
 
-![](supplementary-files/nrs.png)
-
+\begin{figure}[h]
+\centering
+\includegraphics{supplementary-files/nrs.png}
+\end{figure}
 
 ## Numerical Sensation Rating Scale (SRS)
 
-![](supplementary-files/srs.png)
+\begin{figure}[h]
+\centering
+\includegraphics{supplementary-files/srs.png}
+\end{figure}
 
 ----
 

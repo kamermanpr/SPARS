@@ -3,15 +3,14 @@ title: "Supplement 2"
 subtitle: "Experiment 1 -- Group-level summary of measures of central tendency"
 author: "Tory Madden and Peter Kamerman"
 date: "`r format(Sys.Date(), '%d %b %Y')`"
-output: 
-  html_document:
-    keep_md: true
-    theme: yeti
-    hightlight: pygments
-    toc: true
-    toc_depth: 5
-    toc_float: true
-    code_folding: show
+output:
+  pdf_document:
+      toc: true
+      toc_depth: 2
+      latex_engine: xelatex
+mainfont: Helvetica
+fontsize: 12pt
+geometry: a4paper, margin=15mm
 ---
 
 ```{r setup, include = FALSE}
@@ -107,12 +106,16 @@ colnames(central) <- c("Intensity", "Arithmetic mean", "Median",
 
 # Print table
 knitr::kable(central, 
-      align = rep('c', 8),
-      caption = "Group-level measures of central tendency and variance for SPARS ratings at each laser intensity (J)") %>%
-  kable_styling("striped") %>%
-  row_spec(1:13, 
-           align = "c", 
-           color = "black")
+             format = 'latex',
+             booktabs = TRUE,
+             align = rep('c', 8),
+             caption = "Group-level measures of central tendency and variance for SPARS ratings at each laser intensity (J)") %>%
+  kable_styling(latex_options = c('striped', 
+                                  'hold_position',
+                                  'scale_down'),
+                stripe_color = 'gray!20') %>%
+  row_spec(0,
+           bold = TRUE) 
 ``` 
 
 ----
