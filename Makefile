@@ -1,5 +1,8 @@
 # Create directories if required
-$(shell mkdir -p data-cleaned outputs outputs/figures/)
+$(shell mkdir -p data-cleaned figures outputs outputs/figures/)
+
+# Move externally generared figures to appropriate folder
+$(shell cp supplementary-files/*.pdf figures/)
 
 # Dummy outputs
 DATA_A = 	data-cleaned/SPARS_A.csv \
@@ -8,10 +11,13 @@ DATA_A = 	data-cleaned/SPARS_A.csv \
 DATA_B = 	data-cleaned/SPARS_B.csv \
 			data-cleaned/SPARS_B.rds
 
-1A = 	outputs/1A-participants-descriptive.md \
-		outputs/1A-participants-descriptive.html
+1A = 	outputs/1A-participant-descriptive-data.md \
+		outputs/1A-participant-descriptive-data.html
 
-2A = 	outputs/suppl_03_2A-central-tendency.md \
+2Ai = 	outputs/suppl_02_2A_central-tendency-summary.md \
+		outputs/suppl_02_2A_central-tendency-summary.html
+
+2Aii = 	outputs/suppl_03_2A-central-tendency.md \
 		outputs/suppl_03_2A-central-tendency.html
 
 3A = 	outputs/suppl_04_3A-order-effects.md \
@@ -44,11 +50,14 @@ DATA_B = 	data-cleaned/SPARS_B.csv \
 2B = 	outputs/suppl_13_2B-scale-agreement.md \
 		outputs/suppl_13_2B-scale-agreement.html
 
+3B = 	outputs/suppl_01_3B-instructions-for-participants.md \
+		outputs/suppl_01_3B-instructions-for-participants.html
+
 .PHONY: all
 
-all: 	$(DATA_A) $(DATA_B) $(1A) $(2A) $(3A) \
+all: 	$(DATA_A) $(DATA_B) $(1A) $(2Ai) $(2Aii) $(3A) \
 		$(4A1) $(4A2) $(4A3) $(4A4) $(4A5) $(4A6) \
-		$(1B1) $(1B2) $(2B)
+		$(1B1) $(1B2) $(2B) $(3B)
 
 # Clean
 clean:
@@ -64,62 +73,86 @@ data-cleaned/SPARS_B.csv data-cleaned/SPARS_B.rds: \
 	Rscript "$<"
 
 # Generate outputs
-outputs/1A-participants-descriptive.html outputs/1A-participants-descriptive.md: \
-1A-participants-descriptive.Rmd data-cleaned/SPARS_A.rds
+outputs/1A-participant-descriptive-data.html outputs/1A-participant-descriptive-data.md: \
+1A-participant-descriptive-data.Rmd \
+data-cleaned/SPARS_A.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
-	mv figures/1A-participants-descriptive outputs/figures/
+	mv figures/1A-participant-descriptive-data outputs/figures/
+
+outputs/suppl_02_2A-central-tendency-summary.html outputs/suppl_02_2A-central-tendency-summary.md: \
+suppl_02_2A-central-tendency-summary.Rmd \
+data-cleaned/SPARS_A.rds
+	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
 
 outputs/suppl_03_2A-central-tendency.html outputs/suppl_03_2A-central-tendency.md: \
-suppl_03_2A-central-tendency.Rmd data-cleaned/SPARS_A.rds
+suppl_03_2A-central-tendency.Rmd \
+data-cleaned/SPARS_A.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
 	mv figures/suppl_03_2A-central-tendency outputs/figures/
 
 outputs/suppl_04_3A-order-effects.html outputs/suppl_04_3A-order-effects.md: \
-suppl_04_3A-order-effects.Rmd data-cleaned/SPARS_A.rds
+suppl_04_3A-order-effects.Rmd \
+data-cleaned/SPARS_A.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
 	mv figures/suppl_04_3A-order-effects outputs/figures/
 
 outputs/suppl_05_4A-stimulus-response-1.html outputs/suppl_05_4A-stimulus-response-1.md: \
-suppl_05_4A-stimulus-response-1.Rmd data-cleaned/SPARS_A.rds
+suppl_05_4A-stimulus-response-1.Rmd \
+data-cleaned/SPARS_A.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
 	mv figures/suppl_05_4A-stimulus-response-1 outputs/figures/
 
 outputs/suppl_06_4A-stimulus-response-2.html outputs/suppl_06_4A-stimulus-response-2.md: \
-suppl_06_4A-stimulus-response-2.Rmd data-cleaned/SPARS_A.rds
+suppl_06_4A-stimulus-response-2.Rmd \
+data-cleaned/SPARS_A.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
 	mv figures/suppl_06_4A-stimulus-response-2 outputs/figures/
 
 outputs/suppl_07_4A-stimulus-response-3.html outputs/suppl_07_4A-stimulus-response-3.md: \
-suppl_07_4A-stimulus-response-3.Rmd data-cleaned/SPARS_A.rds
+suppl_07_4A-stimulus-response-3.Rmd \
+data-cleaned/SPARS_A.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
 	mv figures/suppl_07_4A-stimulus-response-3 outputs/figures/
 
 outputs/suppl_08_4A-stimulus-response-4.html outputs/suppl_08_4A-stimulus-response-4.md: \
-suppl_08_4A-stimulus-response-4.Rmd data-cleaned/SPARS_A.rds
+suppl_08_4A-stimulus-response-4.Rmd \
+data-cleaned/SPARS_A.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
 	mv figures/suppl_08_4A-stimulus-response-4 outputs/figures/
 
 outputs/suppl_09_4A-stimulus-response-5.html outputs/suppl_09_4A-stimulus-response-5.md: \
-suppl_09_4A-stimulus-response-5.Rmd data-cleaned/SPARS_A.rds
+suppl_09_4A-stimulus-response-5.Rmd \
+data-cleaned/SPARS_A.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
 	mv figures/suppl_09_4A-stimulus-response-5 outputs/figures/
 
 outputs/suppl_10_4A-stimulus-response-6.html outputs/suppl_10_4A-stimulus-response-6.md: \
-suppl_10_4A-stimulus-response-6.Rmd data-cleaned/SPARS_A.rds
+suppl_10_4A-stimulus-response-6.Rmd \
+data-cleaned/SPARS_A.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
 	mv figures/suppl_10_4A-stimulus-response-6 outputs/figures/
 
 outputs/suppl_11_1B-stimulus-response-1.html outputs/suppl_11_1B-stimulus-response-1.md: \
-suppl_11_1B-stimulus-response-1.Rmd data-cleaned/SPARS_B.rds
+suppl_11_1B-stimulus-response-1.Rmd \
+data-cleaned/SPARS_B.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
 	mv figures/suppl_11_1B-stimulus-response-1 outputs/figures/
 
 outputs/suppl_12_1B-stimulus-response-2.html outputs/suppl_12_1B-stimulus-response-2.md: \
-suppl_12_1B-stimulus-response-2.Rmd data-cleaned/SPARS_B.rds
+suppl_12_1B-stimulus-response-2.Rmd \
+data-cleaned/SPARS_B.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
 	mv figures/suppl_12_1B-stimulus-response-2 outputs/figures/
 
 outputs/suppl_13_2B-scale-agreement.html outputs/suppl_13_2B-scale-agreement.md: \
-suppl_13_2B-scale-agreement.Rmd data-cleaned/SPARS_B.rds
+suppl_13_2B-scale-agreement.Rmd \
+data-cleaned/SPARS_B.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
 	mv figures/suppl_13_2B-scale-agreement outputs/figures/
+
+outputs/suppl_01_3B-instructions-for-participants.html outputs/suppl_01_3B-instructions-for-participants.md: \
+suppl_01_3B-instructions-for-participants.Rmd \
+supplementary-files/spars.png \
+supplementary-files/nrs.png \
+supplementary-files/srs.png
+	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
