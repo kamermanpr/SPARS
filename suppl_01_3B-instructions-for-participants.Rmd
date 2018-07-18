@@ -21,7 +21,7 @@ knitr::opts_chunk$set(fig.align = 'center')
 
 ----
 
-This document displays the information given to participants before each block of Experiment 2. 
+This document displays the information given to participants before each block of Experiment 2 on how they should use each ratings scale (Sensation and Pain Rating Scale, Numerical Pain Rating Scale, and the Numerical Sensation Rating Scale).
 
 ----
 
