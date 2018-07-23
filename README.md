@@ -16,4 +16,4 @@ URL for this branch: [https://github.com/kamermanpr/SPARS/tree/supplementary_pdf
 
 ## Run the analysis scripts
 
-The outputs from the scripts contained in this branch are exactkly the same as in the _**master**_ branch of the repo, except that the outputs are in _PDF_ format and not _html_ and _md_ formats. If you want to run the scripts, please consult the README file on the _**master**_ branch. 
+The outputs from the scripts contained in this branch are exactly the same as in the _**master**_ branch of the repo, except that the outputs are in _PDF_ format and not _html_ and _md_ formats. If you want to run the scripts, please consult the README file on the _**master**_ branch. 
