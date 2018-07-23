@@ -92,4 +92,4 @@ To run individual RMarkdown scripts (_\*.Rmd_ files)
 
 #### Shutting down
 
-Once done, log out of RStudio Server and type the following to stop the Docker container: `docker stop spars`. If you then want to remove the container, type: `docker rm spars`. If you also want to remove the Docker image you downloaded, type: `docker rmi kamermanpr/docker-spars:v1.0.4`
+Once done, log out of RStudio Server and enter the following in a terminal to stop the Docker container: `docker stop spars`. If you then want to remove the container, enter: `docker rm spars`. If you also want to remove the Docker image you downloaded, enter: `docker rmi kamermanpr/docker-spars:v1.0.4`
