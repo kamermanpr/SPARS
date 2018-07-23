@@ -87,7 +87,7 @@ To run individual RMarkdown scripts (_\*.Rmd_ files)
     - Open _0A-clean-data.R_ and _0B-clean-data.R_ scripts through the _File_ tab in RStudio, and then click the **'Source'** button on the right of the _Script_ console in RStudio for each script.  
     
 2. Run the individual script by:  
-    - Entering `make outputs/<NAME_OF_OUTPUT_FILE>.html` in the _Terminal_ tab in RStudio, **OR**
+    - Entering `make outputs/<NAME_OF_INPUT_FILE>.html` in the _Terminal_ tab in RStudio, **OR**
     - Opening the relevant _\*.Rmd_ file through the _File_ tab in RStudio, and then clicking the **'knit'** button on the left of the _Script_ console in RStudio. 
 
 #### Shutting down
