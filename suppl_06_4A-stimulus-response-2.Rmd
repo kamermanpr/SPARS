@@ -23,9 +23,13 @@ library(lqmm)
 library(HLMdiag)
 library(sjPlot)
 library(car)
+library(ggeffects)
 
 # Set ggplot theme
 set_theme(base = theme_bw())
+
+# Define greyscale palette
+grey_pal <- c('#999999', '#656565', '#323232', '#000000')
 
 # knitr setup
 knitr::opts_chunk$set(warning = FALSE,
@@ -130,17 +134,16 @@ Anova(lmm1b,
       test.statistic = 'F')
 
 # Print better model
-sjt.lmer(lmm1b,
-         show.header = TRUE,
-         string.dv = "Response", 
-         string.pred = "Coefficients",
-         depvar.labels = '',
-         pred.labels = 'intensity',
-         string.est = 'Estimate',
-         string.ci = '95% CI',
-         string.p = 'p-value',
-         show.icc = FALSE,
-         show.r2 = FALSE)
+tab_model(lmm1b,
+          auto.label = FALSE,
+          dv.labels = "Response", 
+          string.pred = "Coefficients",
+          pred.labels = c('(Intercept)', 'Intensity'),
+          string.stat = 'Estimate',
+          string.ci = '95% CI',
+          string.p = 'p-value',
+          show.icc = FALSE,
+          show.r2 = FALSE)
 ```
 
 ### 2nd-order (quadratic) polynomial
@@ -165,17 +168,18 @@ Anova(lmm2b,
       test.statistic = 'F')
 
 # Print better model
-sjt.lmer(lmm2b,
-         show.header = TRUE,
-         string.dv = "Response", 
-         string.pred = "Coefficients",
-         depvar.labels = '',
-         pred.labels = 'intensity',
-         string.est = 'Estimate',
-         string.ci = '95% CI',
-         string.p = 'p-value',
-         show.icc = FALSE,
-         show.r2 = FALSE)
+tab_model(lmm2b,
+          auto.label = FALSE,
+          dv.labels = "Response", 
+          string.pred = "Coefficients",
+          pred.labels = c('(Intercept)', 
+                          'Intensity (linear)',
+                          'Intensity (quadratic)'),
+          string.stat = 'Estimate',
+          string.ci = '95% CI',
+          string.p = 'p-value',
+          show.icc = FALSE,
+          show.r2 = FALSE)
 ```
 
 ### 3rd-order (cubic) polynomial
@@ -200,17 +204,19 @@ Anova(lmm3b,
       test.statistic = 'F')
 
 # Print better model
-sjt.lmer(lmm3b,
-         show.header = TRUE,
-         string.dv = "Response", 
-         string.pred = "Coefficients",
-         depvar.labels = '',
-         pred.labels = 'intensity',
-         string.est = 'Estimate',
-         string.ci = '95% CI',
-         string.p = 'p-value',
-         show.icc = FALSE,
-         show.r2 = FALSE)
+tab_model(lmm3b,
+          auto.label = FALSE,
+          dv.labels = "Response", 
+          string.pred = "Coefficients",
+          pred.labels = c('(Intercept)', 
+                          'Intensity (linear)',
+                          'Intensity (quadratic)',
+                          'Intensity (cubic)'),
+          string.stat = 'Estimate',
+          string.ci = '95% CI',
+          string.p = 'p-value',
+          show.icc = FALSE,
+          show.r2 = FALSE)
 ```
 
 ### Compare models
@@ -222,14 +228,15 @@ knitr::kable(broom::tidy(anova(lmm1b, lmm2b, lmm3b)),
 
 ### PLot the model
 ```{r lmm_plot}
-predicted <- ggeffects::ggpredict(model = lmm3b,
-                                  terms = 'intensity',
-                                  ci.lvl = 0.95) 
+predicted <- ggeffect(model = lmm3b,
+                      terms = 'intensity',
+                      ci.lvl = 0.95) 
+
 ggplot(data = predicted) +
     geom_ribbon(aes(x = x,
                     ymin = conf.low,
                     ymax = conf.high),
-                fill = '#cccccc') + 
+                fill = '#CCCCCC') + 
     geom_line(aes(x = x,
                   y = predicted)) +
     geom_point(aes(x = x,
@@ -239,62 +246,14 @@ ggplot(data = predicted) +
                    y = median),
                shape = 21,
                size = 4,
-               fill = '#FFA500') +
+               stroke = 1,
+               fill = '#FFFFFF') +
   labs(title = 'Cubic model (95% CI): Predicted values vs stimulus intensity',
-       subtitle = 'Black circles/line: predicted values | Orange circles: group-level median \nFixed effects (intensity): b[L] = 205.4 (95% CI: 163.7 to 247.0); b[Q] = 2.1 (-10.4 to 14.7); \nb[C] = 21.0 (8.4 to 33.5), p = 0.04',
+       subtitle = 'Black circles/line: predicted values | White circles: group-level median \nFixed effects (intensity):\n[linear] = 205.4 (95% CI: 163.7 to 247.0)\n[quadratic] = 2.1 (-10.4 to 14.7)\n[cubic] = 21.0 (8.4 to 33.5), p = 0.04',
        x = 'Stimulus intensity (J)',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
   scale_x_continuous(breaks = seq(from = 1, to = 4, by = 0.25))
-
-# Publication plot
-p <- ggplot(data = predicted) +
-    geom_ribbon(aes(x = x,
-                    ymin = conf.low,
-                    ymax = conf.high),
-                fill = '#CCCCCC') + 
-    geom_segment(x = 0.8, xend = 4, 
-                 y = 0, yend = 0, 
-                 size = 0.6,
-                 linetype = 2) +
-    geom_line(aes(x = x,
-                  y = predicted),
-              size = 0.8) +
-    geom_point(aes(x = x,
-                  y = predicted),
-               size = 1.5) +
-    geom_point(data = data_group,
-               aes(x = intensity,
-                   y = median),
-               shape = 21,
-               size = 5,
-               fill = '#FFA500') +
-    geom_segment(x = 0.8, xend = 0.8, 
-                 y = -50.15, yend = 50.15, 
-                 size = 1.2) +
-    geom_segment(x = 0.995, xend = 4.006, 
-                 y = -55, yend = -55, 
-                 size = 1.2) +
-    labs(x = 'Stimulus intensity (J)',
-         y = 'SPARS rating (-50 to 50)') +
-    scale_y_continuous(limits = c(-55, 50.25), 
-                       expand = c(0, 0),
-                       breaks = c(-50, -25, 0, 25, 50)) +
-    scale_x_continuous(limits = c(0.8, 4.2), 
-                       expand = c(0, 0),
-                       breaks = seq(from = 1, to = 4, by = 0.5)) +
-    theme_bw() +
-    theme(panel.border = element_blank(),
-          panel.grid = element_blank(),
-          axis.text = element_text(size = 16,
-                                   colour = '#000000'),
-          axis.title = element_text(size = 16,
-                                    colour = '#000000'))
-
-ggsave(filename = 'figures/figure_5.pdf',
-       plot = p,
-       width = 6,
-       height = 5)
 ```
 
 The cubic model has the best fit. The resulting curvilinear response function is _steepest_ at the extremes and  _flattens out_ in the mid-ranges of stimulus intensity. We performed diagnostics on this model to confirm that the model was properly specified.
@@ -338,10 +297,10 @@ ggplot(data = data_lqmm) +
       y = Q50) +
   geom_ribbon(aes(ymin = `Q2.5`,
                   ymax = `Q97.5`),
-              fill = '#FFA500') +
+              fill = '#CCCCCC') +
   geom_ribbon(aes(ymin = `Q25`,
                   ymax = `Q75`),
-              fill = '#56B4E9') +
+              fill = '#656565') +
   geom_point(size = 3,
              shape = 21,
              fill = '#FFFFFF',
@@ -349,7 +308,7 @@ ggplot(data = data_lqmm) +
   geom_hline(yintercept = 0,
              linetype = 2) +
   labs(title = paste('Quantile regression'),
-       subtitle = 'Open circles: 50th percentile (median) | Blue band: interquartile range | \nOrange band: 95% prediction interval',
+       subtitle = 'Open circles: 50th percentile (median) | Dark grey band: interquartile range |\nLight grey band: 95% prediction interval',
        x = 'Stimulus intensity (J)',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
@@ -361,10 +320,10 @@ ggplot(data = data_lqmm) +
       y = Q50) +
   geom_ribbon(aes(ymin = `Q2.5`,
                   ymax = `Q97.5`),
-              fill = '#FFA500') +
+              fill = '#CCCCCC') +
   geom_ribbon(aes(ymin = `Q25`,
                   ymax = `Q75`),
-              fill = '#56B4E9') +
+              fill = '#656565') +
   geom_point(data = data_tm,
              aes(y = tri_mean),
              position = position_jitter(width = 0.03)) +
@@ -375,7 +334,7 @@ ggplot(data = data_lqmm) +
   geom_hline(yintercept = 0,
              linetype = 2) +
   labs(title = paste('Quantile regression (with original Tukey trimean data)'),
-       subtitle = 'Open circles: 50th percentile (median) | Blue band: interquartile range | \nOrange band: 95% prediction interval',
+       subtitle = 'Open circles: 50th percentile (median) | Black dots: Tukey trimeans |\nDark grey band: interquartile range | Light grey band: 95% prediction interval',
        x = 'Stimulus intensity (J)',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
@@ -387,10 +346,10 @@ p <- ggplot(data = data_lqmm) +
         y = Q50) +
     geom_ribbon(aes(ymin = `Q2.5`,
                     ymax = `Q97.5`),
-                fill = '#FFA500') +
+                fill = '#CCCCCC') +
     geom_ribbon(aes(ymin = `Q25`,
                     ymax = `Q75`),
-                fill = '#56B4E9') +
+                fill = '#656565') +
     geom_segment(x = 0.8, xend = 4, 
                  y = 0, yend = 0, 
                  size = 0.6,
@@ -400,6 +359,7 @@ p <- ggplot(data = data_lqmm) +
                position = position_jitter(width = 0.03)) +
     geom_point(size = 5,
                shape = 21,
+               stroke = 1,
                fill = '#FFFFFF',
                colour = '#000000') +
     geom_segment(x = 0.8, xend = 0.8, 
@@ -424,7 +384,7 @@ p <- ggplot(data = data_lqmm) +
           axis.title = element_text(size = 16,
                                     colour = '#000000'))
 
-ggsave(filename = 'figures/figure_6.pdf',
+ggsave(filename = 'figures/figure_5.pdf',
        plot = p,
        width = 6,
        height = 5)

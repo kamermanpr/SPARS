@@ -27,6 +27,9 @@ library(influence.ME)
 # Set ggplot theme
 theme_set(new = theme_bw())
 
+# Define greyscale palette
+grey_pal <- c('#999999', '#656565', '#323232', '#000000')
+
 # knitr setup
 knitr::opts_chunk$set(warning = FALSE,
                       message = FALSE,
@@ -140,7 +143,7 @@ data_scale %>%
     geom_smooth(method = 'lm') +
     scale_color_manual(name = 'Direction of intensity change: ',
                        labels = c('Down', 'Up'),
-                       values = c("#56B4E9", "#FC6F00")) +
+                       values = c("#999999", "#323232")) +
     scale_x_continuous(limits = c(-3.5, 3.5), 
                        breaks = seq(from = -3, to = 3, by = 1),
                        expand = c(0,0)) +
@@ -148,9 +151,9 @@ data_scale %>%
                        breaks = seq(from = -60, to = 60, by = 20),
                                     expand = c(0,0)) +
     labs(title = 'Group-level plot: Change in SPARS rating vs Change in stimulus intensity \nbetween two successive stimuli',
-         subtitle = 'Coloured points: Individual responses for all trials | Coloured line: Linear trend for context\nBlue points/line: When a stimulus was of less intensity than the preceding stimulus | \nOrange points/line: When a stimulus was of greater intensity than the preceding stimulus.\nData have been omitted when successive stimuli were of the same intensity (zero change).',
+         subtitle = 'Grey points: Individual responses for all trials | Coloured line: Linear trend for context\nDark grey points/line: When a stimulus was of less intensity than the preceding stimulus | \nLight grey points/line: When a stimulus was of greater intensity than the preceding stimulus.\nData have been omitted when successive stimuli were of the same intensity (zero change).',
          x = expression(Delta~stimulus~intensity~(J)),
-         y = expression(Delta~SPARS~rating)) +
+         y = expression(Delta~SPARS~rating~(predicted))) +
     theme(legend.position = 'top')
 
 ## Publication plot
@@ -177,10 +180,10 @@ p <- data_scale %>%
                  y = -98, yend = -98, 
                  size = 1.2,
                  colour = '#000000') +
-    labs(x = expression(Delta~stimulus~intensity~(J)),
-         y = expression(Delta~SPARS~rating)) +
-    scale_colour_manual(name = expression(Direction~of~stimulus~Delta),
-                        values = c('#FFA500', '#56B4E9'),
+    labs(x = 'Change in stimulus intensity (J)',
+         y = 'Change in SPARS rating') +
+    scale_colour_manual(name = 'Direction of change: ',
+                        values = c("#999999", "#323232"),
                         labels = c('Decreasing intensity', 'Increasing intensity')) +
     scale_y_continuous(limits = c(-98, 90.25), 
                        expand = c(0, 0),
@@ -198,9 +201,10 @@ p <- data_scale %>%
           panel.grid = element_blank(),
           axis.text = element_text(size = 16,
                                    colour = '#000000'),
-          axis.title = element_text(size = 16))
+          axis.title = element_text(size = 16,
+                                    colour = '#000000'))
 
-ggsave(filename = 'figures/figure_8.pdf',
+ggsave(filename = 'figures/figure_7.pdf',
        plot = p,
        width = 6,
        height = 5)
@@ -230,10 +234,9 @@ scale_plots <- data_scale %>%
                                colour = change_direction) +
                        geom_point() +
                        geom_smooth(method = 'lm') +
-                       scale_color_brewer(name = 'Direction of\nintensity change',
+                       scale_color_manual(name = 'Direction of\nintensity change',
                                           labels = c('Down', 'Up'),
-                                          type = 'qual',
-                                          palette = 'Dark2') +
+                                          values = c('#999999', '#323232')) +
                        scale_x_continuous(limits = c(-3.5, 3.5), 
                                           breaks = seq(from = -3, to = 3, by = 1),
                                           expand = c(0,0)) +
@@ -261,7 +264,7 @@ $$\Delta~SPARS~rating \thicksim \Delta~stimulus~intenisty~\ast~direction~of~chan
 
 Preliminary analysis indicated that influence points may be an issue, and so we modelled the data using robust methods.
 
-We generated two models. The first model included an interaction term between change in stimulus internist's and direction of change, and the second model did not. Comparing the models allows one you check whether the slope of the SPARS rating vs change in stimulus intensity relationship was dependent on the direction of the change in stimulus intensity.
+We generated two models. The first model included an interaction term between change in stimulus intensity and direction of change, and the second model did not. Comparing the models allows one you check whether the slope of the SPARS rating vs change in stimulus intensity relationship was dependent on the direction of the change in stimulus intensity.
 
 ```{r segmented_lmm, fig.width = 9}
 # Linear mixed model with interaction
@@ -314,14 +317,12 @@ ci %>%
         fill = model) +
     geom_crossbar(position = position_dodge(width = 1),
                   alpha = 0.7) +
-    scale_fill_brewer(name = 'Model', 
+    scale_fill_manual(name = 'Model', 
                       labels = c('Interaction', 'Main effects only'),
-                      type = 'qual', 
-                      palette = 'Dark2') +
-    scale_colour_brewer(name = 'Model', 
+                      values = c('#999999', '#323232')) +
+    scale_colour_manual(name = 'Model', 
                         labels = c('Interaction', 'Main effects only'),
-                        type = 'qual', 
-                        palette = 'Dark2') +
+                        values = c('#999999', '#323232')) +
     labs(title = 'Comparison of the Wald 95% confidence intervals of the fixed effects (intercept and main effects)',
          subtitle = 'The middle line in each bar shows the mid-point between the interval edges',
          y = 'Units')
@@ -338,7 +339,11 @@ A basic diagnostic assessment did not identify any violations of the model assum
 p_list <- list(plot(scale_lmm2, which = 1), 
                plot(scale_lmm2, which = 2),
                plot(scale_lmm2, which = 3))
-
+x <- plot(scale_lmm2, which = 1) +
+    scale_colour_viridis_c()
+x
+str(x)
+class(x)
 # Print plots
 walk(p_list, ~print(.x))
 ```
@@ -367,10 +372,9 @@ ggplot(data = predicted) +
         colour = group) +
     geom_line() +
     geom_point() +
-    scale_color_brewer(name = 'Direction of\nintensity change',
+    scale_color_manual(name = 'Direction of\nintensity change',
                        labels = c('Down', 'Up'),
-                       type = 'qual',
-                       palette = 'Dark2') +
+                       values = c('#999999', '#323232')) +
     scale_x_continuous(limits = c(-3, 3), 
                        breaks = seq(from = -3, to = 3, by = 1)) +
     scale_y_continuous(limits = c(-60, 60), 

@@ -23,6 +23,9 @@ library(boot)
 # Set ggplot theme
 theme_set(new = theme_bw())
 
+# Define greyscale palette
+grey_pal <- c('#AAAAAA', '#656565', '#000000')
+
 # knitr setup
 knitr::opts_chunk$set(warning = FALSE,
                       message = FALSE,
@@ -145,12 +148,10 @@ ggplot(data = data_varianceP) +
     labs(title = 'Participant-level median absolute deviation (MAD) for the SPARS, pain NRS, and SRS',
          y = 'Median absolute deviation',
          x = 'Stimulus intensity (rank)') +
-    scale_fill_brewer(name = 'Measurement scale: ',
-                      type = 'qual',
-                      palette = 'Dark2') +
-    scale_colour_brewer(name = 'Measurement scale: ',
-                        type = 'qual',
-                        palette = 'Dark2') +
+    scale_fill_manual(name = 'Measurement scale: ',
+                      values = grey_pal) +
+    scale_colour_manual(name = 'Measurement scale: ',
+                        values = grey_pal) +
     facet_wrap(~ PID, ncol = 2) +
     theme(legend.position = 'top')
 ```
@@ -186,12 +187,10 @@ ggplot(data = data_varianceG) +
     labs(title = 'Group-level median absolute deviation (MAD) for the SPARS, pain NRS, and SRS',
          y = 'Median absolute deviation',
          x = 'Stimulus intensity (rank)') +
-    scale_fill_brewer(name = 'Measurement scale: ',
-                      type = 'qual',
-                      palette = 'Dark2') +
-    scale_colour_brewer(name = 'Measurement scale: ',
-                        type = 'qual',
-                        palette = 'Dark2') +
+    scale_fill_manual(name = 'Measurement scale: ',
+                      values = grey_pal) +
+    scale_colour_manual(name = 'Measurement scale: ',
+                        values = grey_pal) +
     theme(legend.position = 'top')
 ```
 
@@ -264,14 +263,10 @@ ggplot(data = nrs_agreementP) +
     geom_crossbar() +
     geom_hline(yintercept = 0,
                linetype = 2) +
-    scale_fill_brewer(name = 'Interval includes zero: ',
-                      labels = c('No', 'Yes'),
-                      type = 'qual',
-                      palette = 'Dark2') +
-    scale_colour_brewer(name = 'Interval includes zero: ',
-                        labels = c('No', 'Yes'),
-                        type = 'qual',
-                        palette = 'Dark2') +
+    scale_fill_manual(name = 'Interval includes zero: ',
+                      values = grey_pal) +
+    scale_colour_manual(name = 'Interval includes zero: ',
+                        values = grey_pal) +
     labs(title = 'Participant-level agreement between SPARS and pain NRS ratings',
          subtitle = 'Bars: 95% confidence interval of the difference in median\nIntervals including zero interpreted as evidence for agreement',
          x = 'Stimulus intensity (rank)',
@@ -335,12 +330,10 @@ ggplot(data = nrs_agreementG) +
     geom_crossbar() +
     geom_hline(yintercept = 0,
                linetype = 2) +
-    scale_fill_brewer(name = 'Interval includes zero: ',
-                      type = 'qual',
-                      palette = 'Dark2') +
-    scale_colour_brewer(name = 'Interval includes zero: ',
-                        type = 'qual',
-                        palette = 'Dark2') +
+     scale_fill_manual(name = 'Interval includes zero: ',
+                      values = grey_pal) +
+    scale_colour_manual(name = 'Interval includes zero: ',
+                        values = grey_pal) +
     labs(title = 'Group-level agreement between SPARS and pain NRS ratings',
          subtitle = 'Bars: 95% confidence interval of the difference in median\nIntervals including zero interpreted as evidence for agreement',
          x = 'Stimulus intensity (rank)',
@@ -422,12 +415,10 @@ ggplot(data = srs_agreementP) +
     geom_crossbar() +
     geom_hline(yintercept = 0,
                linetype = 2) +
-    scale_fill_brewer(name = 'Interval includes zero: ',
-                      type = 'qual',
-                      palette = 'Dark2') +
-    scale_colour_brewer(name = 'Interval includes zero: ',
-                        type = 'qual',
-                        palette = 'Dark2') +
+     scale_fill_manual(name = 'Interval includes zero: ',
+                      values = grey_pal) +
+    scale_colour_manual(name = 'Interval includes zero: ',
+                        values = grey_pal) +
     labs(title = 'Participant-level agreement between SPARS and SRS ratings',
          subtitle = 'Bars: 95% confidence interval of the difference in median\nIntervals including zero interpreted as evidence for agreement',
          x = 'Stimulus intensity (rank)',
@@ -491,12 +482,10 @@ ggplot(data = srs_agreementG) +
     geom_crossbar() +
     geom_hline(yintercept = 0,
                linetype = 2) +
-    scale_fill_brewer(name = 'Interval includes zero: ',
-                      type = 'qual',
-                      palette = 'Dark2') +
-    scale_colour_brewer(name = 'Interval includes zero: ',
-                        type = 'qual',
-                        palette = 'Dark2') +
+     scale_fill_manual(name = 'Interval includes zero: ',
+                      values = grey_pal) +
+    scale_colour_manual(name = 'Interval includes zero: ',
+                        values = grey_pal) +
     labs(title = 'Group-level agreement between SPARS and SRS ratings',
          subtitle = 'Bars: 95% confidence interval of the difference in median\nIntervals including zero interpreted as evidence for agreement',
          x = 'Stimulus intensity (rank)',

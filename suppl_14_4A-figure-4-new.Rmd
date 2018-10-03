@@ -1,0 +1,194 @@
+---
+    title: "New figure 4 for revised manuscript"
+subtitle: "Experiment 1 -- Descriptive plot of the SPARS stimulus-response relationship"
+author: "Peter Kamerman and Tory Madden"
+date: "`r format(Sys.Date(), '%d %B %Y')`"
+output:
+    html_document:
+    keep_md: true
+    theme: yeti
+    hightlight: pygments
+    toc: true
+    toc_depth: 5
+    toc_float: true
+    code_folding: show
+editor_options: 
+  chunk_output_type: console
+---
+
+    ```{r setup, include = FALSE}
+# Load packages
+library(magrittr)
+library(tidyverse)
+library(lmerTest)
+library(ggeffects)
+    
+# Set ggplot theme
+theme_set(new = theme_bw())
+
+# knitr setup
+knitr::opts_chunk$set(warning = FALSE,
+                      message = FALSE,
+                      fig.retina = 2,
+                      fig.height = 7,
+                      fig.width = 7,
+                      fig.align = 'center',
+                      fig.path = 'figures/suppl_14_4A-figure-4-new/')
+
+```
+
+----
+
+In this script, we combined **Figure 4** from (_suppl\_05\_4A-stimulus-response-1.Rmd_) and **Figure 5** from (_suppl\_06\_4A-stimulus-response-2.Rmd_) into a single figure, **Figure 4**, which shows the individual participants' Tukey trimeans by stimulus intensity (black dots), the group means by intensity (white circles), the (best fit) cubic model (black line) and its 95% CI (grey band). 
+
+All figures downstream of Figure 5 have been re-labelled accordingly. 
+
+----
+
+# Import and inspect data
+
+```{r import}
+# Import
+data <- read_rds('./data-cleaned/SPARS_A.rds')
+
+# Inspect
+glimpse(data)
+```
+
+----
+
+# Clean and transform data
+
+We performed a basic clean-up of the data, and then calculated _Tukey trimean_ at each stimulus intensity for each participant (participant average), and finally the _median_ of the trimeans at each stimulus intensity across participants (group average).
+
+```{r clean}
+############################################################
+#                                                          #
+#                          Clean                           #
+#                                                          #
+############################################################
+data %<>%
+# Select required columns
+select(PID, block, block_order, trial_number, intensity, intensity_char, rating)
+
+############################################################
+#                                                          #
+#                Calculate 'Tukey trimean'                 #
+#                                                          #
+############################################################
+# Define tri.mean function
+tri.mean <- function(x) {
+# Calculate quantiles
+q1 <- quantile(x, probs = 0.25, na.rm = TRUE)[[1]]
+q2 <- median(x, na.rm = TRUE)
+q3 <- quantile(x, probs = 0.75, na.rm = TRUE)[[1]]
+# Calculate trimean
+tm <- (q2 + ((q1 + q3) / 2)) / 2
+# Convert to integer
+tm <- as.integer(round(tm))
+return(tm)
+}
+
+############################################################
+#                                                          #
+#                    Generate core data                    #
+#                                                          #
+############################################################
+# Calculate the participant average
+data_tm <- data %>%
+group_by(PID, intensity) %>%
+summarise(tri_mean = tri.mean(rating)) %>%
+ungroup()
+
+# Calculate the group average
+data_group <- data_tm %>%
+group_by(intensity) %>%
+summarise(median = median(tri_mean)) %>%
+ungroup()
+```
+
+----
+
+# Regression model
+
+Generate the 3rd-order (cubic) polynomial regression model (random slope and intercept), and get predicted values for plotting.
+
+```{r lmm_3}
+# Generate model
+lmm3b <- lmer(tri_mean ~ poly(intensity, 3) + (intensity | PID),
+              data = data_tm)
+
+# Generate predicted values
+predicted <- ggeffect(model = lmm3b,
+                      terms = 'intensity',
+                      ci.lvl = 0.95) 
+```
+
+---
+
+# Plot for publication
+
+```{r figure_4_new, fig.width = 10, fig.height = 11}
+p <- ggplot() +
+    geom_ribbon(data = predicted,
+                aes(x = x,
+                    ymin = conf.low,
+                    ymax = conf.high),
+                fill = '#CCCCCC') +
+    geom_point(data = data_tm,
+               aes(x = intensity,
+                   y = tri_mean),
+               position = position_jitter(width = 0.05)) +
+    geom_line(data = predicted,
+              aes(x = x,
+                  y = predicted),
+              size = 0.8) +
+    geom_point(data = data_group,
+               aes(x = intensity,
+                   y = median),
+               shape = 21,
+               size = 5,
+               stroke = 1,
+               fill = '#FFFFFF') +
+    geom_segment(aes(x = 0.8, xend = 0.8,
+                 y = -50.25, yend = 50.25),
+                 size = 1.2) +
+    geom_segment(aes(x = 0.995, xend = 4.006,
+                 y = -55, yend = -55),
+                 size = 1.2) +
+    geom_segment(aes(x = 0.8, xend = 4,
+                 y = 0, yend = 0),
+                 size = 0.6,
+                 linetype = 2) +
+    labs(x = 'Stimulus intensity (J)',
+         y = 'SPARS rating (-50 to 50)') +
+    scale_y_continuous(limits = c(-55, 50.25),
+                       expand = c(0, 0),
+                       breaks = c(-50, -25, 0, 25, 50)) +
+    scale_x_continuous(limits = c(0.8, 4.2),
+                       expand = c(0, 0),
+                       breaks = seq(from = 1, to = 4, by = 0.5)) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid = element_blank(),
+          axis.text = element_text(size = 16,
+                                   colour = '#000000'),
+          axis.title = element_text(size = 16,
+                                   colour = '#000000'))
+
+# Print plot
+print(p)
+
+# Save plot
+ggsave(filename = 'figures/figure_4.pdf',
+       plot = p,
+       width = 6,
+       height = 5)
+```
+
+----
+
+# Session information
+
+    ```{r session_info}
+sessionInfo()

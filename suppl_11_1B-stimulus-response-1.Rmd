@@ -25,6 +25,7 @@ library(HLMdiag)
 library(sjPlot)
 library(car)
 library(patchwork)
+library(ggeffects)
 
 # Set ggplot theme (since I've loaded sjPlot)
 set_theme(base = theme_bw())
@@ -148,15 +149,16 @@ data_tm %>%
   geom_point(position = position_jitter(width = 0.05)) +
   geom_smooth(method = 'loess',
               se = FALSE,
-              colour = '#666666', 
+              colour = '#656565', 
               size = 0.6) +
   geom_point(data = data_group,
              aes(y = median),
              shape = 21,
              size = 4,
-             fill = '#FFA500') +
+             stroke = 1,
+             fill = '#999999') +
   labs(title = 'Group-level stimulus-response plots (raw intensity)',
-       subtitle = 'Black circles: participant-level Tukey trimeans | Orange circles: group-level median | Grey line: loess curve',
+       subtitle = 'Black circles: participant-level Tukey trimeans | Grey circles: group-level median | Grey line: loess curve',
        x = 'Stimulus intensity (J)',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
@@ -170,15 +172,16 @@ data_tmR %>%
   geom_point(position = position_jitter(width = 0.05)) +
   geom_smooth(method = 'loess',
               se = FALSE,
-              colour = '#666666', 
+              colour = '#656565', 
               size = 0.6) +
   geom_point(data = data_groupR,
              aes(y = median),
              shape = 21,
+             stroke = 1,
              size = 4,
-             fill = '#FFA500') +
+             fill = '#999999') +
   labs(title = 'Group-level stimulus-response plots (relative intensity)',
-       subtitle = 'Black circles: participant-level Tukey trimeans | Orange circles: group-level median | Grey line: loess curve\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
+       subtitle = 'Black circles: participant-level Tukey trimeans | Grey circles: group-level median | Grey line: loess curve\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
        x = 'Relative stimulus intensity',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
@@ -196,13 +199,14 @@ p <- data_tmR %>%
     geom_point(position = position_jitter(width = 0.05)) +
     geom_smooth(method = 'loess',
                 se = FALSE,
-                colour = '#FFA500', 
+                colour = '#656565', 
                 size = 1) +
     geom_point(data = data_groupR,
                aes(y = median),
                shape = 21,
+               stroke = 1,
                size = 5,
-               fill = '#FFA500') +
+               fill = '#999999') +
     geom_segment(x = 0.8, xend = 0.8, 
                  y = -50.15, yend = 50.15, 
                  size = 1.2) +
@@ -225,7 +229,7 @@ p <- data_tmR %>%
           axis.title = element_text(size = 16,
                                     colour = '#000000'))
 
-ggsave(filename = 'figures/figure_9.pdf',
+ggsave(filename = 'figures/figure_8.pdf',
        plot = p,
        width = 6,
        height = 5)
@@ -244,15 +248,16 @@ data %>%
   geom_point() +
   geom_smooth(method = 'loess',
               se = FALSE,
-              colour = '#666666',
+              colour = '#656565',
               size = 0.6) +
   geom_point(data = data_tm,
              aes(y = tri_mean),
              shape = 21,
+             stroke = 1,
              size = 3,
-             fill = '#FFA500') +
+             fill = '#999999') +
   labs(title = 'Participant-level stimulus-response plot (raw intensity)',
-       subtitle = 'Black circles: individual experimental blocks | Orange circles: Tukey trimean | Grey line: loess curve',
+       subtitle = 'Black circles: individual experimental blocks | Grey circles: Tukey trimean | Grey line: loess curve',
        x = 'Stimulus intensity (J)',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
@@ -266,15 +271,16 @@ data %>%
   geom_point() +
   geom_smooth(method = 'loess',
               se = FALSE,
-              colour = '#666666',
+              colour = '#656565',
               size = 0.6) +
   geom_point(data = data_tmR,
              aes(y = tri_mean),
              shape = 21,
+             stroke = 1,
              size = 3,
-             fill = '#FFA500') +
+             fill = '#999999') +
   labs(title = 'Participant-level stimulus-response plot (relative intensity)',
-       subtitle = 'Black circles: individual experimental blocks | Orange circles: Tukey trimean | Grey line: loess curve\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
+       subtitle = 'Black circles: individual experimental blocks | Grey circles: Tukey trimean | Grey line: loess curve\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
        x = 'Relative stimulus intensity',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
@@ -300,7 +306,7 @@ data_block <- data %>%
                         geom_point() +
                         geom_smooth(method = 'loess',
                                     se = FALSE,
-                                    colour = '#666666',
+                                    colour = '#656565',
                                     size = 0.6) +
                         labs(title = paste(.y, ': Participant-level stimulus-response plots conditioned on experimental block (raw intensity'),
                              subtitle = 'Black circles: individual data points | Grey line: loess curve',
@@ -328,7 +334,7 @@ data_blockR <- data %>%
                         geom_point() +
                         geom_smooth(method = 'loess',
                                     se = FALSE,
-                                    colour = '#666666',
+                                    colour = '#656565',
                                     size = 0.6) +
                         labs(title = paste(.y, ': Participant-level stimulus-response plots conditioned on experimental block (relative intensity'),
                              subtitle = 'Black circles: individual data points | Grey line: loess curve\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
@@ -373,17 +379,17 @@ Anova(lmm1b,
       test.statistic = 'F')
 
 # Print better model
-sjt.lmer(lmm1b,
-         show.header = TRUE,
-         string.dv = "Response", 
-         string.pred = "Coefficients",
-         depvar.labels = '',
-         pred.labels = 'intensity_rank',
-         string.est = 'Estimate',
-         string.ci = '95% CI',
-         string.p = 'p-value',
-         show.icc = FALSE,
-         show.r2 = FALSE)
+tab_model(lmm1b,
+          auto.label = FALSE,
+          dv.labels = "Response", 
+          string.pred = "Coefficients",
+          pred.labels = c('(Intercept)', 
+                          'Intensity'),
+          string.stat = 'Estimate',
+          string.ci = '95% CI',
+          string.p = 'p-value',
+          show.icc = FALSE,
+          show.r2 = FALSE)
 ```
 
 ### 2nd-order (quadratic) polynomial
@@ -408,17 +414,18 @@ Anova(lmm2b,
       test.statistic = 'F')
 
 # Print better model
-sjt.lmer(lmm2b,
-         show.header = TRUE,
-         string.dv = "Response", 
-         string.pred = "Coefficients",
-         depvar.labels = '',
-         pred.labels = 'intensity_rank',
-         string.est = 'Estimate',
-         string.ci = '95% CI',
-         string.p = 'p-value',
-         show.icc = FALSE,
-         show.r2 = FALSE)
+tab_model(lmm2b,
+          auto.label = FALSE,
+          dv.labels = "Response", 
+          string.pred = "Coefficients",
+          pred.labels = c('(Intercept)', 
+                          'Intensity (linear)',
+                          'Intensity (quadratic)'),
+          string.stat = 'Estimate',
+          string.ci = '95% CI',
+          string.p = 'p-value',
+          show.icc = FALSE,
+          show.r2 = FALSE)
 ```
 
 ### 3rd-order (cubic) polynomial
@@ -443,17 +450,19 @@ Anova(lmm3b,
       test.statistic = 'F')
 
 # Print better model
-sjt.lmer(lmm3b,
-         show.header = TRUE,
-         string.dv = "Response", 
-         string.pred = "Coefficients",
-         depvar.labels = '',
-         pred.labels = 'intensity_rank',
-         string.est = 'Estimate',
-         string.ci = '95% CI',
-         string.p = 'p-value',
-         show.icc = FALSE,
-         show.r2 = FALSE)
+tab_model(lmm3b,
+          auto.label = FALSE,
+          dv.labels = "Response", 
+          string.pred = "Coefficients",
+          pred.labels = c('(Intercept)', 
+                          'Intensity (linear)',
+                          'Intensity (quadratic)',
+                          'Intensity (cubic)'),
+          string.stat = 'Estimate',
+          string.ci = '95% CI',
+          string.p = 'p-value',
+          show.icc = FALSE,
+          show.r2 = FALSE)
 ```
 
 ### Compare models
@@ -466,15 +475,16 @@ knitr::kable(broom::tidy(anova(lmm1b, lmm2b, lmm3b)),
 ### Plot the model
 ```{r lmm_plot}
 # Plot quadratic model
-predicted <- ggeffects::ggpredict(model = lmm2b,
-                                  terms = 'intensity_rank',
-                                  ci.lvl = 0.95) 
+predicted <- ggeffect(model = lmm2b,
+                      terms = 'intensity_rank',
+                      ci.lvl = 0.95) 
+
 ggplot() +
     geom_ribbon(data = predicted,
                 aes(x = x,
                     ymin = conf.low,
                     ymax = conf.high),
-                fill = '#cccccc') + 
+                fill = '#CCCCCC') + 
     geom_line(data = predicted,
               aes(x = x,
                   y = predicted)) +
@@ -485,10 +495,11 @@ ggplot() +
                aes(x = intensity_rank,
                    y = median),
                shape = 21,
+               stroke = 1,
                size = 4,
-               fill = '#FFA500') +
+               fill = '#FFFFFF') +
   labs(title = 'Quadratic model (95% CI): Predicted values vs stimulus intensity_rank',
-       subtitle = 'Black circles/line: predicted values | Orange circles: group-level median\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
+       subtitle = 'Black circles/line: predicted values | White circles: group-level median\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
        x = 'Relative stimulus intensity',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
@@ -515,7 +526,8 @@ quad <- ggplot(data = predicted) +
                    y = median),
                shape = 21,
                size = 5,
-               fill = '#FFA500') +
+               stroke = 1,
+               fill = '#FFFFFF') +
     geom_segment(x = 0.8, xend = 0.8, 
                  y = -50.15, yend = 50.15, 
                  size = 1.2) +
@@ -544,16 +556,16 @@ quad <- ggplot(data = predicted) +
                                     colour = '#000000'))
 
 # Plot cubic model
-predicted_cubic <- ggeffects::ggpredict(model = lmm3b,
-                                  terms = 'intensity_rank',
-                                  ci.lvl = 0.95)
+predicted_cubic <- ggeffect(model = lmm3b,
+                            terms = 'intensity_rank',
+                            ci.lvl = 0.95)
 
 ggplot() +
     geom_ribbon(data = predicted_cubic,
                 aes(x = x,
                     ymin = conf.low,
                     ymax = conf.high),
-                fill = '#cccccc') + 
+                fill = '#CCCCCC') + 
     geom_line(data = predicted_cubic,
               aes(x = x,
                   y = predicted)) +
@@ -564,10 +576,11 @@ ggplot() +
                aes(x = intensity_rank,
                    y = median),
                shape = 21,
+               stroke = 1,
                size = 4,
-               fill = '#FFA500') +
+               fill = '#FFFFFF') +
   labs(title = 'Cubic model (95% CI): Predicted values vs stimulus intensity_rank',
-       subtitle = 'Black circles/line: predicted values | Orange circles: group-level median\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
+       subtitle = 'Black circles/line: predicted values | White circles: group-level median\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
        x = 'Relative stimulus intensity',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
@@ -593,8 +606,9 @@ cubic <- ggplot(data = predicted_cubic) +
                aes(x = intensity_rank,
                    y = median),
                shape = 21,
+               stroke = 1, 
                size = 5,
-               fill = '#FFA500') +
+               fill = '#FFFFFF') +
     geom_segment(x = 0.8, xend = 0.8, 
                  y = -50.15, yend = 50.15, 
                  size = 1.2) +
@@ -628,11 +642,10 @@ cubic <- ggplot(data = predicted_cubic) +
 
 p <- quad + cubic
 
-ggsave(filename = 'figures/figure_10.pdf',
+ggsave(filename = 'figures/figure_9.pdf',
        plot = p,
        width = 12,
        height = 5)
-
 ```
 
 The quadratic and cubic models were better fits than the linear model, and did not differ significantly from each other. Therefore we took the simpler of the two models (quadratic) for further inspection, performing diagnostics on the model to confirm that the model was properly specified.
@@ -672,14 +685,19 @@ ggplot(data = lmm_resid1) +
     aes(x = `poly(intensity_rank, 2)`[, 1],
         y = std.resid) +
     geom_point() +
-    geom_smooth(method = 'lm') +
-    geom_hline(yintercept = 0) +
+    geom_smooth(method = 'lm',
+                colour = '#000000') +
+    geom_hline(yintercept = 0,
+               colour = '#656565',
+               linetype = 2) +
     geom_hline(yintercept = -2,
+               colour = '#656565',
                linetype = 2) +
     geom_hline(yintercept = 2,
+               colour = '#656565',
                linetype = 2) +
     labs(title = 'Quadratic model: Level 1 residuals vs intensity_rank',
-         subtitle = 'Assess linearity of the intensity_rank term | Blue line: linear regression line',
+         subtitle = 'Assess linearity of the intensity_rank term | Black line: linear regression line',
          caption = 'The regression line should be centered on 0\n~95% of points should be betwen -2 and +2',
          y = 'Standardized residuals',
          x = 'Stimulus intensity_rank')
@@ -689,14 +707,19 @@ ggplot(data = lmm_resid1) +
     aes(x = `poly(intensity_rank, 2)`[, 2],
         y = std.resid) +
     geom_point() +
-    geom_smooth(method = 'lm') +
-    geom_hline(yintercept = 0) +
+    geom_smooth(method = 'lm',
+                colour = '#000000') +
+    geom_hline(yintercept = 0,
+               colour = '#656565',
+               linetype = 2) +
     geom_hline(yintercept = -2,
+               colour = '#656565',
                linetype = 2) +
     geom_hline(yintercept = 2,
+               colour = '#656565',
                linetype = 2) +
     labs(title = expression(paste('Quadratic model: Level 1 residuals vs ', intensity^2)),
-         subtitle = 'Assess linearity of the intensity_rank^2 term | Blue line: linear regression line\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
+         subtitle = 'Assess linearity of the intensity_rank^2 term | Black line: linear regression line\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
          caption = 'The regression line should be centered on 0\n~95% of points should be betwen -2 and +2',
          y = 'Standardized residuals',
          x = expression(Relative~stimulus~intensity^2)) 
@@ -725,10 +748,13 @@ ggplot(data = lmm_ssresid1) +
     aes(x = `poly(intensity_rank, 2)`[, 2],
         y = semi.std.resid) +
     geom_point() +
-    geom_smooth(method = 'lm') +
-    geom_hline(yintercept = 0) +
+    geom_smooth(method = 'lm',
+                colour = '#000000') +
+    geom_hline(yintercept = 0,
+               colour = '#656565',
+               linetype = 2) +
     labs(title = expression(paste('Quadratic model: Level 1 residuals vs ', intensity^2)),
-         subtitle = 'Assess homoscedasticity for the intensity_rank^2 term | Blue line: linear regression line\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
+         subtitle = 'Assess homoscedasticity for the intensity_rank^2 term | Black line: linear regression line\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
          y = 'Semi-standardized residuals',
          x = expression(Relative~stimulus~intensity^2)) 
 ```
@@ -929,10 +955,10 @@ ggplot(data = data_lqmm) +
       y = Q50) +
   geom_ribbon(aes(ymin = `Q2.5`,
                   ymax = `Q97.5`),
-              fill = '#E69F00') +
+              fill = '#CCCCCC') +
   geom_ribbon(aes(ymin = `Q25`,
                   ymax = `Q75`),
-              fill = '#56B4E9') +
+              fill = '#656565') +
   geom_point(size = 3,
              shape = 21,
              fill = '#FFFFFF',
@@ -940,7 +966,7 @@ ggplot(data = data_lqmm) +
   geom_hline(yintercept = 0,
              linetype = 2) +
   labs(title = paste('Quantile regression'),
-       subtitle = 'Open circles: 50th percentile (median) | Blue band: interquartile range | Orange band: 95% prediction interval',
+       subtitle = 'Open circles: 50th percentile (median) | Dark grey band: interquartile range | Light grey band: 95% prediction interval',
        x = 'Realtive stimulus intensity',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
@@ -952,10 +978,10 @@ ggplot(data = data_lqmm) +
       y = Q50) +
   geom_ribbon(aes(ymin = `Q2.5`,
                   ymax = `Q97.5`),
-              fill = '#E69F00') +
+              fill = '#CCCCCC') +
   geom_ribbon(aes(ymin = `Q25`,
                   ymax = `Q75`),
-              fill = '#56B4E9') +
+              fill = '#656565') +
   geom_point(data = data_tmR,
              aes(y = tri_mean),
              position = position_jitter(width = 0.03)) +
@@ -966,7 +992,7 @@ ggplot(data = data_lqmm) +
   geom_hline(yintercept = 0,
              linetype = 2) +
   labs(title = paste('Quantile regression (with original Tukey trimean data)'),
-       subtitle = 'Open circles: 50th percentile (median) | Blue band: interquartile range | Orange band: 95% prediction interval',
+       subtitle = 'Open circles: 50th percentile (median) | Dark grey band: interquartile range | Light grey band: 95% prediction interval',
        x = 'Stimulus intensity_rank (J)',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
@@ -978,10 +1004,10 @@ p <- ggplot(data = data_lqmm) +
         y = Q50) +
     geom_ribbon(aes(ymin = `Q2.5`,
                     ymax = `Q97.5`),
-                fill = '#FFA500') +
+                fill = '#CCCCCC') +
     geom_ribbon(aes(ymin = `Q25`,
                     ymax = `Q75`),
-                fill = '#56B4E9') +
+                fill = '#656565') +
     geom_segment(x = 0.8, xend = 9, 
                  y = 0, yend = 0, 
                  size = 0.6,
@@ -991,6 +1017,7 @@ p <- ggplot(data = data_lqmm) +
                position = position_jitter(width = 0.03)) +
     geom_point(size = 5,
                shape = 21,
+               stroke = 1,
                fill = '#FFFFFF',
                colour = '#000000') +
     geom_segment(x = 0.8, xend = 0.8, 
@@ -1015,7 +1042,7 @@ p <- ggplot(data = data_lqmm) +
           axis.title = element_text(size = 16,
                                     colour = '#000000'))
 
-ggsave(filename = 'figures/figure_11.pdf',
+ggsave(filename = 'figures/figure_10.pdf',
        plot = p,
        width = 6,
        height = 5)

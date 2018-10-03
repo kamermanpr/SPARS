@@ -41,6 +41,9 @@ DATA_B = 	data-cleaned/SPARS_B.csv \
 4A6 = 	outputs/suppl_10_4A-stimulus-response-6.md \
 		outputs/suppl_10_4A-stimulus-response-6.html
 
+4A7 = 	outputs/suppl_14_4A-figure-4-new.md \
+		outputs/suppl_14_4A-figure-4-new.html
+
 1B1 = 	outputs/suppl_11_1B-stimulus-response-1.md \
 		outputs/suppl_11_1B-stimulus-response-1.html
 
@@ -56,7 +59,7 @@ DATA_B = 	data-cleaned/SPARS_B.csv \
 .PHONY: all
 
 all: 	$(DATA_A) $(DATA_B) $(1A) $(2Ai) $(2Aii) $(3A) \
-		$(4A1) $(4A2) $(4A3) $(4A4) $(4A5) $(4A6) \
+		$(4A1) $(4A2) $(4A3) $(4A4) $(4A5) $(4A6) $(4A7) \
 		$(1B1) $(1B2) $(2B) $(3B)
 
 # Clean
@@ -156,3 +159,9 @@ supplementary-files/spars.png \
 supplementary-files/nrs.png \
 supplementary-files/srs.png
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
+
+outputs/suppl_14_4A-figure-4-new.html outputs/suppl_14_4A-figure-4-new.md: \
+suppl_14_4A-figure-4-new.Rmd \
+data-cleaned/SPARS_A.rds
+	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
+	mv figures/suppl_14_4A-figure-4-new outputs/figures/
