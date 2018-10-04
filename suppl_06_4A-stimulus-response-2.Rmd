@@ -22,9 +22,13 @@ library(lqmm)
 library(HLMdiag)
 library(sjPlot)
 library(car)
+library(ggeffects)
 
 # Set ggplot theme
 set_theme(base = theme_bw())
+
+# Define greyscale palette
+grey_pal <- c('#999999', '#656565', '#323232', '#000000')
 
 # knitr setup
 knitr::opts_chunk$set(warning = FALSE,
@@ -130,13 +134,12 @@ Anova(lmm1b,
 # Print better model
 summary(lmm1b)
 # Doesn't work with LaTex
-# sjt.lmer(lmm1b,
-#          show.header = TRUE,
-#          string.dv = "Response", 
+#tab_model(lmm1b,
+#          auto.label = FALSE,
+#          dv.labels = "Response", 
 #          string.pred = "Coefficients",
-#          depvar.labels = '',
-#          pred.labels = 'intensity',
-#          string.est = 'Estimate',
+#          pred.labels = c('(Intercept)', 'Intensity'),
+#          string.stat = 'Estimate',
 #          string.ci = '95% CI',
 #          string.p = 'p-value',
 #          show.icc = FALSE,
@@ -167,13 +170,14 @@ Anova(lmm2b,
 # Print better model
 summary(lmm2b)
 # Doesn't work with LaTex
-# sjt.lmer(lmm2b,
-#          show.header = TRUE,
-#          string.dv = "Response", 
+#tab_model(lmm2b,
+#          auto.label = FALSE,
+#          dv.labels = "Response", 
 #          string.pred = "Coefficients",
-#          depvar.labels = '',
-#          pred.labels = 'intensity',
-#          string.est = 'Estimate',
+#          pred.labels = c('(Intercept)', 
+#                          'Intensity (linear)',
+#                          'Intensity (quadratic)'),
+#          string.stat = 'Estimate',
 #          string.ci = '95% CI',
 #          string.p = 'p-value',
 #          show.icc = FALSE,
@@ -204,13 +208,15 @@ Anova(lmm3b,
 # Print better model
 summary(lmm3b)
 # Doeasn't work with LaTex
-# sjt.lmer(lmm3b,
-#          show.header = TRUE,
-#          string.dv = "Response", 
+#tab_model(lmm3b,
+#          auto.label = FALSE,
+#          dv.labels = "Response", 
 #          string.pred = "Coefficients",
-#          depvar.labels = '',
-#          pred.labels = 'intensity',
-#          string.est = 'Estimate',
+#          pred.labels = c('(Intercept)', 
+#                          'Intensity (linear)',
+#                          'Intensity (quadratic)',
+#                          'Intensity (cubic)'),
+#          string.stat = 'Estimate',
 #          string.ci = '95% CI',
 #          string.p = 'p-value',
 #          show.icc = FALSE,
@@ -226,14 +232,15 @@ knitr::kable(broom::tidy(anova(lmm1b, lmm2b, lmm3b)),
 
 ### PLot the model
 ```{r lmm_plot}
-predicted <- ggeffects::ggpredict(model = lmm3b,
-                                  terms = 'intensity',
-                                  ci.lvl = 0.95) 
+predicted <- ggeffect(model = lmm3b,
+                      terms = 'intensity',
+                      ci.lvl = 0.95) 
+
 ggplot(data = predicted) +
     geom_ribbon(aes(x = x,
                     ymin = conf.low,
                     ymax = conf.high),
-                fill = '#cccccc') + 
+                fill = '#CCCCCC') + 
     geom_line(aes(x = x,
                   y = predicted)) +
     geom_point(aes(x = x,
@@ -242,10 +249,11 @@ ggplot(data = predicted) +
                aes(x = intensity,
                    y = median),
                shape = 21,
-               size = 4,
-               fill = '#FFA500') +
+               size = 5,
+               stroke = 1,
+               fill = '#FFFFFF') +
   labs(title = 'Cubic model (95% CI): Predicted values vs stimulus intensity',
-       subtitle = 'Black circles/line: predicted values | Orange circles: group-level median \nFixed effects (intensity): b[L] = 205.4 (95% CI: 163.7 to 247.0); b[Q] = 2.1 (-10.4 to 14.7); \nb[C] = 21.0 (8.4 to 33.5), p = 0.04',
+       subtitle = 'Black circles/line: predicted values | White circles: group-level median \nFixed effects (intensity):\n[linear] = 205.4 (95% CI: 163.7 to 247.0)\n[quadratic] = 2.1 (-10.4 to 14.7)\n[cubic] = 21.0 (8.4 to 33.5), p = 0.04',
        x = 'Stimulus intensity (J)',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
@@ -293,18 +301,18 @@ ggplot(data = data_lqmm) +
       y = Q50) +
   geom_ribbon(aes(ymin = `Q2.5`,
                   ymax = `Q97.5`),
-              fill = '#FFA500') +
+              fill = '#CCCCCC') +
   geom_ribbon(aes(ymin = `Q25`,
                   ymax = `Q75`),
-              fill = '#56B4E9') +
-  geom_point(size = 3,
+              fill = '#656565') +
+  geom_hline(yintercept = 0,
+             linetype = 2) +
+  geom_point(size = 5,
              shape = 21,
              fill = '#FFFFFF',
              colour = '#000000') +
-  geom_hline(yintercept = 0,
-             linetype = 2) +
   labs(title = paste('Quantile regression'),
-       subtitle = 'Open circles: 50th percentile (median) | Blue band: interquartile range | \nOrange band: 95% prediction interval',
+       subtitle = 'Open circles: 50th percentile (median) | Dark grey band: interquartile range |\nLight grey band: 95% prediction interval',
        x = 'Stimulus intensity (J)',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
@@ -316,21 +324,21 @@ ggplot(data = data_lqmm) +
       y = Q50) +
   geom_ribbon(aes(ymin = `Q2.5`,
                   ymax = `Q97.5`),
-              fill = '#FFA500') +
+              fill = '#CCCCCC') +
   geom_ribbon(aes(ymin = `Q25`,
                   ymax = `Q75`),
-              fill = '#56B4E9') +
+              fill = '#656565') +
   geom_point(data = data_tm,
              aes(y = tri_mean),
              position = position_jitter(width = 0.03)) +
-  geom_point(size = 3,
+  geom_hline(yintercept = 0,
+             linetype = 2) +
+  geom_point(size = 5,
              shape = 21,
              fill = '#FFFFFF',
              colour = '#000000') +
-  geom_hline(yintercept = 0,
-             linetype = 2) +
   labs(title = paste('Quantile regression (with original Tukey trimean data)'),
-       subtitle = 'Open circles: 50th percentile (median) | Blue band: interquartile range | \nOrange band: 95% prediction interval',
+       subtitle = 'Open circles: 50th percentile (median) | Black dots: Tukey trimeans |\nDark grey band: interquartile range | Light grey band: 95% prediction interval',
        x = 'Stimulus intensity (J)',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +

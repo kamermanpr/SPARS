@@ -24,6 +24,9 @@ library(patchwork)
 # Set ggplot theme
 theme_set(new = theme_bw())
 
+# Define greyscale palette
+grey_pal <- c('#999999', '#656565', '#323232', '#000000')
+
 # knitr setup
 knitr::opts_chunk$set(warning = FALSE,
                       message = FALSE,
@@ -140,14 +143,20 @@ ggplot(data = lmm_resid1) +
     aes(x = `poly(intensity, 3)`[, 1],
         y = std.resid) +
     geom_point() +
-    geom_smooth(method = 'lm') +
-    geom_hline(yintercept = 0) +
+    geom_smooth(method = 'lm', 
+                size = 1,
+                colour = '#000000') +
+    geom_hline(yintercept = 0,
+               linetype = 2,
+               colour = '#656565') +
     geom_hline(yintercept = -2,
-               linetype = 2) +
+               linetype = 2,
+               colour = '#656565') +
     geom_hline(yintercept = 2,
-               linetype = 2) +
+               linetype = 2,
+               colour = '#656565') +
     labs(title = 'Cubic model: Level 1 residuals vs intensity',
-         subtitle = 'Assess linearity of the intensity term | Blue line: linear regression line',
+         subtitle = 'Assess linearity of the intensity term | Solid black line: linear regression line',
          caption = 'The regression line should be centered on 0\n~95% of points should be betwen -2 and +2',
          y = 'Standardized residuals',
          x = 'Stimulus intensity')
@@ -157,14 +166,20 @@ ggplot(data = lmm_resid1) +
     aes(x = `poly(intensity, 3)`[, 2],
         y = std.resid) +
     geom_point() +
-    geom_smooth(method = 'lm') +
-    geom_hline(yintercept = 0) +
+    geom_smooth(method = 'lm', 
+                size = 1,
+                colour = '#000000') +
+    geom_hline(yintercept = 0,
+               linetype = 2,
+               colour = '#656565') +
     geom_hline(yintercept = -2,
-               linetype = 2) +
+               linetype = 2,
+               colour = '#656565') +
     geom_hline(yintercept = 2,
-               linetype = 2) +
+               linetype = 2,
+               colour = '#656565') +
     labs(title = expression(paste('Cubic model: Level 1 residuals vs ', intensity^2)),
-         subtitle = expression(paste('Assess linearity of the ', intensity^2, ' term | Blue line: linear regression line')),
+         subtitle = expression(paste('Assess linearity of the ', intensity^2, ' term | Solid black line: linear regression line')),
          caption = 'The regression line should be centered on 0\n~95% of points should be betwen -2 and +2',
          y = 'Standardized residuals',
          x = expression(Stimulus~intensity^2)) 
@@ -174,18 +189,23 @@ ggplot(data = lmm_resid1) +
     aes(x = `poly(intensity, 3)`[, 3],
         y = std.resid) +
     geom_point() +
-    geom_smooth(method = 'lm') +
-    geom_hline(yintercept = 0) +
+    geom_smooth(method = 'lm', 
+                size = 1,
+                colour = '#000000') +
+    geom_hline(yintercept = 0,
+               linetype = 2,
+               colour = '#656565') +
     geom_hline(yintercept = -2,
-               linetype = 2) +
+               linetype = 2,
+               colour = '#656565') +
     geom_hline(yintercept = 2,
-               linetype = 2) +
+               linetype = 2,
+               colour = '#656565') +
     labs(title = expression(paste('Cubic model: Level 1 residuals vs ', intensity^3)),
-         subtitle = expression(paste('Assess linearity of the ', intensity^3, ' term | Blue line: linear regression line')),
+         subtitle = expression(paste('Assess linearity of the ', intensity^3, ' term | Solid black line: linear regression line')),
          caption = 'The regression line should be centered on 0\n~95% of points should be betwen -2 and +2',
          y = 'Standardized residuals',
-         x = expression(Stimulus~intensity^3)) 
-
+         x = expression(Stimulus~intensity^3))
 ```
 
 The regression curve for the quadratic term shows some signs of deviating from slope = 0, but otherwise the model specification (in terms of linearity) looks okay. Based on the overall picture, we accept that the condition of linearity for the cubic model.
@@ -195,12 +215,12 @@ The regression curve for the quadratic term shows some signs of deviating from s
 The variance of residuals should be constant across the range of the predictor(s). This relationship can be observed by plotting the level 1 semi-standardized residuals against the predictors. Like the assessment of linearity, the residuals should be centred on 0, and show no pattern in the scatter of points.
 
 ```{r resid1_variance}
-# Standardized residuals vs intensity
 ggplot(data = lmm_ssresid1) +
     aes(x = `poly(intensity, 3)`[, 1],
         y = semi.std.resid) +
     geom_point() +
-    geom_hline(yintercept = 0) +
+    geom_hline(yintercept = 0,
+               linetype = 2) +
     labs(title = 'Cubic model: Level 1 residuals vs intensity',
          subtitle = 'Assess homoscedasticity for the intensity term',
          y = 'Semi-standardized residuals',
@@ -211,7 +231,8 @@ ggplot(data = lmm_ssresid1) +
     aes(x = `poly(intensity, 3)`[, 2],
         y = semi.std.resid) +
     geom_point() +
-    geom_hline(yintercept = 0) +
+    geom_hline(yintercept = 0,
+               linetype = 2) +
     labs(title = expression(paste('Cubic model: Level 1 residuals vs ', intensity^2)),
          subtitle = expression(paste('Assess homoscedasticity for the ', intensity^2, ' term')),
          y = 'Semi-standardized residuals',
@@ -222,11 +243,12 @@ ggplot(data = lmm_ssresid1) +
     aes(x = `poly(intensity, 3)`[, 3],
         y = semi.std.resid) +
     geom_point() +
-    geom_hline(yintercept = 0) +
+    geom_hline(yintercept = 0,
+               linetype = 2) +
     labs(title = expression(paste('Cubic model: Level 1 residuals vs ', intensity^3)),
          subtitle = expression(paste('Assess homoscedasticity for the ', intensity^3, ' term')),
          y = 'Semi-standardized residuals',
-         x = expression(Stimulus~intensity^3)) 
+         x = expression(Stimulus~intensity^3))
 ```
 
 There is no obvious pattern to the scatter of residuals across any of the fixed effect terms. So we accept that the residuals are homoscedastic in the cubic model.
@@ -384,7 +406,7 @@ data_tm %>%
                 se = FALSE, 
                 size = 0.6) +
     scale_colour_manual(name = 'Leverage points',
-                        values = c('#0072B2', '#D55E00', '#999999')) +
+                        values = c('#000000', '#656565', '#CCCCCC')) +
     labs(title = 'Inspection of high-leverage participants',
         x = 'Stimulus intensity (J)',
         y = 'SPARS rating [-50 to 50]') +

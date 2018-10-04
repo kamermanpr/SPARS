@@ -21,6 +21,9 @@ library(tidyverse)
 # Set ggplot theme
 theme_set(new = theme_bw())
 
+# Define greyscale palette
+grey_pal <- c('#AAAAAA', '#656565', '#000000')
+
 # knitr setup
 knitr::opts_chunk$set(warning = FALSE,
                       message = FALSE,
@@ -141,12 +144,10 @@ plot_raw <- data %>%
                           geom_point() +
                           scale_y_continuous(limits = c(-50, 100)) +
                           scale_x_continuous(breaks = c(1, 3, 5, 7, 9)) +
-                          scale_fill_brewer(name = 'Scale',
-                                            type = 'qual', 
-                                            palette = 'Dark2') +
-                          scale_colour_brewer(name = 'Scale',
-                                              type = 'qual', 
-                                              palette = 'Dark2') +
+                          scale_fill_manual(name = 'Scale',
+                                            values = grey_pal) +
+                          scale_colour_manual(name = 'Scale',
+                                              values = grey_pal) +
                           labs(title = paste0(.y, ': Raw participant-level stimulus-response ratings on the pain NRS, SRS and SPARS'),
                                subtitle = 'Plots are conditioned on measurement scale and experimental block\npain NRS: 0 (no pain) to 100 (worst pain you can imagine)\nSRS: 0 (no sensation) to 100 (pain)\nSPARS: -50 (no sensation), 0 (pain threshold), +50 (worst pain you can imagine)',
                                x = 'Stimulus intensity (rank)',
@@ -182,12 +183,10 @@ plot_equi <- data %>%
                           geom_point() +
                           scale_y_continuous(limits = c(-50, 50)) +
                           scale_x_continuous(breaks = c(1, 3, 5, 7, 9)) +
-                          scale_fill_brewer(name = 'Scale',
-                                            type = 'qual', 
-                                            palette = 'Dark2') +
-                          scale_colour_brewer(name = 'Scale',
-                                              type = 'qual', 
-                                              palette = 'Dark2') +
+                          scale_fill_manual(name = 'Scale',
+                                            values = grey_pal) +
+                          scale_colour_manual(name = 'Scale',
+                                              values = grey_pal) +
                           labs(title = paste0(.y, ': Scaled participant-level stimulus-response ratings on the pain NRS, SRS and SPARS'),
                                subtitle = 'Plots are conditioned on measurement scale and experimental block\npain NRS: 0 (no pain) to 50 (worst pain you can imagine)\nSRS: -50 (no sensation) to 0 (pain)\nSPARS: -50 (no sensation), 0 (pain threshold), +50 (worst pain you can imagine)',
                                x = 'Stimulus intensity (rank)',
@@ -217,25 +216,22 @@ plot_tm <- data_tm %>%
                                y = tri_mean) +
                            geom_smooth(method = 'loess',
                                        se = FALSE,
-                                       colour = '#666666') +
+                                       colour = '#656565') +
                            geom_point(shape = 21,
                                       size = 3,
-                                      fill = 'orange') +
-                           scale_fill_brewer(name = 'Scale',
-                                             type = 'qual', 
-                                             palette = 'Dark2') +
-                           scale_colour_brewer(name = 'Scale',
-                                               type = 'qual', 
-                                               palette = 'Dark2') +
+                                      fill = '#CCCCCC') +
+                           scale_fill_manual(name = 'Scale',
+                                            values = grey_pal) +
+                           scale_colour_manual(name = 'Scale',
+                                              values = grey_pal) +
                            scale_x_continuous(breaks = c(1, 3, 5, 7, 9)) +
                            scale_y_continuous(limits = c(-50, 50)) +
                            labs(title = paste0(.y, ': Scaled participant-level stimulus-response rating Tukey trimeans on the pain NRS, SRS and SPARS'),
-                                subtitle = 'Orange points: Tukey trimeans | Grey curve: loess curve\nPlots are conditioned on the three scales\npain NRS: 0 (no pain) to 50 (worst pain you can imagine)\nSRS: -50 (no sensation) to 0 (pain)\nSPARS: -50 (no sensation), 0 (pain threshold), +50 (worst pain you can imagine)',
+                                subtitle = 'White points: Tukey trimeans | Grey curve: loess curve\nPlots are conditioned on the three scales\npain NRS: 0 (no pain) to 50 (worst pain you can imagine)\nSRS: -50 (no sensation) to 0 (pain)\nSPARS: -50 (no sensation), 0 (pain threshold), +50 (worst pain you can imagine)',
                                 x = 'Stimulus intensity (rank)',
                                 y = 'Scaled intensity rating (-50 to 50)') +
                            geom_hline(yintercept = 0, linetype = 2) +
                            facet_wrap(~ scale, ncol = 3)))
-
 # Print plots
 walk(plot_tm$plot, ~ print(.x))
 ```
@@ -255,9 +251,9 @@ data_tm %>%
     geom_point(size = 2,
                position = position_dodge(width = 0.2)) +
     scale_fill_manual(name = 'Measurement scale',
-                      values = c('#009E73', '#FFA500', '#56B4E9')) +
+                      values = grey_pal) +
     scale_colour_manual(name = 'Measurement scale',
-                        values = c('#009E73', '#FFA500', '#56B4E9')) +
+                        values = grey_pal) +
     scale_y_continuous(limits = c(-50, 50)) +
     scale_x_continuous(breaks = c(1, 3, 5, 7, 9)) +
     labs(title = 'Scaled group-level stimulus-response ratings on the pain NRS, SRS and SPARS',
@@ -277,9 +273,9 @@ data %>%
         fill = scale) +
     geom_boxplot(alpha = 0.6) +
     scale_fill_manual(name = 'Measurement scale',
-                      values = c('#009E73', '#FFA500', '#56B4E9')) +
+                      values = grey_pal) +
     scale_colour_manual(name = 'Measurement scale',
-                        values = c('#009E73', '#FFA500', '#56B4E9')) +
+                        values = grey_pal) +
     scale_y_continuous(limits = c(-50, 50)) +
     labs(title = 'Scaled group-level stimulus-response ratings on the pain NRS, SRS and SPARS',
          subtitle = 'pain NRS: 0 (no pain) to 50 (worst pain you can imagine)\nSRS: -50 (no sensation) to 0 (pain)\nSPARS: -50 (no sensation), 0 (pain threshold), +50 (worst pain you can imagine)',

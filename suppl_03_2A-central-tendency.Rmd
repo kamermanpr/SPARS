@@ -19,6 +19,9 @@ library(magrittr)
 library(tidyverse)
 library(ggridges)
 
+# Define greyscale palette
+grey_pal <- c('#999999', '#656565', '#323232', '#000000')
+
 # knitr setup
 knitr::opts_chunk$set(warning = FALSE,
                       message = FALSE,
@@ -153,7 +156,8 @@ p_1to6 <- data %>%
   ggplot(data = .) +
   aes(x = rating_positive, 
       y = intensity_char) + 
-  geom_density_ridges2(scale = 1) +
+  geom_density_ridges2(scale = 1,
+                       fill = '#CCCCCC') +
   geom_point(position = position_nudge(y = 0.1),
              shape = 21,
              fill = '#FFFFFF') +
@@ -163,7 +167,8 @@ p_1to6 <- data %>%
              size = 3,
              alpha = 0.8,
              position = position_nudge(y = 0.6)) +
-  scale_fill_viridis_d(name = 'Centrality measure:',
+  scale_fill_manual(name = 'Centrality measure',
+                    values = grey_pal,
                     labels = c('Mean', 'Median', 
                                'Geometric mean', 
                                'Tukey trimean')) +
@@ -171,7 +176,7 @@ p_1to6 <- data %>%
                      breaks = seq(from = 0, to = 100, by = 20),
                      expand = c(0,0)) +
   labs(title = 'Participant-level density distribution of SPARS ratings at each stimulus intensity',
-       subtitle = 'White points: individual data points | Coloured points: measures of centrality',
+       subtitle = 'White points: individual data points | Grey points: measures of centrality',
        x = 'SPARS rating [0-100, positive-corrected scale]',
        y = 'Stimulus intensity (J)') +
   facet_wrap(~PID, ncol = 3) +
@@ -186,7 +191,8 @@ p_7to12 <- data %>%
   ggplot(data = .) +
   aes(x = rating_positive, 
       y = intensity_char) + 
-  geom_density_ridges2(scale = 1) +
+  geom_density_ridges2(scale = 1,
+                       fill = '#CCCCCC') +
   geom_point(position = position_nudge(y = 0.1),
              shape = 21,
              fill = '#FFFFFF') +
@@ -196,7 +202,8 @@ p_7to12 <- data %>%
              size = 3,
              alpha = 0.8,
              position = position_nudge(y = 0.6)) +
-  scale_fill_viridis_d(name = 'Centrality measure:',
+  scale_fill_manual(name = 'Centrality measure',
+                    values = grey_pal,
                     labels = c('Mean', 'Median', 
                                'Geometric mean', 
                                'Tukey trimean')) +
@@ -204,7 +211,7 @@ p_7to12 <- data %>%
                      breaks = seq(from = 0, to = 100, by = 20),
                      expand = c(0,0)) +
   labs(title = 'Participant-level density distribution of SPARS ratings at each stimulus intensity',
-       subtitle = 'White points: individual data points | Coloured points: measures of centrality',
+       subtitle = 'White points: individual data points | Grey points: measures of centrality',
        x = 'SPARS rating [0-100, positive-corrected scale]',
        y = 'Stimulus intensity (J)') +
   facet_wrap(~PID, ncol = 3) +
@@ -219,7 +226,8 @@ p_13to18 <- data %>%
   ggplot(data = .) +
   aes(x = rating_positive, 
       y = intensity_char) + 
-  geom_density_ridges2(scale = 1) +
+  geom_density_ridges2(scale = 1,
+                       fill = '#CCCCCC') +
   geom_point(position = position_nudge(y = 0.1),
              shape = 21,
              fill = '#FFFFFF') +
@@ -229,7 +237,8 @@ p_13to18 <- data %>%
              size = 3,
              alpha = 0.8,
              position = position_nudge(y = 0.6)) +
-  scale_fill_viridis_d(name = 'Centrality measure',
+  scale_fill_manual(name = 'Centrality measure',
+                    values = grey_pal,
                     labels = c('Mean', 'Median', 
                                'Geometric mean', 
                                'Tukey trimean')) +
@@ -237,7 +246,7 @@ p_13to18 <- data %>%
                      breaks = seq(from = 0, to = 100, by = 20),
                      expand = c(0,0)) +
   labs(title = 'Participant-level density distribution of SPARS ratings at each stimulus intensity',
-       subtitle = 'White points: individual data points | Coloured points: measures of centrality',
+       subtitle = 'White points: individual data points | Grey points: measures of centrality',
        x = 'SPARS rating [0-100, positive-corrected scale]',
        y = 'Stimulus intensity (J)') +
   facet_wrap(~PID, ncol = 3) +

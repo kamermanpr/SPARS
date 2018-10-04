@@ -22,6 +22,9 @@ library(patchwork)
 # Set ggplot theme
 theme_set(new = theme_bw())
 
+# Define greyscale palette
+grey_pal <- c('#999999', '#656565', '#323232', '#000000')
+
 # knitr setup
 knitr::opts_chunk$set(warning = FALSE,
                       message = FALSE,
@@ -107,7 +110,7 @@ data_group <- data_tm %>%
 
 ### Group-level stimulus response curve
 
-```{r sr_group, fig.width=10, fig.height=11}
+```{r sr_group, fig.width = 10, fig.height = 11}
 # Plot
 data_tm %>%
   ggplot(data = .) +
@@ -116,15 +119,16 @@ data_tm %>%
   geom_point(position = position_jitter(width = 0.05)) +
   geom_smooth(method = 'loess',
               se = FALSE,
-              colour = '#666666', 
+              colour = '#656565', 
               size = 0.6) +
   geom_point(data = data_group,
              aes(y = median),
              shape = 21,
-             size = 4,
-             fill = '#D55E00') +
+             size = 6,
+             stroke = 1,
+             fill = '#CCCCCC') +
   labs(title = 'Group-level stimulus-response plot',
-       subtitle = 'Black circles: participant-level Tukey trimeans | Orange circles: group-level median | Grey line: loess curve',
+       subtitle = 'Black circles: participant-level Tukey trimeans | Grey circles: group-level median | Grey line: loess curve',
        x = 'Stimulus intensity (J)',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
@@ -149,15 +153,15 @@ data %>%
   geom_point() +
   geom_smooth(method = 'loess',
               se = FALSE,
-              colour = '#666666',
+              colour = '#656565',
               size = 0.6) +
   geom_point(data = data_tm,
              aes(y = tri_mean),
              shape = 21,
-             size = 3,
-             fill = '#D55E00') +
+             size = 2.25,
+             fill = '#CCCCCC') +
   labs(title = 'Participant-level stimulus-response plot',
-       subtitle = 'Black circles: individual experimental blocks | Orange circles: Tukey trimean | \nGrey line: loess curve',
+       subtitle = 'Black circles: individual experimental blocks | Grey circles: Tukey trimean | \nGrey line: loess curve',
        x = 'Stimulus intensity (J)',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
@@ -184,7 +188,7 @@ data_block <- data %>%
                         geom_point() +
                         geom_smooth(method = 'loess',
                                     se = FALSE,
-                                    colour = '#666666',
+                                    colour = '#656565',
                                     size = 0.6) +
                         labs(title = paste(.y, ': Participant-level stimulus-response plots conditioned on experimental block'),
                              subtitle = 'Black circles: individual data points | Grey line: loess curve',

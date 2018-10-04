@@ -23,6 +23,9 @@ library(patchwork)
 # Set ggplot theme 
 theme_set(new = theme_bw())
 
+# Define greyscale palette
+grey_pal <- c('#CCCCCC', '#656565', '#000000')
+
 # knitr setup
 knitr::opts_chunk$set(warning = FALSE,
                       message = FALSE,
@@ -443,8 +446,6 @@ model_combined <- bind_rows(n06_best, n09_best,
                                     'Linear', 'Quadratic', 'Cubic'))
 
 # Plot
-pal <- colorRampPalette(colors = c('#88caef', '#0072B2'))(3)
-
 ggplot(data = model_combined) +
     aes(n_sample,
         fill = best_model) +
@@ -454,7 +455,7 @@ ggplot(data = model_combined) +
          x = 'Study sample size',
          y = 'Proportion of models') +
     scale_fill_manual(name = 'Best model',
-                      values = pal) +
+                      values = grey_pal) +
     scale_y_continuous(breaks = seq(from = 0, to = 1, by = 0.2))
 ```
 

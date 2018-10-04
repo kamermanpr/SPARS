@@ -19,6 +19,9 @@ library(magrittr)
 library(tidyverse)
 library(robustlmm)
 
+# Define greyscale palette
+grey_pal <- c('#999999', '#656565', '#323232', '#000000')
+
 # knitr setup
 knitr::opts_chunk$set(warning = FALSE,
                       message = FALSE,
@@ -105,7 +108,8 @@ data %>%
   aes(x = intensity,
       fill = factor(block_order)) +
   geom_bar() +
-  scale_fill_viridis_d(name = 'Experimental block:') +
+  scale_fill_manual(name = 'Experimental block:',
+                    values = grey_pal) +
   facet_wrap(~PID, ncol = 4) +
   labs(title = 'Number of trials per participant at each stimulus intensity, stratified by experimental block',
        y = 'Number of trials',
@@ -169,16 +173,16 @@ plot_trial <- plot_data %>%
                           y = rating) +
                       geom_point() +
                       geom_smooth(se = FALSE,
-                                  colour = '#666666',
+                                  colour = '#000000',
                                   size = 0.6,
                                   na.rm = TRUE) +
                       geom_hline(data = ..2, 
                                  aes(yintercept = tm),
-                                 colour = 'red',
+                                 colour = '#656565',
                                  size = 0.6,
                                  linetype = 2) +
                       labs(title = paste0(..3, ': SPARS rating versus intensity of the previous stimulus, at different stimulus intensities'),
-                           subtitle = 'Red line (dashed): Tukey trimean of SPARS rating | Grey line (solid): Loess curve',
+                           subtitle = 'Grey line (dashed): Tukey trimean of SPARS rating | Black line (solid): Loess curve',
                            y = 'SPARS rating [-50 to 50]',
                            x = 'Intensity of previous stimulus (J)') +
                       scale_y_continuous(limits = c(-50, 50)) +
@@ -216,16 +220,16 @@ plot_block <- plot_data %>%
                           y = rating) +
                       geom_point() +
                       geom_smooth(se = FALSE,
-                                  colour = '#666666',
+                                  colour = '#000000',
                                   size = 0.6,
                                   na.rm = TRUE) +
                       geom_hline(data = ..2, 
                                  aes(yintercept = tm),
-                                 colour = 'red',
+                                 colour = '#656565',
                                  size = 0.6,
                                  linetype = 2) +
                       labs(title = paste0(..3, ': SPARS rating versus experimental block number, at different stimulus intensities'),
-                           subtitle = 'Red line (dashed): Tukey trimean of SPARS rating | Grey line (solid): Loess curve',
+                           subtitle = 'Grey line (dashed): Tukey trimean of SPARS rating | Black line (solid): Loess curve',
                            y = 'SPARS rating [-50 to 50]',
                            x = 'Block number') +
                       scale_y_continuous(limits = c(-50, 50)) +
