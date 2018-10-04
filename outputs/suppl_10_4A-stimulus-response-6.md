@@ -2,7 +2,7 @@
 title: "Supplement 10"
 subtitle: "Experiment 1 -- Rating variance in the SPARS"
 author: "Peter Kamerman"
-date: "21 Jun 2018"
+date: "04 Oct 2018"
 output: 
   html_document:
     keep_md: true
@@ -71,7 +71,8 @@ ggplot(data = data_varianceP) +
         x = sprintf('%.02f', intensity)) +
     geom_point(shape = 21,
                size = 4,
-               fill = '#E69F00') +
+               stroke = 1,
+               fill = '#FFFFFF') +
     geom_hline(yintercept = 10,
                linetype = 2) +
     labs(title = 'Participant-level median absolute deviation (MAD) for the SPARS',
@@ -113,7 +114,8 @@ ggplot(data = data_varianceG) +
         x = sprintf('%.02f', intensity)) +
     geom_point(shape = 21,
                size = 4,
-               fill = '#E69F00') +
+               stroke = 1,
+               fill = '#FFFFFF') +
     geom_hline(yintercept = 10,
                linetype = 2) +
     labs(title = 'Group-level median absolute deviation (MAD) for the SPARS',
@@ -137,9 +139,9 @@ sessionInfo()
 ```
 
 ```
-## R version 3.5.0 (2018-04-23)
+## R version 3.5.1 (2018-07-02)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.5
+## Running under: macOS  10.14
 ## 
 ## Matrix products: default
 ## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
@@ -152,27 +154,21 @@ sessionInfo()
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] bindrcpp_0.2.2     forcats_0.3.0      stringr_1.3.1     
-##  [4] dplyr_0.7.5        purrr_0.2.5        readr_1.1.1       
-##  [7] tidyr_0.8.1        tibble_1.4.2       ggplot2_2.2.1.9000
-## [10] tidyverse_1.2.1    magrittr_1.5      
+##  [1] bindrcpp_0.2.2  forcats_0.3.0   stringr_1.3.1   dplyr_0.7.6    
+##  [5] purrr_0.2.5     readr_1.1.1     tidyr_0.8.1     tibble_1.4.2   
+##  [9] ggplot2_3.0.0   tidyverse_1.2.1 magrittr_1.5   
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.17      cellranger_1.1.0  pillar_1.2.3     
-##  [4] compiler_3.5.0    plyr_1.8.4        bindr_0.1.1      
-##  [7] tools_3.5.0       digest_0.6.15     lubridate_1.7.4  
-## [10] jsonlite_1.5      evaluate_0.10.1   nlme_3.1-137     
-## [13] gtable_0.2.0      lattice_0.20-35   pkgconfig_2.0.1  
-## [16] rlang_0.2.1       psych_1.8.4       cli_1.0.0        
-## [19] rstudioapi_0.7    yaml_2.1.19       parallel_3.5.0   
-## [22] haven_1.1.1       withr_2.1.2       xml2_1.2.0       
-## [25] httr_1.3.1        knitr_1.20        hms_0.4.2        
-## [28] rprojroot_1.3-2   grid_3.5.0        tidyselect_0.2.4 
-## [31] glue_1.2.0        R6_2.2.2          readxl_1.1.0     
-## [34] foreign_0.8-70    rmarkdown_1.9     modelr_0.1.2     
-## [37] reshape2_1.4.3    backports_1.1.2   scales_0.5.0.9000
-## [40] htmltools_0.3.6   rvest_0.3.2       assertthat_0.2.0 
-## [43] mnormt_1.5-5      colorspace_1.3-2  labeling_0.3     
-## [46] stringi_1.2.2     lazyeval_0.2.1    munsell_0.4.3    
-## [49] broom_0.4.4       crayon_1.3.4
+##  [1] Rcpp_0.12.19     cellranger_1.1.0 pillar_1.3.0     compiler_3.5.1  
+##  [5] plyr_1.8.4       bindr_0.1.1      tools_3.5.1      digest_0.6.17   
+##  [9] lubridate_1.7.4  jsonlite_1.5     evaluate_0.11    nlme_3.1-137    
+## [13] gtable_0.2.0     lattice_0.20-35  pkgconfig_2.0.2  rlang_0.2.2     
+## [17] cli_1.0.1        rstudioapi_0.8   yaml_2.2.0       haven_1.1.2     
+## [21] withr_2.1.2      xml2_1.2.0       httr_1.3.1       knitr_1.20      
+## [25] hms_0.4.2        rprojroot_1.3-2  grid_3.5.1       tidyselect_0.2.4
+## [29] glue_1.3.0       R6_2.2.2         readxl_1.1.0     rmarkdown_1.10  
+## [33] modelr_0.1.2     backports_1.1.2  scales_1.0.0     htmltools_0.3.6 
+## [37] rvest_0.3.2      assertthat_0.2.0 colorspace_1.3-2 labeling_0.3    
+## [41] stringi_1.2.4    lazyeval_0.2.1   munsell_0.5.0    broom_0.5.0     
+## [45] crayon_1.3.4
 ```

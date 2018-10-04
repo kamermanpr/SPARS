@@ -2,7 +2,7 @@
 title: "Supplement 8"
 subtitle: "Experiment 1 -- Stability of the SPARS stimulus-response relationship"
 author: "Peter Kamerman"
-date: "21 Jun 2018"
+date: "04 Oct 2018"
 output: 
   html_document:
     keep_md: true
@@ -460,8 +460,6 @@ model_combined <- bind_rows(n06_best, n09_best,
                                     'Linear', 'Quadratic', 'Cubic'))
 
 # Plot
-pal <- colorRampPalette(colors = c('#88caef', '#0072B2'))(3)
-
 ggplot(data = model_combined) +
     aes(n_sample,
         fill = best_model) +
@@ -471,7 +469,7 @@ ggplot(data = model_combined) +
          x = 'Study sample size',
          y = 'Proportion of models') +
     scale_fill_manual(name = 'Best model',
-                      values = pal) +
+                      values = grey_pal) +
     scale_y_continuous(breaks = seq(from = 0, to = 1, by = 0.2))
 ```
 
@@ -493,7 +491,7 @@ p <- model_combined %>%
     labs(x = 'Sample size',
          y = 'Proportion of models') +
     scale_fill_manual(name = 'Best model',
-                      values = pal) +
+                      values = grey_pal) +
     scale_y_continuous(limits = c(-0.002, 1.002),
                        breaks = seq(from = 0, to = 1, by = 0.2)) +
     scale_x_discrete(labels = c(6, 9, 12, 15, 18)) +
@@ -504,9 +502,10 @@ p <- model_combined %>%
           legend.text = element_text(size = 14),
           axis.text = element_text(size = 16,
                                    colour = '#000000'),
-          axis.title = element_text(size = 16))
+          axis.title = element_text(size = 16,
+                                   colour = '#000000'))
 
-ggsave(filename = 'figures/figure_7.pdf',
+ggsave(filename = 'figures/figure_6.pdf',
        plot = p,
        width = 7,
        height = 5)
@@ -523,9 +522,9 @@ sessionInfo()
 ```
 
 ```
-## R version 3.5.0 (2018-04-23)
+## R version 3.5.1 (2018-07-02)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.5
+## Running under: macOS  10.14
 ## 
 ## Matrix products: default
 ## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
@@ -538,29 +537,22 @@ sessionInfo()
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] bindrcpp_0.2.2     patchwork_0.0.1    lme4_1.1-17       
-##  [4] Matrix_1.2-14      forcats_0.3.0      stringr_1.3.1     
-##  [7] dplyr_0.7.5        purrr_0.2.5        readr_1.1.1       
-## [10] tidyr_0.8.1        tibble_1.4.2       ggplot2_2.2.1.9000
-## [13] tidyverse_1.2.1    magrittr_1.5      
+##  [1] bindrcpp_0.2.2  patchwork_0.0.1 lme4_1.1-18-1   Matrix_1.2-14  
+##  [5] forcats_0.3.0   stringr_1.3.1   dplyr_0.7.6     purrr_0.2.5    
+##  [9] readr_1.1.1     tidyr_0.8.1     tibble_1.4.2    ggplot2_3.0.0  
+## [13] tidyverse_1.2.1 magrittr_1.5   
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_0.2.4  reshape2_1.4.3    splines_3.5.0    
-##  [4] haven_1.1.1       lattice_0.20-35   colorspace_1.3-2 
-##  [7] htmltools_0.3.6   yaml_2.1.19       rlang_0.2.1      
-## [10] nloptr_1.0.4      pillar_1.2.3      foreign_0.8-70   
-## [13] glue_1.2.0        withr_2.1.2       modelr_0.1.2     
-## [16] readxl_1.1.0      bindr_0.1.1       plyr_1.8.4       
-## [19] munsell_0.4.3     gtable_0.2.0      cellranger_1.1.0 
-## [22] rvest_0.3.2       psych_1.8.4       evaluate_0.10.1  
-## [25] knitr_1.20        parallel_3.5.0    broom_0.4.4      
-## [28] Rcpp_0.12.17      scales_0.5.0.9000 backports_1.1.2  
-## [31] jsonlite_1.5      mnormt_1.5-5      hms_0.4.2        
-## [34] digest_0.6.15     stringi_1.2.2     grid_3.5.0       
-## [37] rprojroot_1.3-2   cli_1.0.0         tools_3.5.0      
-## [40] lazyeval_0.2.1    crayon_1.3.4      pkgconfig_2.0.1  
-## [43] MASS_7.3-50       xml2_1.2.0        lubridate_1.7.4  
-## [46] minqa_1.2.4       assertthat_0.2.0  rmarkdown_1.9    
-## [49] httr_1.3.1        rstudioapi_0.7    R6_2.2.2         
-## [52] nlme_3.1-137      compiler_3.5.0
+##  [1] tidyselect_0.2.4 splines_3.5.1    haven_1.1.2      lattice_0.20-35 
+##  [5] colorspace_1.3-2 htmltools_0.3.6  yaml_2.2.0       rlang_0.2.2     
+##  [9] nloptr_1.2.1     pillar_1.3.0     glue_1.3.0       withr_2.1.2     
+## [13] modelr_0.1.2     readxl_1.1.0     bindr_0.1.1      plyr_1.8.4      
+## [17] munsell_0.5.0    gtable_0.2.0     cellranger_1.1.0 rvest_0.3.2     
+## [21] evaluate_0.11    knitr_1.20       broom_0.5.0      Rcpp_0.12.19    
+## [25] scales_1.0.0     backports_1.1.2  jsonlite_1.5     hms_0.4.2       
+## [29] digest_0.6.17    stringi_1.2.4    grid_3.5.1       rprojroot_1.3-2 
+## [33] cli_1.0.1        tools_3.5.1      lazyeval_0.2.1   crayon_1.3.4    
+## [37] pkgconfig_2.0.2  MASS_7.3-50      xml2_1.2.0       lubridate_1.7.4 
+## [41] assertthat_0.2.0 minqa_1.2.4      rmarkdown_1.10   httr_1.3.1      
+## [45] rstudioapi_0.8   R6_2.2.2         nlme_3.1-137     compiler_3.5.1
 ```

@@ -130,7 +130,7 @@ data_reduced <- data_scale %>%
 
 ### Group-level
 
-```{r exploratory_plots, fig.width = 7, fig.height = 7, dpi = 500}
+```{r exploratory_plots, fig.width = 7, fig.height = 7}
 # Generate the plots for each individual
 data_scale %>%
     # Filter out 'no change'

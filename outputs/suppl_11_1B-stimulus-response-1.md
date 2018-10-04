@@ -2,7 +2,7 @@
 title: "Supplement 11"
 subtitle: "Experiment 2 -- Stimulus-response characteristics of the SPARS"
 author: "Peter Kamerman"
-date: "21 Jun 2018"
+date: "04 Oct 2018"
 output: 
   html_document:
     keep_md: true
@@ -158,15 +158,16 @@ data_tm %>%
   geom_point(position = position_jitter(width = 0.05)) +
   geom_smooth(method = 'loess',
               se = FALSE,
-              colour = '#666666', 
+              colour = '#656565', 
               size = 0.6) +
   geom_point(data = data_group,
              aes(y = median),
              shape = 21,
-             size = 4,
-             fill = '#FFA500') +
+             size = 5,
+             stroke = 1,
+             fill = '#999999') +
   labs(title = 'Group-level stimulus-response plots (raw intensity)',
-       subtitle = 'Black circles: participant-level Tukey trimeans | Orange circles: group-level median | Grey line: loess curve',
+       subtitle = 'Black circles: participant-level Tukey trimeans | Grey circles: group-level median | Grey line: loess curve',
        x = 'Stimulus intensity (J)',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
@@ -184,15 +185,16 @@ data_tmR %>%
   geom_point(position = position_jitter(width = 0.05)) +
   geom_smooth(method = 'loess',
               se = FALSE,
-              colour = '#666666', 
+              colour = '#656565', 
               size = 0.6) +
   geom_point(data = data_groupR,
              aes(y = median),
              shape = 21,
-             size = 4,
-             fill = '#FFA500') +
+             stroke = 1,
+             size = 5,
+             fill = '#999999') +
   labs(title = 'Group-level stimulus-response plots (relative intensity)',
-       subtitle = 'Black circles: participant-level Tukey trimeans | Orange circles: group-level median | Grey line: loess curve\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
+       subtitle = 'Black circles: participant-level Tukey trimeans | Grey circles: group-level median | Grey line: loess curve\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
        x = 'Relative stimulus intensity',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
@@ -214,13 +216,14 @@ p <- data_tmR %>%
     geom_point(position = position_jitter(width = 0.05)) +
     geom_smooth(method = 'loess',
                 se = FALSE,
-                colour = '#FFA500', 
+                colour = '#656565', 
                 size = 1) +
     geom_point(data = data_groupR,
                aes(y = median),
                shape = 21,
+               stroke = 1,
                size = 5,
-               fill = '#FFA500') +
+               fill = '#999999') +
     geom_segment(x = 0.8, xend = 0.8, 
                  y = -50.15, yend = 50.15, 
                  size = 1.2) +
@@ -243,7 +246,7 @@ p <- data_tmR %>%
           axis.title = element_text(size = 16,
                                     colour = '#000000'))
 
-ggsave(filename = 'figures/figure_9.pdf',
+ggsave(filename = 'figures/figure_8.pdf',
        plot = p,
        width = 6,
        height = 5)
@@ -263,15 +266,15 @@ data %>%
   geom_point() +
   geom_smooth(method = 'loess',
               se = FALSE,
-              colour = '#666666',
+              colour = '#656565',
               size = 0.6) +
   geom_point(data = data_tm,
              aes(y = tri_mean),
              shape = 21,
              size = 3,
-             fill = '#FFA500') +
+             fill = '#999999') +
   labs(title = 'Participant-level stimulus-response plot (raw intensity)',
-       subtitle = 'Black circles: individual experimental blocks | Orange circles: Tukey trimean | Grey line: loess curve',
+       subtitle = 'Black circles: individual experimental blocks | Grey circles: Tukey trimean | Grey line: loess curve',
        x = 'Stimulus intensity (J)',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
@@ -289,15 +292,15 @@ data %>%
   geom_point() +
   geom_smooth(method = 'loess',
               se = FALSE,
-              colour = '#666666',
+              colour = '#656565',
               size = 0.6) +
   geom_point(data = data_tmR,
              aes(y = tri_mean),
              shape = 21,
              size = 3,
-             fill = '#FFA500') +
+             fill = '#999999') +
   labs(title = 'Participant-level stimulus-response plot (relative intensity)',
-       subtitle = 'Black circles: individual experimental blocks | Orange circles: Tukey trimean | Grey line: loess curve\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
+       subtitle = 'Black circles: individual experimental blocks | Grey circles: Tukey trimean | Grey line: loess curve\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
        x = 'Relative stimulus intensity',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
@@ -326,7 +329,7 @@ data_block <- data %>%
                         geom_point() +
                         geom_smooth(method = 'loess',
                                     se = FALSE,
-                                    colour = '#666666',
+                                    colour = '#656565',
                                     size = 0.6) +
                         labs(title = paste(.y, ': Participant-level stimulus-response plots conditioned on experimental block (raw intensity'),
                              subtitle = 'Black circles: individual data points | Grey line: loess curve',
@@ -358,7 +361,7 @@ data_blockR <- data %>%
                         geom_point() +
                         geom_smooth(method = 'loess',
                                     se = FALSE,
-                                    colour = '#666666',
+                                    colour = '#656565',
                                     size = 0.6) +
                         labs(title = paste(.y, ': Participant-level stimulus-response plots conditioned on experimental block (relative intensity'),
                              subtitle = 'Black circles: individual data points | Grey line: loess curve\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
@@ -432,79 +435,66 @@ Anova(lmm1b,
 
 ```r
 # Print better model
-sjt.lmer(lmm1b,
-         show.header = TRUE,
-         string.dv = "Response", 
-         string.pred = "Coefficients",
-         depvar.labels = '',
-         pred.labels = 'intensity_rank',
-         string.est = 'Estimate',
-         string.ci = '95% CI',
-         string.p = 'p-value',
-         show.icc = FALSE,
-         show.r2 = FALSE)
+tab_model(lmm1b,
+          auto.label = FALSE,
+          dv.labels = "Response", 
+          string.pred = "Coefficients",
+          pred.labels = c('(Intercept)', 
+                          'Intensity'),
+          string.stat = 'Estimate',
+          string.ci = '95% CI',
+          string.p = 'p-value',
+          show.icc = FALSE,
+          show.r2 = FALSE)
 ```
 
-<table style="border-collapse:collapse; border:none;border-bottom:double;">
+<table style="border-collapse:collapse; border:none;">
 <tr>
-<td style="padding:0.2cm; border-top:double;" rowspan="2"><em>Coefficients</em></td>
-<td colspan="4" style="padding:0.2cm; border-top:double; text-align:center; border-bottom:1px solid;"><em>Response</em></td>
-</tr>
-
-<td style=" padding-left:0.5em; padding-right:0.5em;">&nbsp;</td>
-<td style="padding:0.2cm; text-align:center; " colspan="3"></td>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">&nbsp;</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">Response</th>
 </tr>
 <tr>
-<td style="padding:0.2cm; font-style:italic;">&nbsp;</td>
-<td style="padding-left:0.5em; padding-right:0.5em; font-style:italic;">&nbsp;</td>
-<td style="padding:0.2cm; text-align:center; font-style:italic; ">Estimate</td>
-<td style="padding:0.2cm; text-align:center; font-style:italic; ">95% CI</td>
-<td style="padding:0.2cm; text-align:center; font-style:italic; ">p&#45;value</td> 
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">Coefficients</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">Estimates</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">95% CI</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">p-value</td>
 </tr>
 <tr>
-<td colspan="5" style="padding:0.2cm; text-align:left; border-top:1px solid; font-weight:bold; text-align:left;">Fixed Parts</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">(Intercept)</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-38.87</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-56.10&nbsp;&ndash;&nbsp;-21.65</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</td>
 </tr>
 <tr>
-<td style="padding:0.2cm; text-align:left;">(Intercept)</td>
-<td style="padding-left:0.5em; padding-right:0.5em; ">&nbsp;</td>
-<td style="padding:0.2cm; text-align:center; ">&#45;38.87</td>
-<td style="padding:0.2cm; text-align:center; ">&#45;56.10&nbsp;&ndash;&nbsp;&#45;21.65</td>
-<td style="padding:0.2cm; text-align:center; ">.004</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">Intensity</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">6.01</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">3.81&nbsp;&ndash;&nbsp;8.21</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</td>
 </tr>
 <tr>
-<td style="padding:0.2cm; text-align:left;">intensity_rank</td>
-<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td>
-<td style="padding:0.2cm; text-align:center; ">6.01</td>
-<td style="padding:0.2cm; text-align:center; ">3.81&nbsp;&ndash;&nbsp;8.21</td>
-<td style="padding:0.2cm; text-align:center; ">.002</td>
-</tr><tr>
-<td colspan="5" style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; font-weight:bold; text-align:left; padding-top:0.5em;">Random Parts</td>
+<td colspan="4" style="font-weight:bold; text-align:left; padding-top:.8em;">Random Effects</td>
 </tr>
 
 <tr>
-<td style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;">&sigma;<sup>2</sup></td>
-<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">58.333</td>
-</tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">&sigma;<sup>2</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">58.33</td>
 
 <tr>
-<td style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;">&tau;<sub>00, PID</sub></td>
-<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">509.896</td>
-</tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">&tau;<sub>00</sub> <sub>PID</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">509.90</td>
 
 <tr>
-<td style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;">&rho;<sub>01</sub></td>
-<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">&#45;0.958</td>
-</tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">&tau;<sub>11</sub> <sub>PID.intensity_rank</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">7.86</td>
 
 <tr>
-<td style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;">N<sub>PID</sub></td>
-<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">7</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">&rho;<sub>01</sub> <sub>PID</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">-0.96</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">Observations</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">63</td>
 </tr>
 
-<tr>
-<td style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;">Observations</td>
-<td style="padding-left:0.5em; padding-right:0.5em; border-top:1px solid;">&nbsp;</td><td style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:center; border-top:1px solid;" colspan="3">63</td>
-</tr>
 </table>
 
 ### 2nd-order (quadratic) polynomial
@@ -556,86 +546,73 @@ Anova(lmm2b,
 
 ```r
 # Print better model
-sjt.lmer(lmm2b,
-         show.header = TRUE,
-         string.dv = "Response", 
-         string.pred = "Coefficients",
-         depvar.labels = '',
-         pred.labels = 'intensity_rank',
-         string.est = 'Estimate',
-         string.ci = '95% CI',
-         string.p = 'p-value',
-         show.icc = FALSE,
-         show.r2 = FALSE)
+tab_model(lmm2b,
+          auto.label = FALSE,
+          dv.labels = "Response", 
+          string.pred = "Coefficients",
+          pred.labels = c('(Intercept)', 
+                          'Intensity (linear)',
+                          'Intensity (quadratic)'),
+          string.stat = 'Estimate',
+          string.ci = '95% CI',
+          string.p = 'p-value',
+          show.icc = FALSE,
+          show.r2 = FALSE)
 ```
 
-<table style="border-collapse:collapse; border:none;border-bottom:double;">
+<table style="border-collapse:collapse; border:none;">
 <tr>
-<td style="padding:0.2cm; border-top:double;" rowspan="2"><em>Coefficients</em></td>
-<td colspan="4" style="padding:0.2cm; border-top:double; text-align:center; border-bottom:1px solid;"><em>Response</em></td>
-</tr>
-
-<td style=" padding-left:0.5em; padding-right:0.5em;">&nbsp;</td>
-<td style="padding:0.2cm; text-align:center; " colspan="3"></td>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">&nbsp;</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">Response</th>
 </tr>
 <tr>
-<td style="padding:0.2cm; font-style:italic;">&nbsp;</td>
-<td style="padding-left:0.5em; padding-right:0.5em; font-style:italic;">&nbsp;</td>
-<td style="padding:0.2cm; text-align:center; font-style:italic; ">Estimate</td>
-<td style="padding:0.2cm; text-align:center; font-style:italic; ">95% CI</td>
-<td style="padding:0.2cm; text-align:center; font-style:italic; ">p&#45;value</td> 
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">Coefficients</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">Estimates</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">95% CI</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">p-value</td>
 </tr>
 <tr>
-<td colspan="5" style="padding:0.2cm; text-align:left; border-top:1px solid; font-weight:bold; text-align:left;">Fixed Parts</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">(Intercept)</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-8.83</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-16.47&nbsp;&ndash;&nbsp;-1.18</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.024</strong></td>
 </tr>
 <tr>
-<td style="padding:0.2cm; text-align:left;">(Intercept)</td>
-<td style="padding-left:0.5em; padding-right:0.5em; ">&nbsp;</td>
-<td style="padding:0.2cm; text-align:center; ">&#45;8.83</td>
-<td style="padding:0.2cm; text-align:center; ">&#45;16.47&nbsp;&ndash;&nbsp;&#45;1.18</td>
-<td style="padding:0.2cm; text-align:center; ">.064</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">Intensity (linear)</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">123.16</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">78.03&nbsp;&ndash;&nbsp;168.29</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</td>
 </tr>
 <tr>
-<td style="padding:0.2cm; text-align:left;">poly(intensity_rank, 2)1</td>
-<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td>
-<td style="padding:0.2cm; text-align:center; ">123.16</td>
-<td style="padding:0.2cm; text-align:center; ">78.03&nbsp;&ndash;&nbsp;168.29</td>
-<td style="padding:0.2cm; text-align:center; ">.002</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">Intensity (quadratic)</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">15.87</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.42&nbsp;&ndash;&nbsp;30.31</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.031</strong></td>
 </tr>
 <tr>
-<td style="padding:0.2cm; text-align:left;">poly(intensity_rank, 2)2</td>
-<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td>
-<td style="padding:0.2cm; text-align:center; ">15.87</td>
-<td style="padding:0.2cm; text-align:center; ">1.42&nbsp;&ndash;&nbsp;30.31</td>
-<td style="padding:0.2cm; text-align:center; ">.036</td>
-</tr><tr>
-<td colspan="5" style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; font-weight:bold; text-align:left; padding-top:0.5em;">Random Parts</td>
+<td colspan="4" style="font-weight:bold; text-align:left; padding-top:.8em;">Random Effects</td>
 </tr>
 
 <tr>
-<td style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;">&sigma;<sup>2</sup></td>
-<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">54.304</td>
-</tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">&sigma;<sup>2</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">54.30</td>
 
 <tr>
-<td style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;">&tau;<sub>00, PID</sub></td>
-<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">512.022</td>
-</tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">&tau;<sub>00</sub> <sub>PID</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">512.02</td>
 
 <tr>
-<td style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;">&rho;<sub>01</sub></td>
-<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">&#45;0.957</td>
-</tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">&tau;<sub>11</sub> <sub>PID.intensity_rank</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">7.93</td>
 
 <tr>
-<td style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;">N<sub>PID</sub></td>
-<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">7</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">&rho;<sub>01</sub> <sub>PID</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">-0.96</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">Observations</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">63</td>
 </tr>
 
-<tr>
-<td style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;">Observations</td>
-<td style="padding-left:0.5em; padding-right:0.5em; border-top:1px solid;">&nbsp;</td><td style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:center; border-top:1px solid;" colspan="3">63</td>
-</tr>
 </table>
 
 ### 3rd-order (cubic) polynomial
@@ -687,93 +664,80 @@ Anova(lmm3b,
 
 ```r
 # Print better model
-sjt.lmer(lmm3b,
-         show.header = TRUE,
-         string.dv = "Response", 
-         string.pred = "Coefficients",
-         depvar.labels = '',
-         pred.labels = 'intensity_rank',
-         string.est = 'Estimate',
-         string.ci = '95% CI',
-         string.p = 'p-value',
-         show.icc = FALSE,
-         show.r2 = FALSE)
+tab_model(lmm3b,
+          auto.label = FALSE,
+          dv.labels = "Response", 
+          string.pred = "Coefficients",
+          pred.labels = c('(Intercept)', 
+                          'Intensity (linear)',
+                          'Intensity (quadratic)',
+                          'Intensity (cubic)'),
+          string.stat = 'Estimate',
+          string.ci = '95% CI',
+          string.p = 'p-value',
+          show.icc = FALSE,
+          show.r2 = FALSE)
 ```
 
-<table style="border-collapse:collapse; border:none;border-bottom:double;">
+<table style="border-collapse:collapse; border:none;">
 <tr>
-<td style="padding:0.2cm; border-top:double;" rowspan="2"><em>Coefficients</em></td>
-<td colspan="4" style="padding:0.2cm; border-top:double; text-align:center; border-bottom:1px solid;"><em>Response</em></td>
-</tr>
-
-<td style=" padding-left:0.5em; padding-right:0.5em;">&nbsp;</td>
-<td style="padding:0.2cm; text-align:center; " colspan="3"></td>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">&nbsp;</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">Response</th>
 </tr>
 <tr>
-<td style="padding:0.2cm; font-style:italic;">&nbsp;</td>
-<td style="padding-left:0.5em; padding-right:0.5em; font-style:italic;">&nbsp;</td>
-<td style="padding:0.2cm; text-align:center; font-style:italic; ">Estimate</td>
-<td style="padding:0.2cm; text-align:center; font-style:italic; ">95% CI</td>
-<td style="padding:0.2cm; text-align:center; font-style:italic; ">p&#45;value</td> 
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">Coefficients</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">Estimates</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">95% CI</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">p-value</td>
 </tr>
 <tr>
-<td colspan="5" style="padding:0.2cm; text-align:left; border-top:1px solid; font-weight:bold; text-align:left;">Fixed Parts</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">(Intercept)</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-8.83</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-16.47&nbsp;&ndash;&nbsp;-1.18</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.024</strong></td>
 </tr>
 <tr>
-<td style="padding:0.2cm; text-align:left;">(Intercept)</td>
-<td style="padding-left:0.5em; padding-right:0.5em; ">&nbsp;</td>
-<td style="padding:0.2cm; text-align:center; ">&#45;8.83</td>
-<td style="padding:0.2cm; text-align:center; ">&#45;16.47&nbsp;&ndash;&nbsp;&#45;1.18</td>
-<td style="padding:0.2cm; text-align:center; ">.064</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">Intensity (linear)</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">123.16</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">78.03&nbsp;&ndash;&nbsp;168.29</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</td>
 </tr>
 <tr>
-<td style="padding:0.2cm; text-align:left;">poly(intensity_rank, 3)1</td>
-<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td>
-<td style="padding:0.2cm; text-align:center; ">123.16</td>
-<td style="padding:0.2cm; text-align:center; ">78.03&nbsp;&ndash;&nbsp;168.29</td>
-<td style="padding:0.2cm; text-align:center; ">.002</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">Intensity (quadratic)</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">15.87</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.32&nbsp;&ndash;&nbsp;30.41</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.033</strong></td>
 </tr>
 <tr>
-<td style="padding:0.2cm; text-align:left;">poly(intensity_rank, 3)2</td>
-<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td>
-<td style="padding:0.2cm; text-align:center; ">15.87</td>
-<td style="padding:0.2cm; text-align:center; ">1.32&nbsp;&ndash;&nbsp;30.41</td>
-<td style="padding:0.2cm; text-align:center; ">.038</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">Intensity (cubic)</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-4.22</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-18.76&nbsp;&ndash;&nbsp;10.33</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.570</td>
 </tr>
 <tr>
-<td style="padding:0.2cm; text-align:left;">poly(intensity_rank, 3)3</td>
-<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td>
-<td style="padding:0.2cm; text-align:center; ">&#45;4.22</td>
-<td style="padding:0.2cm; text-align:center; ">&#45;18.76&nbsp;&ndash;&nbsp;10.33</td>
-<td style="padding:0.2cm; text-align:center; ">.573</td>
-</tr><tr>
-<td colspan="5" style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; font-weight:bold; text-align:left; padding-top:0.5em;">Random Parts</td>
+<td colspan="4" style="font-weight:bold; text-align:left; padding-top:.8em;">Random Effects</td>
 </tr>
 
 <tr>
-<td style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;">&sigma;<sup>2</sup></td>
-<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">55.081</td>
-</tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">&sigma;<sup>2</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">55.08</td>
 
 <tr>
-<td style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;">&tau;<sub>00, PID</sub></td>
-<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">511.612</td>
-</tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">&tau;<sub>00</sub> <sub>PID</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">511.61</td>
 
 <tr>
-<td style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;">&rho;<sub>01</sub></td>
-<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">&#45;0.957</td>
-</tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">&tau;<sub>11</sub> <sub>PID.intensity_rank</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">7.92</td>
 
 <tr>
-<td style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;">N<sub>PID</sub></td>
-<td style="padding-left:0.5em; padding-right:0.5em;">&nbsp;</td><td style="padding:0.2cm; text-align:center; padding-top:0.1cm; padding-bottom:0.1cm;" colspan="3">7</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">&rho;<sub>01</sub> <sub>PID</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">-0.96</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">Observations</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">63</td>
 </tr>
 
-<tr>
-<td style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;">Observations</td>
-<td style="padding-left:0.5em; padding-right:0.5em; border-top:1px solid;">&nbsp;</td><td style="padding:0.2cm; padding-top:0.1cm; padding-bottom:0.1cm; text-align:center; border-top:1px solid;" colspan="3">63</td>
-</tr>
 </table>
 
 ### Compare models
@@ -798,15 +762,16 @@ lmm3b     8   474.3731   491.5182   -229.1866   458.3731   0.3353413        1   
 
 ```r
 # Plot quadratic model
-predicted <- ggeffects::ggpredict(model = lmm2b,
-                                  terms = 'intensity_rank',
-                                  ci.lvl = 0.95) 
+predicted <- ggeffect(model = lmm2b,
+                      terms = 'intensity_rank',
+                      ci.lvl = 0.95) 
+
 ggplot() +
     geom_ribbon(data = predicted,
                 aes(x = x,
                     ymin = conf.low,
                     ymax = conf.high),
-                fill = '#cccccc') + 
+                fill = '#CCCCCC') + 
     geom_line(data = predicted,
               aes(x = x,
                   y = predicted)) +
@@ -817,10 +782,11 @@ ggplot() +
                aes(x = intensity_rank,
                    y = median),
                shape = 21,
-               size = 4,
-               fill = '#FFA500') +
+               stroke = 1,
+               size = 5,
+               fill = '#FFFFFF') +
   labs(title = 'Quadratic model (95% CI): Predicted values vs stimulus intensity_rank',
-       subtitle = 'Black circles/line: predicted values | Orange circles: group-level median\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
+       subtitle = 'Black circles/line: predicted values | White circles: group-level median\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
        x = 'Relative stimulus intensity',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
@@ -851,7 +817,8 @@ quad <- ggplot(data = predicted) +
                    y = median),
                shape = 21,
                size = 5,
-               fill = '#FFA500') +
+               stroke = 1,
+               fill = '#FFFFFF') +
     geom_segment(x = 0.8, xend = 0.8, 
                  y = -50.15, yend = 50.15, 
                  size = 1.2) +
@@ -880,16 +847,16 @@ quad <- ggplot(data = predicted) +
                                     colour = '#000000'))
 
 # Plot cubic model
-predicted_cubic <- ggeffects::ggpredict(model = lmm3b,
-                                  terms = 'intensity_rank',
-                                  ci.lvl = 0.95)
+predicted_cubic <- ggeffect(model = lmm3b,
+                            terms = 'intensity_rank',
+                            ci.lvl = 0.95)
 
 ggplot() +
     geom_ribbon(data = predicted_cubic,
                 aes(x = x,
                     ymin = conf.low,
                     ymax = conf.high),
-                fill = '#cccccc') + 
+                fill = '#CCCCCC') + 
     geom_line(data = predicted_cubic,
               aes(x = x,
                   y = predicted)) +
@@ -900,10 +867,11 @@ ggplot() +
                aes(x = intensity_rank,
                    y = median),
                shape = 21,
-               size = 4,
-               fill = '#FFA500') +
+               stroke = 1,
+               size = 5,
+               fill = '#FFFFFF') +
   labs(title = 'Cubic model (95% CI): Predicted values vs stimulus intensity_rank',
-       subtitle = 'Black circles/line: predicted values | Orange circles: group-level median\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
+       subtitle = 'Black circles/line: predicted values | White circles: group-level median\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
        x = 'Relative stimulus intensity',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
@@ -933,8 +901,9 @@ cubic <- ggplot(data = predicted_cubic) +
                aes(x = intensity_rank,
                    y = median),
                shape = 21,
+               stroke = 1, 
                size = 5,
-               fill = '#FFA500') +
+               fill = '#FFFFFF') +
     geom_segment(x = 0.8, xend = 0.8, 
                  y = -50.15, yend = 50.15, 
                  size = 1.2) +
@@ -968,7 +937,7 @@ cubic <- ggplot(data = predicted_cubic) +
 
 p <- quad + cubic
 
-ggsave(filename = 'figures/figure_10.pdf',
+ggsave(filename = 'figures/figure_9.pdf',
        plot = p,
        width = 12,
        height = 5)
@@ -1013,14 +982,19 @@ ggplot(data = lmm_resid1) +
     aes(x = `poly(intensity_rank, 2)`[, 1],
         y = std.resid) +
     geom_point() +
-    geom_smooth(method = 'lm') +
-    geom_hline(yintercept = 0) +
+    geom_smooth(method = 'lm',
+                colour = '#000000') +
+    geom_hline(yintercept = 0,
+               colour = '#656565',
+               linetype = 2) +
     geom_hline(yintercept = -2,
+               colour = '#656565',
                linetype = 2) +
     geom_hline(yintercept = 2,
+               colour = '#656565',
                linetype = 2) +
     labs(title = 'Quadratic model: Level 1 residuals vs intensity_rank',
-         subtitle = 'Assess linearity of the intensity_rank term | Blue line: linear regression line',
+         subtitle = 'Assess linearity of the intensity_rank term | Black line: linear regression line',
          caption = 'The regression line should be centered on 0\n~95% of points should be betwen -2 and +2',
          y = 'Standardized residuals',
          x = 'Stimulus intensity_rank')
@@ -1034,14 +1008,19 @@ ggplot(data = lmm_resid1) +
     aes(x = `poly(intensity_rank, 2)`[, 2],
         y = std.resid) +
     geom_point() +
-    geom_smooth(method = 'lm') +
-    geom_hline(yintercept = 0) +
+    geom_smooth(method = 'lm',
+                colour = '#000000') +
+    geom_hline(yintercept = 0,
+               colour = '#656565',
+               linetype = 2) +
     geom_hline(yintercept = -2,
+               colour = '#656565',
                linetype = 2) +
     geom_hline(yintercept = 2,
+               colour = '#656565',
                linetype = 2) +
     labs(title = expression(paste('Quadratic model: Level 1 residuals vs ', intensity^2)),
-         subtitle = 'Assess linearity of the intensity_rank^2 term | Blue line: linear regression line\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
+         subtitle = 'Assess linearity of the intensity_rank^2 term | Black line: linear regression line\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
          caption = 'The regression line should be centered on 0\n~95% of points should be betwen -2 and +2',
          y = 'Standardized residuals',
          x = expression(Relative~stimulus~intensity^2)) 
@@ -1077,10 +1056,13 @@ ggplot(data = lmm_ssresid1) +
     aes(x = `poly(intensity_rank, 2)`[, 2],
         y = semi.std.resid) +
     geom_point() +
-    geom_smooth(method = 'lm') +
-    geom_hline(yintercept = 0) +
+    geom_smooth(method = 'lm',
+                colour = '#000000') +
+    geom_hline(yintercept = 0,
+               colour = '#656565',
+               linetype = 2) +
     labs(title = expression(paste('Quadratic model: Level 1 residuals vs ', intensity^2)),
-         subtitle = 'Assess homoscedasticity for the intensity_rank^2 term | Blue line: linear regression line\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
+         subtitle = 'Assess homoscedasticity for the intensity_rank^2 term | Black line: linear regression line\nRelative intensity was calculated using the rank of the ordered (ascending) stimulus intensities each participant was exposed to.',
          y = 'Semi-standardized residuals',
          x = expression(Relative~stimulus~intensity^2)) 
 ```
@@ -1300,13 +1282,13 @@ summary(qmm)
 ## 
 ## Fixed effects:
 ##                             Value Std. Error lower bound upper bound
-## (Intercept)               -69.078     25.685    -120.695     -17.462
-## poly(intensity_rank, 2)1  128.368     24.008      80.121     176.615
-## poly(intensity_rank, 2)2   11.399     13.551     -15.834      38.631
+## (Intercept)               -69.078     25.485    -120.291     -17.865
+## poly(intensity_rank, 2)1  128.368     16.774      94.659     162.076
+## poly(intensity_rank, 2)2   11.399     12.738     -14.199      36.996
 ##                           Pr(>|t|)    
-## (Intercept)               0.009757 ** 
-## poly(intensity_rank, 2)1 2.332e-06 ***
-## poly(intensity_rank, 2)2  0.404358    
+## (Intercept)               0.009232 ** 
+## poly(intensity_rank, 2)1 6.509e-10 ***
+## poly(intensity_rank, 2)2  0.375244    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -1314,13 +1296,13 @@ summary(qmm)
 ## 
 ## Fixed effects:
 ##                             Value Std. Error lower bound upper bound
-## (Intercept)              -17.4995    10.5543    -38.7092      3.7102
-## poly(intensity_rank, 2)1 121.5351    24.2463     72.8104    170.2598
-## poly(intensity_rank, 2)2   5.7801    14.5709    -23.5013     35.0615
+## (Intercept)              -17.4995    11.0587    -39.7228      4.7238
+## poly(intensity_rank, 2)1 121.5351    17.4752     86.4173    156.6529
+## poly(intensity_rank, 2)2   5.7801    13.1627    -20.6714     32.2316
 ##                           Pr(>|t|)    
-## (Intercept)                 0.1037    
-## poly(intensity_rank, 2)1 7.411e-06 ***
-## poly(intensity_rank, 2)2    0.6933    
+## (Intercept)                 0.1200    
+## poly(intensity_rank, 2)1 7.797e-09 ***
+## poly(intensity_rank, 2)2    0.6625    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -1328,13 +1310,13 @@ summary(qmm)
 ## 
 ## Fixed effects:
 ##                             Value Std. Error lower bound upper bound
-## (Intercept)               -4.4901     7.2770    -19.1139      10.134
-## poly(intensity_rank, 2)1 121.6123    25.1331     71.1055     172.119
-## poly(intensity_rank, 2)2  13.7000    14.0717    -14.5781      41.978
+## (Intercept)               -4.4901     7.0253    -18.6080      9.6278
+## poly(intensity_rank, 2)1 121.6123    17.5788     86.2865    156.9381
+## poly(intensity_rank, 2)2  13.7000    13.8614    -14.1555     41.5555
 ##                           Pr(>|t|)    
-## (Intercept)                 0.5401    
-## poly(intensity_rank, 2)1 1.342e-05 ***
-## poly(intensity_rank, 2)2    0.3350    
+## (Intercept)                 0.5257    
+## poly(intensity_rank, 2)1 8.883e-09 ***
+## poly(intensity_rank, 2)2    0.3278    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -1342,27 +1324,27 @@ summary(qmm)
 ## 
 ## Fixed effects:
 ##                             Value Std. Error lower bound upper bound
-## (Intercept)                2.4089     9.6170    -16.9172      21.735
-## poly(intensity_rank, 2)1 118.7761    29.1229     60.2515     177.301
-## poly(intensity_rank, 2)2  17.9548    15.7690    -13.7341      49.644
+## (Intercept)                2.4089     8.8950    -15.4663      20.284
+## poly(intensity_rank, 2)1 118.7761    20.8678     76.8407     160.712
+## poly(intensity_rank, 2)2  17.9548    15.7055    -13.6066      49.516
 ##                           Pr(>|t|)    
-## (Intercept)              0.8032617    
-## poly(intensity_rank, 2)1 0.0001662 ***
-## poly(intensity_rank, 2)2 0.2603991    
+## (Intercept)                 0.7877    
+## poly(intensity_rank, 2)1 6.958e-07 ***
+## poly(intensity_rank, 2)2    0.2585    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## tau = 0.975
 ## 
 ## Fixed effects:
-##                            Value Std. Error lower bound upper bound
-## (Intercept)               60.212     21.884      16.235     104.189
-## poly(intensity_rank, 2)1 117.400     24.576      68.013     166.787
-## poly(intensity_rank, 2)2  17.273     12.810      -8.470      43.017
+##                             Value Std. Error lower bound upper bound
+## (Intercept)               60.2116    20.4743     19.0671     101.356
+## poly(intensity_rank, 2)1 117.4004    17.5696     82.0928     152.708
+## poly(intensity_rank, 2)2  17.2735    13.1363     -9.1249      43.672
 ##                           Pr(>|t|)    
-## (Intercept)               0.008294 ** 
-## poly(intensity_rank, 2)1 1.654e-05 ***
-## poly(intensity_rank, 2)2  0.183732    
+## (Intercept)               0.004985 ** 
+## poly(intensity_rank, 2)1 2.063e-08 ***
+## poly(intensity_rank, 2)2  0.194650    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -1396,18 +1378,19 @@ ggplot(data = data_lqmm) +
       y = Q50) +
   geom_ribbon(aes(ymin = `Q2.5`,
                   ymax = `Q97.5`),
-              fill = '#E69F00') +
+              fill = '#CCCCCC') +
   geom_ribbon(aes(ymin = `Q25`,
                   ymax = `Q75`),
-              fill = '#56B4E9') +
-  geom_point(size = 3,
-             shape = 21,
-             fill = '#FFFFFF',
-             colour = '#000000') +
+              fill = '#656565') +
   geom_hline(yintercept = 0,
              linetype = 2) +
+  geom_point(size = 5,
+             shape = 21,
+             stroke = 1,
+             fill = '#FFFFFF',
+             colour = '#000000') +
   labs(title = paste('Quantile regression'),
-       subtitle = 'Open circles: 50th percentile (median) | Blue band: interquartile range | Orange band: 95% prediction interval',
+       subtitle = 'Open circles: 50th percentile (median) | Dark grey band: interquartile range | Light grey band: 95% prediction interval',
        x = 'Realtive stimulus intensity',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
@@ -1423,21 +1406,22 @@ ggplot(data = data_lqmm) +
       y = Q50) +
   geom_ribbon(aes(ymin = `Q2.5`,
                   ymax = `Q97.5`),
-              fill = '#E69F00') +
+              fill = '#CCCCCC') +
   geom_ribbon(aes(ymin = `Q25`,
                   ymax = `Q75`),
-              fill = '#56B4E9') +
+              fill = '#656565') +
+  geom_hline(yintercept = 0,
+             linetype = 2) +
   geom_point(data = data_tmR,
              aes(y = tri_mean),
              position = position_jitter(width = 0.03)) +
-  geom_point(size = 3,
+  geom_point(size = 5,
+             stroke = 1,
              shape = 21,
              fill = '#FFFFFF',
              colour = '#000000') +
-  geom_hline(yintercept = 0,
-             linetype = 2) +
   labs(title = paste('Quantile regression (with original Tukey trimean data)'),
-       subtitle = 'Open circles: 50th percentile (median) | Blue band: interquartile range | Orange band: 95% prediction interval',
+       subtitle = 'Open circles: 50th percentile (median) | Dark grey band: interquartile range | Light grey band: 95% prediction interval',
        x = 'Stimulus intensity_rank (J)',
        y = 'SPARS rating [-50 to 50]') +
   scale_y_continuous(limits = c(-50, 50)) +
@@ -1453,10 +1437,10 @@ p <- ggplot(data = data_lqmm) +
         y = Q50) +
     geom_ribbon(aes(ymin = `Q2.5`,
                     ymax = `Q97.5`),
-                fill = '#FFA500') +
+                fill = '#CCCCCC') +
     geom_ribbon(aes(ymin = `Q25`,
                     ymax = `Q75`),
-                fill = '#56B4E9') +
+                fill = '#656565') +
     geom_segment(x = 0.8, xend = 9, 
                  y = 0, yend = 0, 
                  size = 0.6,
@@ -1466,6 +1450,7 @@ p <- ggplot(data = data_lqmm) +
                position = position_jitter(width = 0.03)) +
     geom_point(size = 5,
                shape = 21,
+               stroke = 1,
                fill = '#FFFFFF',
                colour = '#000000') +
     geom_segment(x = 0.8, xend = 0.8, 
@@ -1490,7 +1475,7 @@ p <- ggplot(data = data_lqmm) +
           axis.title = element_text(size = 16,
                                     colour = '#000000'))
 
-ggsave(filename = 'figures/figure_11.pdf',
+ggsave(filename = 'figures/figure_10.pdf',
        plot = p,
        width = 6,
        height = 5)
@@ -1507,9 +1492,9 @@ sessionInfo()
 ```
 
 ```
-## R version 3.5.0 (2018-04-23)
+## R version 3.5.1 (2018-07-02)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.5
+## Running under: macOS  10.14
 ## 
 ## Matrix products: default
 ## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
@@ -1522,48 +1507,42 @@ sessionInfo()
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] bindrcpp_0.2.2     car_3.0-0          carData_3.0-1     
-##  [4] sjPlot_2.4.1       HLMdiag_0.3.1      lqmm_1.5.4        
-##  [7] lme4_1.1-17        Matrix_1.2-14      patchwork_0.0.1   
-## [10] forcats_0.3.0      stringr_1.3.1      dplyr_0.7.5       
-## [13] purrr_0.2.5        readr_1.1.1        tidyr_0.8.1       
-## [16] tibble_1.4.2       ggplot2_2.2.1.9000 tidyverse_1.2.1   
-## [19] magrittr_1.5      
+##  [1] bindrcpp_0.2.2  ggeffects_0.5.0 car_3.0-2       carData_3.0-2  
+##  [5] sjPlot_2.6.0    HLMdiag_0.3.1   lqmm_1.5.4      lme4_1.1-18-1  
+##  [9] Matrix_1.2-14   patchwork_0.0.1 forcats_0.3.0   stringr_1.3.1  
+## [13] dplyr_0.7.6     purrr_0.2.5     readr_1.1.1     tidyr_0.8.1    
+## [17] tibble_1.4.2    ggplot2_3.0.0   tidyverse_1.2.1 magrittr_1.5   
 ## 
 ## loaded via a namespace (and not attached):
-##   [1] TH.data_1.0-8      minqa_1.2.4        colorspace_1.3-2  
-##   [4] rio_0.5.10         modeltools_0.2-21  ggridges_0.5.0    
-##   [7] sjlabelled_1.0.11  rprojroot_1.3-2    estimability_1.3  
-##  [10] snakecase_0.9.1    rstudioapi_0.7     glmmTMB_0.2.1.0   
-##  [13] DT_0.4             mvtnorm_1.0-8      lubridate_1.7.4   
-##  [16] coin_1.2-2         xml2_1.2.0         codetools_0.2-15  
-##  [19] splines_3.5.0      mnormt_1.5-5       knitr_1.20        
-##  [22] sjmisc_2.7.2       effects_4.0-1      bayesplot_1.5.0   
-##  [25] jsonlite_1.5       nloptr_1.0.4       ggeffects_0.3.4   
-##  [28] pbkrtest_0.4-7     broom_0.4.4        shiny_1.1.0       
-##  [31] compiler_3.5.0     httr_1.3.1         sjstats_0.15.0    
-##  [34] emmeans_1.2.1      backports_1.1.2    assertthat_0.2.0  
-##  [37] lazyeval_0.2.1     survey_3.33-2      cli_1.0.0         
-##  [40] later_0.7.3        htmltools_0.3.6    tools_3.5.0       
-##  [43] SparseGrid_0.8.2   coda_0.19-1        gtable_0.2.0      
-##  [46] glue_1.2.0         reshape2_1.4.3     merTools_0.4.1    
-##  [49] Rcpp_0.12.17       cellranger_1.1.0   nlme_3.1-137      
-##  [52] psych_1.8.4        lmtest_0.9-36      openxlsx_4.1.0    
-##  [55] rvest_0.3.2        mime_0.5           stringdist_0.9.5.1
-##  [58] MASS_7.3-50        zoo_1.8-1          scales_0.5.0.9000 
-##  [61] promises_1.0.1     hms_0.4.2          parallel_3.5.0    
-##  [64] sandwich_2.4-0     pwr_1.2-2          TMB_1.7.13        
-##  [67] curl_3.2           yaml_2.1.19        stringi_1.2.2     
-##  [70] highr_0.6          blme_1.0-4         zip_1.0.0         
-##  [73] rlang_0.2.1        pkgconfig_2.0.1    arm_1.10-1        
-##  [76] evaluate_0.10.1    lattice_0.20-35    prediction_0.3.6  
-##  [79] bindr_0.1.1        labeling_0.3       htmlwidgets_1.2   
-##  [82] tidyselect_0.2.4   plyr_1.8.4         R6_2.2.2          
-##  [85] multcomp_1.4-8     RLRsim_3.1-3       pillar_1.2.3      
-##  [88] haven_1.1.1        foreign_0.8-70     withr_2.1.2       
-##  [91] mgcv_1.8-23        survival_2.42-3    abind_1.4-5       
-##  [94] nnet_7.3-12        modelr_0.1.2       crayon_1.3.4      
-##  [97] rmarkdown_1.9      grid_3.5.0         readxl_1.1.0      
-## [100] data.table_1.11.4  digest_0.6.15      xtable_1.8-2      
-## [103] httpuv_1.4.3       stats4_3.5.0       munsell_0.4.3
+##  [1] TH.data_1.0-9      minqa_1.2.4        colorspace_1.3-2  
+##  [4] modeltools_0.2-22  rio_0.5.10         ggridges_0.5.1    
+##  [7] sjlabelled_1.0.14  rprojroot_1.3-2    estimability_1.3  
+## [10] snakecase_0.9.2    rstudioapi_0.8     glmmTMB_0.2.2.0   
+## [13] mvtnorm_1.0-8      lubridate_1.7.4    coin_1.2-2        
+## [16] xml2_1.2.0         codetools_0.2-15   splines_3.5.1     
+## [19] mnormt_1.5-5       knitr_1.20         sjmisc_2.7.5      
+## [22] effects_4.0-3      bayesplot_1.6.0    jsonlite_1.5      
+## [25] nloptr_1.2.1       pbkrtest_0.4-7     broom_0.5.0       
+## [28] compiler_3.5.1     httr_1.3.1         sjstats_0.17.1    
+## [31] emmeans_1.2.4      backports_1.1.2    assertthat_0.2.0  
+## [34] lazyeval_0.2.1     survey_3.33-2      cli_1.0.1         
+## [37] htmltools_0.3.6    tools_3.5.1        SparseGrid_0.8.2  
+## [40] coda_0.19-1        gtable_0.2.0       glue_1.3.0        
+## [43] reshape2_1.4.3     Rcpp_0.12.19       cellranger_1.1.0  
+## [46] nlme_3.1-137       psych_1.8.4        openxlsx_4.1.0    
+## [49] rvest_0.3.2        stringdist_0.9.5.1 MASS_7.3-50       
+## [52] zoo_1.8-4          scales_1.0.0       hms_0.4.2         
+## [55] parallel_3.5.1     sandwich_2.5-0     pwr_1.2-2         
+## [58] TMB_1.7.14         yaml_2.2.0         curl_3.2          
+## [61] stringi_1.2.4      highr_0.7          zip_1.0.0         
+## [64] rlang_0.2.2        pkgconfig_2.0.2    evaluate_0.11     
+## [67] lattice_0.20-35    prediction_0.3.6   bindr_0.1.1       
+## [70] labeling_0.3       tidyselect_0.2.4   plyr_1.8.4        
+## [73] R6_2.2.2           multcomp_1.4-8     RLRsim_3.1-3      
+## [76] pillar_1.3.0       haven_1.1.2        foreign_0.8-71    
+## [79] withr_2.1.2        mgcv_1.8-24        abind_1.4-5       
+## [82] survival_2.42-6    nnet_7.3-12        modelr_0.1.2      
+## [85] crayon_1.3.4       rmarkdown_1.10     grid_3.5.1        
+## [88] readxl_1.1.0       data.table_1.11.8  digest_0.6.17     
+## [91] xtable_1.8-3       stats4_3.5.1       munsell_0.5.0
 ```

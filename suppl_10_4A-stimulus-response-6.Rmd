@@ -70,7 +70,7 @@ data %<>%
 
 # Intra-individual variation (participant-level)
 
-```{r varianceP, fig.height = 9, fig.width = 9}
+```{r varianceP, fig.height = 12, fig.width = 9}
 # Calculate MAD
 data_varianceP <- data %>%
     group_by(PID, intensity) %>%

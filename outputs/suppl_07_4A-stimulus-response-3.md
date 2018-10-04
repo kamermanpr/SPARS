@@ -2,7 +2,7 @@
 title: "SPARS trial A"
 subtitle: "Diagnostics for the best-fit linear mixed model of the SPARS stimulus-response relationship"
 author: "Peter Kamerman and Tory Madden"
-date: "21 June 2018"
+date: "04 October 2018"
 output: 
   html_document:
     keep_md: true
@@ -127,14 +127,20 @@ ggplot(data = lmm_resid1) +
     aes(x = `poly(intensity, 3)`[, 1],
         y = std.resid) +
     geom_point() +
-    geom_smooth(method = 'lm') +
-    geom_hline(yintercept = 0) +
+    geom_smooth(method = 'lm', 
+                size = 1,
+                colour = '#000000') +
+    geom_hline(yintercept = 0,
+               linetype = 2,
+               colour = '#656565') +
     geom_hline(yintercept = -2,
-               linetype = 2) +
+               linetype = 2,
+               colour = '#656565') +
     geom_hline(yintercept = 2,
-               linetype = 2) +
+               linetype = 2,
+               colour = '#656565') +
     labs(title = 'Cubic model: Level 1 residuals vs intensity',
-         subtitle = 'Assess linearity of the intensity term | Blue line: linear regression line',
+         subtitle = 'Assess linearity of the intensity term | Solid black line: linear regression line',
          caption = 'The regression line should be centered on 0\n~95% of points should be betwen -2 and +2',
          y = 'Standardized residuals',
          x = 'Stimulus intensity')
@@ -148,14 +154,20 @@ ggplot(data = lmm_resid1) +
     aes(x = `poly(intensity, 3)`[, 2],
         y = std.resid) +
     geom_point() +
-    geom_smooth(method = 'lm') +
-    geom_hline(yintercept = 0) +
+    geom_smooth(method = 'lm', 
+                size = 1,
+                colour = '#000000') +
+    geom_hline(yintercept = 0,
+               linetype = 2,
+               colour = '#656565') +
     geom_hline(yintercept = -2,
-               linetype = 2) +
+               linetype = 2,
+               colour = '#656565') +
     geom_hline(yintercept = 2,
-               linetype = 2) +
+               linetype = 2,
+               colour = '#656565') +
     labs(title = expression(paste('Cubic model: Level 1 residuals vs ', intensity^2)),
-         subtitle = expression(paste('Assess linearity of the ', intensity^2, ' term | Blue line: linear regression line')),
+         subtitle = expression(paste('Assess linearity of the ', intensity^2, ' term | Solid black line: linear regression line')),
          caption = 'The regression line should be centered on 0\n~95% of points should be betwen -2 and +2',
          y = 'Standardized residuals',
          x = expression(Stimulus~intensity^2)) 
@@ -169,14 +181,20 @@ ggplot(data = lmm_resid1) +
     aes(x = `poly(intensity, 3)`[, 3],
         y = std.resid) +
     geom_point() +
-    geom_smooth(method = 'lm') +
-    geom_hline(yintercept = 0) +
+    geom_smooth(method = 'lm', 
+                size = 1,
+                colour = '#000000') +
+    geom_hline(yintercept = 0,
+               linetype = 2,
+               colour = '#656565') +
     geom_hline(yintercept = -2,
-               linetype = 2) +
+               linetype = 2,
+               colour = '#656565') +
     geom_hline(yintercept = 2,
-               linetype = 2) +
+               linetype = 2,
+               colour = '#656565') +
     labs(title = expression(paste('Cubic model: Level 1 residuals vs ', intensity^3)),
-         subtitle = expression(paste('Assess linearity of the ', intensity^3, ' term | Blue line: linear regression line')),
+         subtitle = expression(paste('Assess linearity of the ', intensity^3, ' term | Solid black line: linear regression line')),
          caption = 'The regression line should be centered on 0\n~95% of points should be betwen -2 and +2',
          y = 'Standardized residuals',
          x = expression(Stimulus~intensity^3)) 
@@ -197,7 +215,8 @@ ggplot(data = lmm_ssresid1) +
     aes(x = `poly(intensity, 3)`[, 1],
         y = semi.std.resid) +
     geom_point() +
-    geom_hline(yintercept = 0) +
+    geom_hline(yintercept = 0,
+               linetype = 2) +
     labs(title = 'Cubic model: Level 1 residuals vs intensity',
          subtitle = 'Assess homoscedasticity for the intensity term',
          y = 'Semi-standardized residuals',
@@ -212,7 +231,8 @@ ggplot(data = lmm_ssresid1) +
     aes(x = `poly(intensity, 3)`[, 2],
         y = semi.std.resid) +
     geom_point() +
-    geom_hline(yintercept = 0) +
+    geom_hline(yintercept = 0,
+               linetype = 2) +
     labs(title = expression(paste('Cubic model: Level 1 residuals vs ', intensity^2)),
          subtitle = expression(paste('Assess homoscedasticity for the ', intensity^2, ' term')),
          y = 'Semi-standardized residuals',
@@ -227,7 +247,8 @@ ggplot(data = lmm_ssresid1) +
     aes(x = `poly(intensity, 3)`[, 3],
         y = semi.std.resid) +
     geom_point() +
-    geom_hline(yintercept = 0) +
+    geom_hline(yintercept = 0,
+               linetype = 2) +
     labs(title = expression(paste('Cubic model: Level 1 residuals vs ', intensity^3)),
          subtitle = expression(paste('Assess homoscedasticity for the ', intensity^3, ' term')),
          y = 'Semi-standardized residuals',
@@ -327,7 +348,7 @@ dotplot_diag(x = influence_rvc[ , 1],
     labs(title = 'Relative variance change for the residual variance',
          subtitle = 'Cutoffs determined by measures of internal scaling',
          y = 'Relative variance change',
-         x = 'Participant ID')
+         x = 'Participant ID') 
 ```
 
 <img src="figures/suppl_07_4A-stimulus-response-3/influence_random-1.png" width="672" style="display: block; margin: auto;" />
@@ -420,7 +441,7 @@ data_tm %>%
                 se = FALSE, 
                 size = 0.6) +
     scale_colour_manual(name = 'Leverage points',
-                        values = c('#0072B2', '#D55E00', '#999999')) +
+                        values = c('#000000', '#656565', '#CCCCCC')) +
     labs(title = 'Inspection of high-leverage participants',
         x = 'Stimulus intensity (J)',
         y = 'SPARS rating [-50 to 50]') +
@@ -443,7 +464,7 @@ dotplot_diag(x = influence_cooks,
     labs(title = 'Influence: Cooks Distance',
          subtitle = 'Cutoffs determined by measures of internal scaling',
          y = 'Cooks Distance',
-         x = 'Participant ID')
+         x = 'Participant ID') 
 ```
 
 <img src="figures/suppl_07_4A-stimulus-response-3/influence_fixed-1.png" width="672" style="display: block; margin: auto;" />
@@ -463,9 +484,9 @@ sessionInfo()
 ```
 
 ```
-## R version 3.5.0 (2018-04-23)
+## R version 3.5.1 (2018-07-02)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.5
+## Running under: macOS  10.14
 ## 
 ## Matrix products: default
 ## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
@@ -478,30 +499,23 @@ sessionInfo()
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] bindrcpp_0.2.2     patchwork_0.0.1    HLMdiag_0.3.1     
-##  [4] lme4_1.1-17        Matrix_1.2-14      forcats_0.3.0     
-##  [7] stringr_1.3.1      dplyr_0.7.5        purrr_0.2.5       
-## [10] readr_1.1.1        tidyr_0.8.1        tibble_1.4.2      
-## [13] ggplot2_2.2.1.9000 tidyverse_1.2.1    magrittr_1.5      
+##  [1] bindrcpp_0.2.2  patchwork_0.0.1 HLMdiag_0.3.1   lme4_1.1-18-1  
+##  [5] Matrix_1.2-14   forcats_0.3.0   stringr_1.3.1   dplyr_0.7.6    
+##  [9] purrr_0.2.5     readr_1.1.1     tidyr_0.8.1     tibble_1.4.2   
+## [13] ggplot2_3.0.0   tidyverse_1.2.1 magrittr_1.5   
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_0.2.4  reshape2_1.4.3    splines_3.5.0    
-##  [4] haven_1.1.1       lattice_0.20-35   colorspace_1.3-2 
-##  [7] htmltools_0.3.6   mgcv_1.8-23       yaml_2.1.19      
-## [10] rlang_0.2.1       nloptr_1.0.4      pillar_1.2.3     
-## [13] foreign_0.8-70    glue_1.2.0        withr_2.1.2      
-## [16] modelr_0.1.2      readxl_1.1.0      bindr_0.1.1      
-## [19] plyr_1.8.4        munsell_0.4.3     gtable_0.2.0     
-## [22] cellranger_1.1.0  rvest_0.3.2       psych_1.8.4      
-## [25] evaluate_0.10.1   labeling_0.3      knitr_1.20       
-## [28] RLRsim_3.1-3      parallel_3.5.0    broom_0.4.4      
-## [31] Rcpp_0.12.17      scales_0.5.0.9000 backports_1.1.2  
-## [34] jsonlite_1.5      mnormt_1.5-5      hms_0.4.2        
-## [37] digest_0.6.15     stringi_1.2.2     grid_3.5.0       
-## [40] rprojroot_1.3-2   cli_1.0.0         tools_3.5.0      
-## [43] lazyeval_0.2.1    crayon_1.3.4      pkgconfig_2.0.1  
-## [46] MASS_7.3-50       xml2_1.2.0        lubridate_1.7.4  
-## [49] minqa_1.2.4       assertthat_0.2.0  rmarkdown_1.9    
-## [52] httr_1.3.1        rstudioapi_0.7    R6_2.2.2         
-## [55] nlme_3.1-137      compiler_3.5.0
+##  [1] tidyselect_0.2.4 reshape2_1.4.3   splines_3.5.1    haven_1.1.2     
+##  [5] lattice_0.20-35  colorspace_1.3-2 htmltools_0.3.6  mgcv_1.8-24     
+##  [9] yaml_2.2.0       rlang_0.2.2      nloptr_1.2.1     pillar_1.3.0    
+## [13] glue_1.3.0       withr_2.1.2      modelr_0.1.2     readxl_1.1.0    
+## [17] bindr_0.1.1      plyr_1.8.4       munsell_0.5.0    gtable_0.2.0    
+## [21] cellranger_1.1.0 rvest_0.3.2      evaluate_0.11    labeling_0.3    
+## [25] knitr_1.20       RLRsim_3.1-3     broom_0.5.0      Rcpp_0.12.19    
+## [29] scales_1.0.0     backports_1.1.2  jsonlite_1.5     hms_0.4.2       
+## [33] digest_0.6.17    stringi_1.2.4    grid_3.5.1       rprojroot_1.3-2 
+## [37] cli_1.0.1        tools_3.5.1      lazyeval_0.2.1   crayon_1.3.4    
+## [41] pkgconfig_2.0.2  MASS_7.3-50      xml2_1.2.0       lubridate_1.7.4 
+## [45] assertthat_0.2.0 minqa_1.2.4      rmarkdown_1.10   httr_1.3.1      
+## [49] rstudioapi_0.8   R6_2.2.2         nlme_3.1-137     compiler_3.5.1
 ```

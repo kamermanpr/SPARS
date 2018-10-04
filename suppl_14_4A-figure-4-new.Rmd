@@ -1,10 +1,10 @@
 ---
-    title: "New figure 4 for revised manuscript"
+title: "New figure 4 for revised manuscript"
 subtitle: "Experiment 1 -- Descriptive plot of the SPARS stimulus-response relationship"
 author: "Peter Kamerman and Tory Madden"
 date: "`r format(Sys.Date(), '%d %B %Y')`"
 output:
-    html_document:
+  html_document:
     keep_md: true
     theme: yeti
     hightlight: pygments
@@ -12,8 +12,6 @@ output:
     toc_depth: 5
     toc_float: true
     code_folding: show
-editor_options: 
-  chunk_output_type: console
 ---
 
     ```{r setup, include = FALSE}

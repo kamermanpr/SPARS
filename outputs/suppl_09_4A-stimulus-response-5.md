@@ -2,7 +2,7 @@
 title: "Supplement 9"
 subtitle: "Experiment 1 -- Sensitivity of the SPARS to changes in stimulus intensity"
 author: "Peter Kamerman"
-date: "21 Jun 2018"
+date: "04 Oct 2018"
 output: 
   html_document:
     keep_md: true
@@ -121,7 +121,7 @@ data_scale %>%
     geom_smooth(method = 'lm') +
     scale_color_manual(name = 'Direction of intensity change: ',
                        labels = c('Down', 'Up'),
-                       values = c("#56B4E9", "#FC6F00")) +
+                       values = c("#999999", "#323232")) +
     scale_x_continuous(limits = c(-3.5, 3.5), 
                        breaks = seq(from = -3, to = 3, by = 1),
                        expand = c(0,0)) +
@@ -129,9 +129,9 @@ data_scale %>%
                        breaks = seq(from = -60, to = 60, by = 20),
                                     expand = c(0,0)) +
     labs(title = 'Group-level plot: Change in SPARS rating vs Change in stimulus intensity \nbetween two successive stimuli',
-         subtitle = 'Coloured points: Individual responses for all trials | Coloured line: Linear trend for context\nBlue points/line: When a stimulus was of less intensity than the preceding stimulus | \nOrange points/line: When a stimulus was of greater intensity than the preceding stimulus.\nData have been omitted when successive stimuli were of the same intensity (zero change).',
+         subtitle = 'Grey points: Individual responses for all trials | Coloured line: Linear trend for context\nDark grey points/line: When a stimulus was of less intensity than the preceding stimulus | \nLight grey points/line: When a stimulus was of greater intensity than the preceding stimulus.\nData have been omitted when successive stimuli were of the same intensity (zero change).',
          x = expression(Delta~stimulus~intensity~(J)),
-         y = expression(Delta~SPARS~rating)) +
+         y = expression(Delta~SPARS~rating~(predicted))) +
     theme(legend.position = 'top')
 ```
 
@@ -162,10 +162,10 @@ p <- data_scale %>%
                  y = -98, yend = -98, 
                  size = 1.2,
                  colour = '#000000') +
-    labs(x = expression(Delta~stimulus~intensity~(J)),
-         y = expression(Delta~SPARS~rating)) +
-    scale_colour_manual(name = expression(Direction~of~stimulus~Delta),
-                        values = c('#FFA500', '#56B4E9'),
+    labs(x = 'Change in stimulus intensity (J)',
+         y = 'Change in SPARS rating') +
+    scale_colour_manual(name = 'Direction of change: ',
+                        values = c("#999999", "#323232"),
                         labels = c('Decreasing intensity', 'Increasing intensity')) +
     scale_y_continuous(limits = c(-98, 90.25), 
                        expand = c(0, 0),
@@ -183,9 +183,10 @@ p <- data_scale %>%
           panel.grid = element_blank(),
           axis.text = element_text(size = 16,
                                    colour = '#000000'),
-          axis.title = element_text(size = 16))
+          axis.title = element_text(size = 16,
+                                    colour = '#000000'))
 
-ggsave(filename = 'figures/figure_8.pdf',
+ggsave(filename = 'figures/figure_7.pdf',
        plot = p,
        width = 6,
        height = 5)
@@ -216,10 +217,9 @@ scale_plots <- data_scale %>%
                                colour = change_direction) +
                        geom_point() +
                        geom_smooth(method = 'lm') +
-                       scale_color_brewer(name = 'Direction of\nintensity change',
+                       scale_color_manual(name = 'Direction of\nintensity change',
                                           labels = c('Down', 'Up'),
-                                          type = 'qual',
-                                          palette = 'Dark2') +
+                                          values = c('#999999', '#323232')) +
                        scale_x_continuous(limits = c(-3.5, 3.5), 
                                           breaks = seq(from = -3, to = 3, by = 1),
                                           expand = c(0,0)) +
@@ -249,7 +249,7 @@ $$\Delta~SPARS~rating \thicksim \Delta~stimulus~intenisty~\ast~direction~of~chan
 
 Preliminary analysis indicated that influence points may be an issue, and so we modelled the data using robust methods.
 
-We generated two models. The first model included an interaction term between change in stimulus internist's and direction of change, and the second model did not. Comparing the models allows one you check whether the slope of the SPARS rating vs change in stimulus intensity relationship was dependent on the direction of the change in stimulus intensity.
+We generated two models. The first model included an interaction term between change in stimulus intensity and direction of change, and the second model did not. Comparing the models allows one you check whether the slope of the SPARS rating vs change in stimulus intensity relationship was dependent on the direction of the change in stimulus intensity.
 
 
 ```r
@@ -422,14 +422,12 @@ ci %>%
         fill = model) +
     geom_crossbar(position = position_dodge(width = 1),
                   alpha = 0.7) +
-    scale_fill_brewer(name = 'Model', 
+    scale_fill_manual(name = 'Model', 
                       labels = c('Interaction', 'Main effects only'),
-                      type = 'qual', 
-                      palette = 'Dark2') +
-    scale_colour_brewer(name = 'Model', 
+                      values = c('#999999', '#323232')) +
+    scale_colour_manual(name = 'Model', 
                         labels = c('Interaction', 'Main effects only'),
-                        type = 'qual', 
-                        palette = 'Dark2') +
+                        values = c('#999999', '#323232')) +
     labs(title = 'Comparison of the Wald 95% confidence intervals of the fixed effects (intercept and main effects)',
          subtitle = 'The middle line in each bar shows the mid-point between the interval edges',
          y = 'Units')
@@ -449,7 +447,32 @@ A basic diagnostic assessment did not identify any violations of the model assum
 p_list <- list(plot(scale_lmm2, which = 1), 
                plot(scale_lmm2, which = 2),
                plot(scale_lmm2, which = 3))
+x <- plot(scale_lmm2, which = 1) +
+    scale_colour_viridis_c()
+x
+```
 
+```
+## NULL
+```
+
+```r
+str(x)
+```
+
+```
+##  NULL
+```
+
+```r
+class(x)
+```
+
+```
+## [1] "NULL"
+```
+
+```r
 # Print plots
 walk(p_list, ~print(.x))
 ```
@@ -481,10 +504,9 @@ ggplot(data = predicted) +
         colour = group) +
     geom_line() +
     geom_point() +
-    scale_color_brewer(name = 'Direction of\nintensity change',
+    scale_color_manual(name = 'Direction of\nintensity change',
                        labels = c('Down', 'Up'),
-                       type = 'qual',
-                       palette = 'Dark2') +
+                       values = c('#999999', '#323232')) +
     scale_x_continuous(limits = c(-3, 3), 
                        breaks = seq(from = -3, to = 3, by = 1)) +
     scale_y_continuous(limits = c(-60, 60), 
@@ -511,9 +533,9 @@ sessionInfo()
 ```
 
 ```
-## R version 3.5.0 (2018-04-23)
+## R version 3.5.1 (2018-07-02)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.5
+## Running under: macOS  10.14
 ## 
 ## Matrix products: default
 ## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
@@ -526,47 +548,42 @@ sessionInfo()
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] bindrcpp_0.2.2     influence.ME_0.9-9 sjPlot_2.4.1      
-##  [4] robustlmm_2.2-1    lmerTest_3.0-1     lme4_1.1-17       
+##  [1] bindrcpp_0.2.2     influence.ME_0.9-9 sjPlot_2.6.0      
+##  [4] robustlmm_2.2-1    lmerTest_3.0-1     lme4_1.1-18-1     
 ##  [7] Matrix_1.2-14      patchwork_0.0.1    forcats_0.3.0     
-## [10] stringr_1.3.1      dplyr_0.7.5        purrr_0.2.5       
+## [10] stringr_1.3.1      dplyr_0.7.6        purrr_0.2.5       
 ## [13] readr_1.1.1        tidyr_0.8.1        tibble_1.4.2      
-## [16] ggplot2_2.2.1.9000 tidyverse_1.2.1    magrittr_1.5      
+## [16] ggplot2_3.0.0      tidyverse_1.2.1    magrittr_1.5      
 ## 
 ## loaded via a namespace (and not attached):
-##   [1] TH.data_1.0-8      minqa_1.2.4        colorspace_1.3-2  
-##   [4] modeltools_0.2-21  ggridges_0.5.0     sjlabelled_1.0.11 
-##   [7] rprojroot_1.3-2    estimability_1.3   snakecase_0.9.1   
-##  [10] rstudioapi_0.7     glmmTMB_0.2.1.0    DT_0.4            
-##  [13] mvtnorm_1.0-8      lubridate_1.7.4    coin_1.2-2        
-##  [16] xml2_1.2.0         codetools_0.2-15   splines_3.5.0     
-##  [19] mnormt_1.5-5       robustbase_0.93-0  knitr_1.20        
-##  [22] sjmisc_2.7.2       effects_4.0-1      bayesplot_1.5.0   
-##  [25] jsonlite_1.5       nloptr_1.0.4       ggeffects_0.3.4   
-##  [28] broom_0.4.4        shiny_1.1.0        compiler_3.5.0    
-##  [31] httr_1.3.1         sjstats_0.15.0     emmeans_1.2.1     
-##  [34] backports_1.1.2    assertthat_0.2.0   lazyeval_0.2.1    
-##  [37] survey_3.33-2      cli_1.0.0          later_0.7.3       
-##  [40] htmltools_0.3.6    tools_3.5.0        coda_0.19-1       
-##  [43] gtable_0.2.0       glue_1.2.0         reshape2_1.4.3    
-##  [46] merTools_0.4.1     Rcpp_0.12.17       carData_3.0-1     
-##  [49] cellranger_1.1.0   nlme_3.1-137       psych_1.8.4       
-##  [52] lmtest_0.9-36      rvest_0.3.2        mime_0.5          
-##  [55] stringdist_0.9.5.1 DEoptimR_1.0-8     MASS_7.3-50       
-##  [58] zoo_1.8-1          scales_0.5.0.9000  promises_1.0.1    
-##  [61] hms_0.4.2          parallel_3.5.0     sandwich_2.4-0    
-##  [64] RColorBrewer_1.1-2 pwr_1.2-2          TMB_1.7.13        
-##  [67] yaml_2.1.19        fastGHQuad_0.2     stringi_1.2.2     
-##  [70] highr_0.6          blme_1.0-4         rlang_0.2.1       
-##  [73] pkgconfig_2.0.1    arm_1.10-1         evaluate_0.10.1   
-##  [76] lattice_0.20-35    prediction_0.3.6   bindr_0.1.1       
-##  [79] labeling_0.3       htmlwidgets_1.2    tidyselect_0.2.4  
-##  [82] plyr_1.8.4         R6_2.2.2           multcomp_1.4-8    
-##  [85] pillar_1.2.3       haven_1.1.1        foreign_0.8-70    
-##  [88] withr_2.1.2        survival_2.42-3    abind_1.4-5       
-##  [91] nnet_7.3-12        modelr_0.1.2       crayon_1.3.4      
-##  [94] rmarkdown_1.9      grid_3.5.0         readxl_1.1.0      
-##  [97] data.table_1.11.4  digest_0.6.15      xtable_1.8-2      
-## [100] httpuv_1.4.3       numDeriv_2016.8-1  stats4_3.5.0      
-## [103] munsell_0.4.3
+##  [1] nlme_3.1-137       lubridate_1.7.4    httr_1.3.1        
+##  [4] rprojroot_1.3-2    numDeriv_2016.8-1  TMB_1.7.14        
+##  [7] tools_3.5.1        backports_1.1.2    R6_2.2.2          
+## [10] sjlabelled_1.0.14  lazyeval_0.2.1     colorspace_1.3-2  
+## [13] nnet_7.3-12        withr_2.1.2        mnormt_1.5-5      
+## [16] tidyselect_0.2.4   emmeans_1.2.4      compiler_3.5.1    
+## [19] cli_1.0.1          rvest_0.3.2        xml2_1.2.0        
+## [22] sandwich_2.5-0     labeling_0.3       effects_4.0-3     
+## [25] scales_1.0.0       psych_1.8.4        DEoptimR_1.0-8    
+## [28] mvtnorm_1.0-8      robustbase_0.93-3  ggridges_0.5.1    
+## [31] digest_0.6.17      foreign_0.8-71     minqa_1.2.4       
+## [34] rmarkdown_1.10     stringdist_0.9.5.1 pkgconfig_2.0.2   
+## [37] htmltools_0.3.6    highr_0.7          pwr_1.2-2         
+## [40] rlang_0.2.2        readxl_1.1.0       rstudioapi_0.8    
+## [43] bindr_0.1.1        zoo_1.8-4          jsonlite_1.5      
+## [46] modeltools_0.2-22  bayesplot_1.6.0    Rcpp_0.12.19      
+## [49] munsell_0.5.0      prediction_0.3.6   fastGHQuad_1.0    
+## [52] stringi_1.2.4      multcomp_1.4-8     yaml_2.2.0        
+## [55] snakecase_0.9.2    carData_3.0-2      MASS_7.3-50       
+## [58] plyr_1.8.4         grid_3.5.1         parallel_3.5.1    
+## [61] sjmisc_2.7.5       crayon_1.3.4       lattice_0.20-35   
+## [64] ggeffects_0.5.0    haven_1.1.2        splines_3.5.1     
+## [67] sjstats_0.17.1     hms_0.4.2          knitr_1.20        
+## [70] pillar_1.3.0       estimability_1.3   codetools_0.2-15  
+## [73] stats4_3.5.1       glue_1.3.0         evaluate_0.11     
+## [76] data.table_1.11.8  modelr_0.1.2       nloptr_1.2.1      
+## [79] cellranger_1.1.0   gtable_0.2.0       assertthat_0.2.0  
+## [82] coin_1.2-2         xtable_1.8-3       broom_0.5.0       
+## [85] survey_3.33-2      coda_0.19-1        viridisLite_0.3.0 
+## [88] survival_2.42-6    glmmTMB_0.2.2.0    TH.data_1.0-9
 ```

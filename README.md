@@ -17,13 +17,14 @@ All inputs (root directory) and outputs (_/outputs_) prefixed with _suppl\_\*\*\
 
 ## Run the analysis scripts
 
-For reproducibility, we have created a [Docker](https://www.docker.com) image with the R environment required to run the SPARS data analysis scripts. The image is built using the [rocker/verse](https://hub.docker.com/r/rocker/verse/) image of [_base R_](https://cran.r-project.org/) _v3.5.0_, and includes [_RStudio server_](https://www.rstudio.com/products/rstudio/#Server), the [_TinyTex_](https://yihui.name/tinytex/) Latex distribution, the [_tidyverse_](https://www.tidyverse.org/) suite of R packages (with dependencies), and several R packages (with dependencies) that are required to run the markdown scripts in [SPARS](https://github.com/kamermanpr/SPARS). CRAN packages were installed from [MRAN](https://mran.microsoft.com/timemachine) using the 2018-06-01 snapshot for _R v3.5.0_. The only package installed form GitHub (_thomasp85/patchwork_) was locked to the 12 June 2018 commit: [_1d3eccb2e065b79ace1e993c895e0b28dd870ee2_](https://github.com/thomasp85/patchwork/tree/1d3eccb2e065b79ace1e993c895e0b28dd870ee2).
+For reproducibility, we have created a [Docker](https://www.docker.com) image with the R environment required to run the SPARS data analysis scripts. The image is built using the [rocker/verse](https://hub.docker.com/r/rocker/verse/) image of [_base R_](https://cran.r-project.org/) _v3.5.1_, and includes [_RStudio server_](https://www.rstudio.com/products/rstudio/#Server), the [_TinyTex_](https://yihui.name/tinytex/) Latex distribution, the [_tidyverse_](https://www.tidyverse.org/) suite of R packages (with dependencies), and several R packages (with dependencies) that are required to run the markdown scripts in [SPARS](https://github.com/kamermanpr/SPARS). CRAN packages were installed from [MRAN](https://mran.microsoft.com/timemachine) using the 2018-10-03 snapshot for _R v3.5.1_. The only package installed form GitHub (_thomasp85/patchwork_) was locked to the 22 September 2018 commit: [_fd7958bae3e7a1e30237c751952e412a0a1d1242_](https://github.com/thomasp85/patchwork/tree/fd7958bae3e7a1e30237c751952e412a0a1d1242).
+
 
 ### Image details
 - **OS:**  
     - Debian:stretch _(all kamermanpr/docker-spars version tags < v2.0.0)_   
 - **R:**  
-    - v3.5.0   
+    - v3.5.1   
 - **RStudio server:**  
     - v1.1.456 _(all kamermanpr/docker-spars version tags < v2.0.0)_  
 - **GitHub packages:**  
@@ -34,6 +35,7 @@ For reproducibility, we have created a [Docker](https://www.docker.com) image wi
     - kableExtra
     - ggplot2
     - ggridges
+    - ggeffects
     - HLMdiag
     - influence.ME
     - lme4
@@ -51,11 +53,11 @@ You need to have Docker installed on your computer. To do so, go to [docker.com]
 
 #### Download the latest image
 
-Enter: `docker pull kamermanpr/docker-spars:v1.0.4`
+Enter: `docker pull kamermanpr/docker-spars:v1.1`
 
 #### Run the container
 
-Enter: `docker run -d -p 8787:8787 -v </PATH>:/home/rstudio --name spars kamermanpr/docker-spars:v1.0.4`
+Enter: `docker run -d -p 8787:8787 -v </PATH>:/home/rstudio --name spars kamermanpr/docker-spars:v1.1`
 
 Where `</PATH>` refers to the path to the SPARS directory on your computer, which you either cloned from GitHub ([_kamermanpr/SPARS_](https://github.com/kamermanpr/SPARS), `git clone https://github.com/kamermanpr/SPARS`), or downloaded and extracted from figshare ([DOI: 10.6084/m9.figshare.6561743](https://doi.org/10.6084/m9.figshare.6561743)).
 
@@ -92,4 +94,4 @@ To run individual RMarkdown scripts (_\*.Rmd_ files)
 
 #### Shutting down
 
-Once done, log out of RStudio Server and enter the following in a terminal to stop the Docker container: `docker stop spars`. If you then want to remove the container, enter: `docker rm spars`. If you also want to remove the Docker image you downloaded, enter: `docker rmi kamermanpr/docker-spars:v1.0.4`
+Once done, log out of RStudio Server and enter the following in a terminal to stop the Docker container: `docker stop spars`. If you then want to remove the container, enter: `docker rm spars`. If you also want to remove the Docker image you downloaded, enter: `docker rmi kamermanpr/docker-spars:v1.1`

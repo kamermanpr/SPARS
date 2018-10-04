@@ -2,7 +2,7 @@
 title: "Supplement 12"
 subtitle: "Experiment 2 -- Descriptive plots of the stimulus-response relationship for the SPARS, SRS, and pain NRS"
 author: "Peter Kamerman and Tory Madden"
-date: "21 June 2018"
+date: "04 October 2018"
 output: 
   html_document:
     keep_md: true
@@ -147,12 +147,10 @@ plot_raw <- data %>%
                           geom_point() +
                           scale_y_continuous(limits = c(-50, 100)) +
                           scale_x_continuous(breaks = c(1, 3, 5, 7, 9)) +
-                          scale_fill_brewer(name = 'Scale',
-                                            type = 'qual', 
-                                            palette = 'Dark2') +
-                          scale_colour_brewer(name = 'Scale',
-                                              type = 'qual', 
-                                              palette = 'Dark2') +
+                          scale_fill_manual(name = 'Scale',
+                                            values = grey_pal) +
+                          scale_colour_manual(name = 'Scale',
+                                              values = grey_pal) +
                           labs(title = paste0(.y, ': Raw participant-level stimulus-response ratings on the pain NRS, SRS and SPARS'),
                                subtitle = 'Plots are conditioned on measurement scale and experimental block\npain NRS: 0 (no pain) to 100 (worst pain you can imagine)\nSRS: 0 (no sensation) to 100 (pain)\nSPARS: -50 (no sensation), 0 (pain threshold), +50 (worst pain you can imagine)',
                                x = 'Stimulus intensity (rank)',
@@ -191,12 +189,10 @@ plot_equi <- data %>%
                           geom_point() +
                           scale_y_continuous(limits = c(-50, 50)) +
                           scale_x_continuous(breaks = c(1, 3, 5, 7, 9)) +
-                          scale_fill_brewer(name = 'Scale',
-                                            type = 'qual', 
-                                            palette = 'Dark2') +
-                          scale_colour_brewer(name = 'Scale',
-                                              type = 'qual', 
-                                              palette = 'Dark2') +
+                          scale_fill_manual(name = 'Scale',
+                                            values = grey_pal) +
+                          scale_colour_manual(name = 'Scale',
+                                              values = grey_pal) +
                           labs(title = paste0(.y, ': Scaled participant-level stimulus-response ratings on the pain NRS, SRS and SPARS'),
                                subtitle = 'Plots are conditioned on measurement scale and experimental block\npain NRS: 0 (no pain) to 50 (worst pain you can imagine)\nSRS: -50 (no sensation) to 0 (pain)\nSPARS: -50 (no sensation), 0 (pain threshold), +50 (worst pain you can imagine)',
                                x = 'Stimulus intensity (rank)',
@@ -229,20 +225,18 @@ plot_tm <- data_tm %>%
                                y = tri_mean) +
                            geom_smooth(method = 'loess',
                                        se = FALSE,
-                                       colour = '#666666') +
+                                       colour = '#656565') +
                            geom_point(shape = 21,
                                       size = 3,
-                                      fill = 'orange') +
-                           scale_fill_brewer(name = 'Scale',
-                                             type = 'qual', 
-                                             palette = 'Dark2') +
-                           scale_colour_brewer(name = 'Scale',
-                                               type = 'qual', 
-                                               palette = 'Dark2') +
+                                      fill = '#CCCCCC') +
+                           scale_fill_manual(name = 'Scale',
+                                            values = grey_pal) +
+                           scale_colour_manual(name = 'Scale',
+                                              values = grey_pal) +
                            scale_x_continuous(breaks = c(1, 3, 5, 7, 9)) +
                            scale_y_continuous(limits = c(-50, 50)) +
                            labs(title = paste0(.y, ': Scaled participant-level stimulus-response rating Tukey trimeans on the pain NRS, SRS and SPARS'),
-                                subtitle = 'Orange points: Tukey trimeans | Grey curve: loess curve\nPlots are conditioned on the three scales\npain NRS: 0 (no pain) to 50 (worst pain you can imagine)\nSRS: -50 (no sensation) to 0 (pain)\nSPARS: -50 (no sensation), 0 (pain threshold), +50 (worst pain you can imagine)',
+                                subtitle = 'White points: Tukey trimeans | Grey curve: loess curve\nPlots are conditioned on the three scales\npain NRS: 0 (no pain) to 50 (worst pain you can imagine)\nSRS: -50 (no sensation) to 0 (pain)\nSPARS: -50 (no sensation), 0 (pain threshold), +50 (worst pain you can imagine)',
                                 x = 'Stimulus intensity (rank)',
                                 y = 'Scaled intensity rating (-50 to 50)') +
                            geom_hline(yintercept = 0, linetype = 2) +
@@ -270,9 +264,9 @@ data_tm %>%
     geom_point(size = 2,
                position = position_dodge(width = 0.2)) +
     scale_fill_manual(name = 'Measurement scale',
-                      values = c('#009E73', '#FFA500', '#56B4E9')) +
+                      values = grey_pal) +
     scale_colour_manual(name = 'Measurement scale',
-                        values = c('#009E73', '#FFA500', '#56B4E9')) +
+                        values = grey_pal) +
     scale_y_continuous(limits = c(-50, 50)) +
     scale_x_continuous(breaks = c(1, 3, 5, 7, 9)) +
     labs(title = 'Scaled group-level stimulus-response ratings on the pain NRS, SRS and SPARS',
@@ -318,9 +312,9 @@ p <- data_tm %>%
                        expand = c(0, 0),
                        breaks = seq(from = 1, to = 9, by = 1)) +
     scale_fill_manual(name = 'Scale',
-                      values = c('#009E73', '#FFA500', '#56B4E9')) +
+                      values = grey_pal) +
     scale_colour_manual(name = 'Scale',
-                        values = c('#009E73', '#FFA500', '#56B4E9')) +
+                        values = grey_pal) +
     theme_bw() +
     theme(panel.border = element_blank(),
           panel.grid = element_blank(),
@@ -333,7 +327,7 @@ p <- data_tm %>%
           axis.title = element_text(size = 16,
                                     colour = '#000000'))
 
-ggsave(filename = 'figures/figure_12.pdf',
+ggsave(filename = 'figures/figure_11.pdf',
        plot = p,
        width = 6,
        height = 5)
@@ -350,9 +344,9 @@ data %>%
         fill = scale) +
     geom_boxplot(alpha = 0.6) +
     scale_fill_manual(name = 'Measurement scale',
-                      values = c('#009E73', '#FFA500', '#56B4E9')) +
+                      values = grey_pal) +
     scale_colour_manual(name = 'Measurement scale',
-                        values = c('#009E73', '#FFA500', '#56B4E9')) +
+                        values = grey_pal) +
     scale_y_continuous(limits = c(-50, 50)) +
     labs(title = 'Scaled group-level stimulus-response ratings on the pain NRS, SRS and SPARS',
          subtitle = 'pain NRS: 0 (no pain) to 50 (worst pain you can imagine)\nSRS: -50 (no sensation) to 0 (pain)\nSPARS: -50 (no sensation), 0 (pain threshold), +50 (worst pain you can imagine)',
@@ -382,9 +376,9 @@ sessionInfo()
 ```
 
 ```
-## R version 3.5.0 (2018-04-23)
+## R version 3.5.1 (2018-07-02)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.5
+## Running under: macOS  10.14
 ## 
 ## Matrix products: default
 ## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
@@ -397,27 +391,21 @@ sessionInfo()
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] bindrcpp_0.2.2     forcats_0.3.0      stringr_1.3.1     
-##  [4] dplyr_0.7.5        purrr_0.2.5        readr_1.1.1       
-##  [7] tidyr_0.8.1        tibble_1.4.2       ggplot2_2.2.1.9000
-## [10] tidyverse_1.2.1    magrittr_1.5      
+##  [1] bindrcpp_0.2.2  forcats_0.3.0   stringr_1.3.1   dplyr_0.7.6    
+##  [5] purrr_0.2.5     readr_1.1.1     tidyr_0.8.1     tibble_1.4.2   
+##  [9] ggplot2_3.0.0   tidyverse_1.2.1 magrittr_1.5   
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_0.2.4   reshape2_1.4.3     haven_1.1.1       
-##  [4] lattice_0.20-35    colorspace_1.3-2   htmltools_0.3.6   
-##  [7] yaml_2.1.19        rlang_0.2.1        pillar_1.2.3      
-## [10] foreign_0.8-70     glue_1.2.0         withr_2.1.2       
-## [13] RColorBrewer_1.1-2 modelr_0.1.2       readxl_1.1.0      
-## [16] bindr_0.1.1        plyr_1.8.4         munsell_0.4.3     
-## [19] gtable_0.2.0       cellranger_1.1.0   rvest_0.3.2       
-## [22] psych_1.8.4        evaluate_0.10.1    labeling_0.3      
-## [25] knitr_1.20         parallel_3.5.0     broom_0.4.4       
-## [28] Rcpp_0.12.17       scales_0.5.0.9000  backports_1.1.2   
-## [31] jsonlite_1.5       mnormt_1.5-5       hms_0.4.2         
-## [34] digest_0.6.15      stringi_1.2.2      grid_3.5.0        
-## [37] rprojroot_1.3-2    cli_1.0.0          tools_3.5.0       
-## [40] lazyeval_0.2.1     crayon_1.3.4       pkgconfig_2.0.1   
-## [43] xml2_1.2.0         lubridate_1.7.4    assertthat_0.2.0  
-## [46] rmarkdown_1.9      httr_1.3.1         rstudioapi_0.7    
-## [49] R6_2.2.2           nlme_3.1-137       compiler_3.5.0
+##  [1] Rcpp_0.12.19     cellranger_1.1.0 pillar_1.3.0     compiler_3.5.1  
+##  [5] plyr_1.8.4       bindr_0.1.1      tools_3.5.1      digest_0.6.17   
+##  [9] lubridate_1.7.4  jsonlite_1.5     evaluate_0.11    nlme_3.1-137    
+## [13] gtable_0.2.0     lattice_0.20-35  pkgconfig_2.0.2  rlang_0.2.2     
+## [17] cli_1.0.1        rstudioapi_0.8   yaml_2.2.0       haven_1.1.2     
+## [21] withr_2.1.2      xml2_1.2.0       httr_1.3.1       knitr_1.20      
+## [25] hms_0.4.2        rprojroot_1.3-2  grid_3.5.1       tidyselect_0.2.4
+## [29] glue_1.3.0       R6_2.2.2         readxl_1.1.0     rmarkdown_1.10  
+## [33] modelr_0.1.2     backports_1.1.2  scales_1.0.0     htmltools_0.3.6 
+## [37] rvest_0.3.2      assertthat_0.2.0 colorspace_1.3-2 labeling_0.3    
+## [41] stringi_1.2.4    lazyeval_0.2.1   munsell_0.5.0    broom_0.5.0     
+## [45] crayon_1.3.4
 ```

@@ -2,7 +2,7 @@
 title: "Supplement 3"
 subtitle: "Experiment 1 -- Measures of central tendency"
 author: "Peter Kamerman"
-date: "21 Jun 2018"
+date: "04 Oct 2018"
 output: 
   html_document:
     keep_md: true
@@ -12,6 +12,8 @@ output:
     toc_depth: 5
     toc_float: true
     code_folding: show
+editor_options: 
+  chunk_output_type: console
 ---
 
 
@@ -165,6 +167,9 @@ pid_a <- c(paste0('ID0', 1:6))
 pid_b <- c(paste0('ID0', 7:9), 'ID10', 'ID11', 'ID12')
 pid_c <- c(paste0('ID', 13:18))
 
+# Define greyscale palette
+grey_pal <- c('#999999', '#656565', '#323232', '#000000')
+
 # Plot first 6 participants
 p_1to6 <- data %>%
   filter(PID %in% pid_a) %>%
@@ -172,7 +177,8 @@ p_1to6 <- data %>%
   ggplot(data = .) +
   aes(x = rating_positive, 
       y = intensity_char) + 
-  geom_density_ridges2(scale = 1) +
+  geom_density_ridges2(scale = 1,
+                       fill = '#CCCCCC') +
   geom_point(position = position_nudge(y = 0.1),
              shape = 21,
              fill = '#FFFFFF') +
@@ -182,7 +188,8 @@ p_1to6 <- data %>%
              size = 3,
              alpha = 0.8,
              position = position_nudge(y = 0.6)) +
-  scale_fill_viridis_d(name = 'Centrality measure:',
+  scale_fill_manual(name = 'Centrality measure:',
+                    values = grey_pal,
                     labels = c('Mean', 'Median', 
                                'Geometric mean', 
                                'Tukey trimean')) +
@@ -190,7 +197,7 @@ p_1to6 <- data %>%
                      breaks = seq(from = 0, to = 100, by = 20),
                      expand = c(0,0)) +
   labs(title = 'Participant-level density distribution of SPARS ratings at each stimulus intensity',
-       subtitle = 'White points: individual data points | Coloured points: measures of centrality',
+       subtitle = 'White points: individual data points | Grey points: measures of centrality',
        y = 'Stimulus intensity (J)') +
   facet_wrap(~PID, ncol = 3) +
   theme_bw() +
@@ -207,7 +214,8 @@ p_7to12 <- data %>%
   ggplot(data = .) +
   aes(x = rating_positive, 
       y = intensity_char) + 
-  geom_density_ridges2(scale = 1) +
+  geom_density_ridges2(scale = 1,
+                       fill = '#CCCCCC') +
   geom_point(position = position_nudge(y = 0.1),
              shape = 21,
              fill = '#FFFFFF') +
@@ -217,7 +225,8 @@ p_7to12 <- data %>%
              size = 3,
              alpha = 0.8,
              position = position_nudge(y = 0.6)) +
-  scale_fill_viridis_d(name = 'Centrality measure:',
+  scale_fill_manual(name = 'Centrality measure:',
+                    values = grey_pal,
                     labels = c('Mean', 'Median', 
                                'Geometric mean', 
                                'Tukey trimean')) +
@@ -240,7 +249,8 @@ p_13to18 <- data %>%
   ggplot(data = .) +
   aes(x = rating_positive, 
       y = intensity_char) + 
-  geom_density_ridges2(scale = 1) +
+  geom_density_ridges2(scale = 1,
+                       fill = '#CCCCCC') +
   geom_point(position = position_nudge(y = 0.1),
              shape = 21,
              fill = '#FFFFFF') +
@@ -250,7 +260,8 @@ p_13to18 <- data %>%
              size = 3,
              alpha = 0.8,
              position = position_nudge(y = 0.6)) +
-  scale_fill_viridis_d(name = 'Centrality measure',
+  scale_fill_manual(name = 'Centrality measure',
+                    values = grey_pal,
                     labels = c('Mean', 'Median', 
                                'Geometric mean', 
                                'Tukey trimean')) +
@@ -285,9 +296,9 @@ sessionInfo()
 ```
 
 ```
-## R version 3.5.0 (2018-04-23)
+## R version 3.5.1 (2018-07-02)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.5
+## Running under: macOS  10.14
 ## 
 ## Matrix products: default
 ## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
@@ -300,27 +311,21 @@ sessionInfo()
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] bindrcpp_0.2.2     ggridges_0.5.0     forcats_0.3.0     
-##  [4] stringr_1.3.1      dplyr_0.7.5        purrr_0.2.5       
-##  [7] readr_1.1.1        tidyr_0.8.1        tibble_1.4.2      
-## [10] ggplot2_2.2.1.9000 tidyverse_1.2.1    magrittr_1.5      
+##  [1] bindrcpp_0.2.2  ggridges_0.5.1  forcats_0.3.0   stringr_1.3.1  
+##  [5] dplyr_0.7.6     purrr_0.2.5     readr_1.1.1     tidyr_0.8.1    
+##  [9] tibble_1.4.2    ggplot2_3.0.0   tidyverse_1.2.1 magrittr_1.5   
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_0.2.4  reshape2_1.4.3    haven_1.1.1      
-##  [4] lattice_0.20-35   colorspace_1.3-2  htmltools_0.3.6  
-##  [7] viridisLite_0.3.0 yaml_2.1.19       rlang_0.2.1      
-## [10] pillar_1.2.3      foreign_0.8-70    glue_1.2.0       
-## [13] withr_2.1.2       modelr_0.1.2      readxl_1.1.0     
-## [16] bindr_0.1.1       plyr_1.8.4        munsell_0.4.3    
-## [19] gtable_0.2.0      cellranger_1.1.0  rvest_0.3.2      
-## [22] psych_1.8.4       evaluate_0.10.1   knitr_1.20       
-## [25] parallel_3.5.0    broom_0.4.4       Rcpp_0.12.17     
-## [28] scales_0.5.0.9000 backports_1.1.2   jsonlite_1.5     
-## [31] mnormt_1.5-5      hms_0.4.2         digest_0.6.15    
-## [34] stringi_1.2.2     grid_3.5.0        rprojroot_1.3-2  
-## [37] cli_1.0.0         tools_3.5.0       lazyeval_0.2.1   
-## [40] crayon_1.3.4      pkgconfig_2.0.1   xml2_1.2.0       
-## [43] lubridate_1.7.4   assertthat_0.2.0  rmarkdown_1.9    
-## [46] httr_1.3.1        rstudioapi_0.7    R6_2.2.2         
-## [49] nlme_3.1-137      compiler_3.5.0
+##  [1] tidyselect_0.2.4 haven_1.1.2      lattice_0.20-35  colorspace_1.3-2
+##  [5] htmltools_0.3.6  yaml_2.2.0       rlang_0.2.2      pillar_1.3.0    
+##  [9] foreign_0.8-71   glue_1.3.0       withr_2.1.2      modelr_0.1.2    
+## [13] readxl_1.1.0     bindr_0.1.1      plyr_1.8.4       munsell_0.5.0   
+## [17] gtable_0.2.0     cellranger_1.1.0 rvest_0.3.2      psych_1.8.4     
+## [21] evaluate_0.11    knitr_1.20       parallel_3.5.1   broom_0.5.0     
+## [25] Rcpp_0.12.19     scales_1.0.0     backports_1.1.2  jsonlite_1.5    
+## [29] mnormt_1.5-5     hms_0.4.2        digest_0.6.17    stringi_1.2.4   
+## [33] grid_3.5.1       rprojroot_1.3-2  cli_1.0.1        tools_3.5.1     
+## [37] lazyeval_0.2.1   crayon_1.3.4     pkgconfig_2.0.2  xml2_1.2.0      
+## [41] lubridate_1.7.4  assertthat_0.2.0 rmarkdown_1.10   httr_1.3.1      
+## [45] rstudioapi_0.8   R6_2.2.2         nlme_3.1-137     compiler_3.5.1
 ```

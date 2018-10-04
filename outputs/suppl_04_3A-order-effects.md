@@ -2,7 +2,7 @@
 title: "Supplement 4"
 subtitle: "Experiment 1 -- Effect of stimulus order and blocking on SPARS rating"
 author: "Peter Kamerman"
-date: "21 Jun 2018"
+date: "04 Oct 2018"
 output: 
   html_document:
     keep_md: true
@@ -122,7 +122,8 @@ data %>%
   aes(x = intensity,
       fill = factor(block_order)) +
   geom_bar() +
-  scale_fill_viridis_d(name = 'Experimental block:') +
+  scale_fill_manual(name = 'Experimental block:',
+                    values = grey_pal) +
   facet_wrap(~PID, ncol = 4) +
   labs(title = 'Number of trials per participant at each stimulus intensity, stratified by experimental block',
        y = 'Number of trials',
@@ -190,16 +191,16 @@ plot_trial <- plot_data %>%
                           y = rating) +
                       geom_point() +
                       geom_smooth(se = FALSE,
-                                  colour = '#666666',
+                                  colour = '#000000',
                                   size = 0.6,
                                   na.rm = TRUE) +
                       geom_hline(data = ..2, 
                                  aes(yintercept = tm),
-                                 colour = 'red',
+                                 colour = '#656565',
                                  size = 0.6,
                                  linetype = 2) +
                       labs(title = paste0(..3, ': SPARS rating versus intensity of the previous stimulus, at different stimulus intensities'),
-                           subtitle = 'Red line (dashed): Tukey trimean of SPARS rating | Grey line (solid): Loess curve',
+                           subtitle = 'Grey line (dashed): Tukey trimean of SPARS rating | Black line (solid): Loess curve',
                            y = 'SPARS rating [-50 to 50]',
                            x = 'Intensity of previous stimulus (J)') +
                       scale_y_continuous(limits = c(-50, 50)) +
@@ -240,16 +241,16 @@ plot_block <- plot_data %>%
                           y = rating) +
                       geom_point() +
                       geom_smooth(se = FALSE,
-                                  colour = '#666666',
+                                  colour = '#000000',
                                   size = 0.6,
                                   na.rm = TRUE) +
                       geom_hline(data = ..2, 
                                  aes(yintercept = tm),
-                                 colour = 'red',
+                                 colour = '#656565',
                                  size = 0.6,
                                  linetype = 2) +
                       labs(title = paste0(..3, ': SPARS rating versus experimental block number, at different stimulus intensities'),
-                           subtitle = 'Red line (dashed): Tukey trimean of SPARS rating | Grey line (solid): Loess curve',
+                           subtitle = 'Grey line (dashed): Tukey trimean of SPARS rating | Black line (solid): Loess curve',
                            y = 'SPARS rating [-50 to 50]',
                            x = 'Block number') +
                       scale_y_continuous(limits = c(-50, 50)) +
@@ -275,9 +276,9 @@ Visual inspection of the figures shows the loess curve (grey curve) oscillating 
 # Session information
 
 ```
-## R version 3.5.0 (2018-04-23)
+## R version 3.5.1 (2018-07-02)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.5
+## Running under: macOS  10.14
 ## 
 ## Matrix products: default
 ## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
@@ -290,31 +291,28 @@ Visual inspection of the figures shows the loess curve (grey curve) oscillating 
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] bindrcpp_0.2.2     robustlmm_2.2-1    lme4_1.1-17       
-##  [4] Matrix_1.2-14      forcats_0.3.0      stringr_1.3.1     
-##  [7] dplyr_0.7.5        purrr_0.2.5        readr_1.1.1       
-## [10] tidyr_0.8.1        tibble_1.4.2       ggplot2_2.2.1.9000
-## [13] tidyverse_1.2.1    magrittr_1.5      
+##  [1] bindrcpp_0.2.2  robustlmm_2.2-1 lme4_1.1-18-1   Matrix_1.2-14  
+##  [5] forcats_0.3.0   stringr_1.3.1   dplyr_0.7.6     purrr_0.2.5    
+##  [9] readr_1.1.1     tidyr_0.8.1     tibble_1.4.2    ggplot2_3.0.0  
+## [13] tidyverse_1.2.1 magrittr_1.5   
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.17      lubridate_1.7.4   lattice_0.20-35  
-##  [4] assertthat_0.2.0  rprojroot_1.3-2   digest_0.6.15    
-##  [7] psych_1.8.4       R6_2.2.2          cellranger_1.1.0 
-## [10] plyr_1.8.4        backports_1.1.2   evaluate_0.10.1  
-## [13] httr_1.3.1        pillar_1.2.3      rlang_0.2.1      
-## [16] lazyeval_0.2.1    readxl_1.1.0      rstudioapi_0.7   
-## [19] minqa_1.2.4       nloptr_1.0.4      rmarkdown_1.9    
-## [22] labeling_0.3      splines_3.5.0     foreign_0.8-70   
-## [25] munsell_0.4.3     broom_0.4.4       compiler_3.5.0   
-## [28] modelr_0.1.2      pkgconfig_2.0.1   mnormt_1.5-5     
-## [31] htmltools_0.3.6   fastGHQuad_0.2    tidyselect_0.2.4 
-## [34] codetools_0.2-15  viridisLite_0.3.0 crayon_1.3.4     
-## [37] withr_2.1.2       MASS_7.3-50       grid_3.5.0       
-## [40] nlme_3.1-137      jsonlite_1.5      xtable_1.8-2     
-## [43] gtable_0.2.0      scales_0.5.0.9000 cli_1.0.0        
-## [46] stringi_1.2.2     reshape2_1.4.3    robustbase_0.93-0
-## [49] xml2_1.2.0        tools_3.5.0       glue_1.2.0       
-## [52] DEoptimR_1.0-8    hms_0.4.2         parallel_3.5.0   
-## [55] yaml_2.1.19       colorspace_1.3-2  rvest_0.3.2      
-## [58] knitr_1.20        bindr_0.1.1       haven_1.1.1
+##  [1] tidyselect_0.2.4  splines_3.5.1     haven_1.1.2      
+##  [4] lattice_0.20-35   colorspace_1.3-2  htmltools_0.3.6  
+##  [7] yaml_2.2.0        rlang_0.2.2       nloptr_1.2.1     
+## [10] pillar_1.3.0      glue_1.3.0        withr_2.1.2      
+## [13] modelr_0.1.2      readxl_1.1.0      bindr_0.1.1      
+## [16] plyr_1.8.4        robustbase_0.93-3 munsell_0.5.0    
+## [19] gtable_0.2.0      cellranger_1.1.0  rvest_0.3.2      
+## [22] codetools_0.2-15  evaluate_0.11     labeling_0.3     
+## [25] knitr_1.20        DEoptimR_1.0-8    broom_0.5.0      
+## [28] Rcpp_0.12.19      xtable_1.8-3      scales_1.0.0     
+## [31] backports_1.1.2   jsonlite_1.5      fastGHQuad_1.0   
+## [34] hms_0.4.2         digest_0.6.17     stringi_1.2.4    
+## [37] grid_3.5.1        rprojroot_1.3-2   cli_1.0.1        
+## [40] tools_3.5.1       lazyeval_0.2.1    crayon_1.3.4     
+## [43] pkgconfig_2.0.2   MASS_7.3-50       xml2_1.2.0       
+## [46] lubridate_1.7.4   assertthat_0.2.0  minqa_1.2.4      
+## [49] rmarkdown_1.10    httr_1.3.1        rstudioapi_0.8   
+## [52] R6_2.2.2          nlme_3.1-137      compiler_3.5.1
 ```

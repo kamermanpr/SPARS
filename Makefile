@@ -82,6 +82,13 @@ data-cleaned/SPARS_A.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
 	mv figures/1A-participant-descriptive-data outputs/figures/
 
+outputs/suppl_01_3B-instructions-for-participants.html: \
+suppl_01_3B-instructions-for-participants.Rmd \
+data/spars.png \
+data/nrs.png \
+data/srs.png
+	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
+
 outputs/suppl_02_2A-central-tendency-summary.html outputs/suppl_02_2A-central-tendency-summary.md: \
 suppl_02_2A-central-tendency-summary.Rmd \
 data-cleaned/SPARS_A.rds
@@ -152,13 +159,6 @@ suppl_13_2B-scale-agreement.Rmd \
 data-cleaned/SPARS_B.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
 	mv figures/suppl_13_2B-scale-agreement outputs/figures/
-
-outputs/suppl_01_3B-instructions-for-participants.html outputs/suppl_01_3B-instructions-for-participants.md: \
-suppl_01_3B-instructions-for-participants.Rmd \
-supplementary-files/spars.png \
-supplementary-files/nrs.png \
-supplementary-files/srs.png
-	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
 
 outputs/suppl_14_4A-figure-4-new.html outputs/suppl_14_4A-figure-4-new.md: \
 suppl_14_4A-figure-4-new.Rmd \

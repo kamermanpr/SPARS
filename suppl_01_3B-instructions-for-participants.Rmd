@@ -5,7 +5,7 @@ author: "Tory Madden"
 date: "`r format(Sys.Date(), '%d %B %Y')`"
 output: 
   html_document:
-    keep_md: true
+    keep_md: false
     theme: yeti
     hightlight: pygments
     toc: true
@@ -29,17 +29,17 @@ This document displays the information given to participants before each block o
 
 ## Sensation and Pain Rating Scale (SPARS)
 
-![](supplementary-files/spars.png)
+![](data/spars.png)
 
 
 ## Numerical Pain Rating Scale (NRS)
 
-![](supplementary-files/nrs.png)
+![](data/nrs.png)
 
 
 ## Numerical Sensation Rating Scale (SRS)
 
-![](supplementary-files/srs.png)
+![](data/srs.png)
 
 ----
 

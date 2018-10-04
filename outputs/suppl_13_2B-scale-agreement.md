@@ -2,7 +2,7 @@
 title: "Supplement 13"
 subtitle: "Experiment 2 -- Agreement between the SPARS and the pain NRS/SRS"
 author: "Peter Kamerman and Tory Madden"
-date: "21 June 2018"
+date: "04 October 2018"
 output: 
   html_document:
     keep_md: true
@@ -146,12 +146,10 @@ ggplot(data = data_varianceP) +
     labs(title = 'Participant-level median absolute deviation (MAD) for the SPARS, pain NRS, and SRS',
          y = 'Median absolute deviation',
          x = 'Stimulus intensity (rank)') +
-    scale_fill_brewer(name = 'Measurement scale: ',
-                      type = 'qual',
-                      palette = 'Dark2') +
-    scale_colour_brewer(name = 'Measurement scale: ',
-                        type = 'qual',
-                        palette = 'Dark2') +
+    scale_fill_manual(name = 'Measurement scale: ',
+                      values = grey_pal) +
+    scale_colour_manual(name = 'Measurement scale: ',
+                        values = grey_pal) +
     facet_wrap(~ PID, ncol = 2) +
     theme(legend.position = 'top')
 ```
@@ -190,12 +188,10 @@ ggplot(data = data_varianceG) +
     labs(title = 'Group-level median absolute deviation (MAD) for the SPARS, pain NRS, and SRS',
          y = 'Median absolute deviation',
          x = 'Stimulus intensity (rank)') +
-    scale_fill_brewer(name = 'Measurement scale: ',
-                      type = 'qual',
-                      palette = 'Dark2') +
-    scale_colour_brewer(name = 'Measurement scale: ',
-                        type = 'qual',
-                        palette = 'Dark2') +
+    scale_fill_manual(name = 'Measurement scale: ',
+                      values = grey_pal) +
+    scale_colour_manual(name = 'Measurement scale: ',
+                        values = grey_pal) +
     theme(legend.position = 'top')
 ```
 
@@ -271,14 +267,10 @@ ggplot(data = nrs_agreementP) +
     geom_crossbar() +
     geom_hline(yintercept = 0,
                linetype = 2) +
-    scale_fill_brewer(name = 'Interval includes zero: ',
-                      labels = c('No', 'Yes'),
-                      type = 'qual',
-                      palette = 'Dark2') +
-    scale_colour_brewer(name = 'Interval includes zero: ',
-                        labels = c('No', 'Yes'),
-                        type = 'qual',
-                        palette = 'Dark2') +
+    scale_fill_manual(name = 'Interval includes zero: ',
+                      values = grey_pal) +
+    scale_colour_manual(name = 'Interval includes zero: ',
+                        values = grey_pal) +
     labs(title = 'Participant-level agreement between SPARS and pain NRS ratings',
          subtitle = 'Bars: 95% confidence interval of the difference in median\nIntervals including zero interpreted as evidence for agreement',
          x = 'Stimulus intensity (rank)',
@@ -345,12 +337,10 @@ ggplot(data = nrs_agreementG) +
     geom_crossbar() +
     geom_hline(yintercept = 0,
                linetype = 2) +
-    scale_fill_brewer(name = 'Interval includes zero: ',
-                      type = 'qual',
-                      palette = 'Dark2') +
-    scale_colour_brewer(name = 'Interval includes zero: ',
-                        type = 'qual',
-                        palette = 'Dark2') +
+     scale_fill_manual(name = 'Interval includes zero: ',
+                      values = grey_pal) +
+    scale_colour_manual(name = 'Interval includes zero: ',
+                        values = grey_pal) +
     labs(title = 'Group-level agreement between SPARS and pain NRS ratings',
          subtitle = 'Bars: 95% confidence interval of the difference in median\nIntervals including zero interpreted as evidence for agreement',
          x = 'Stimulus intensity (rank)',
@@ -435,12 +425,10 @@ ggplot(data = srs_agreementP) +
     geom_crossbar() +
     geom_hline(yintercept = 0,
                linetype = 2) +
-    scale_fill_brewer(name = 'Interval includes zero: ',
-                      type = 'qual',
-                      palette = 'Dark2') +
-    scale_colour_brewer(name = 'Interval includes zero: ',
-                        type = 'qual',
-                        palette = 'Dark2') +
+     scale_fill_manual(name = 'Interval includes zero: ',
+                      values = grey_pal) +
+    scale_colour_manual(name = 'Interval includes zero: ',
+                        values = grey_pal) +
     labs(title = 'Participant-level agreement between SPARS and SRS ratings',
          subtitle = 'Bars: 95% confidence interval of the difference in median\nIntervals including zero interpreted as evidence for agreement',
          x = 'Stimulus intensity (rank)',
@@ -507,12 +495,10 @@ ggplot(data = srs_agreementG) +
     geom_crossbar() +
     geom_hline(yintercept = 0,
                linetype = 2) +
-    scale_fill_brewer(name = 'Interval includes zero: ',
-                      type = 'qual',
-                      palette = 'Dark2') +
-    scale_colour_brewer(name = 'Interval includes zero: ',
-                        type = 'qual',
-                        palette = 'Dark2') +
+     scale_fill_manual(name = 'Interval includes zero: ',
+                      values = grey_pal) +
+    scale_colour_manual(name = 'Interval includes zero: ',
+                        values = grey_pal) +
     labs(title = 'Group-level agreement between SPARS and SRS ratings',
          subtitle = 'Bars: 95% confidence interval of the difference in median\nIntervals including zero interpreted as evidence for agreement',
          x = 'Stimulus intensity (rank)',
@@ -541,9 +527,9 @@ sessionInfo()
 ```
 
 ```
-## R version 3.5.0 (2018-04-23)
+## R version 3.5.1 (2018-07-02)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.5
+## Running under: macOS  10.14
 ## 
 ## Matrix products: default
 ## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
@@ -556,27 +542,21 @@ sessionInfo()
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] bindrcpp_0.2.2     boot_1.3-20        forcats_0.3.0     
-##  [4] stringr_1.3.1      dplyr_0.7.5        purrr_0.2.5       
-##  [7] readr_1.1.1        tidyr_0.8.1        tibble_1.4.2      
-## [10] ggplot2_2.2.1.9000 tidyverse_1.2.1    magrittr_1.5      
+##  [1] bindrcpp_0.2.2  boot_1.3-20     forcats_0.3.0   stringr_1.3.1  
+##  [5] dplyr_0.7.6     purrr_0.2.5     readr_1.1.1     tidyr_0.8.1    
+##  [9] tibble_1.4.2    ggplot2_3.0.0   tidyverse_1.2.1 magrittr_1.5   
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_0.2.4   reshape2_1.4.3     haven_1.1.1       
-##  [4] lattice_0.20-35    colorspace_1.3-2   htmltools_0.3.6   
-##  [7] yaml_2.1.19        rlang_0.2.1        pillar_1.2.3      
-## [10] foreign_0.8-70     glue_1.2.0         withr_2.1.2       
-## [13] RColorBrewer_1.1-2 modelr_0.1.2       readxl_1.1.0      
-## [16] bindr_0.1.1        plyr_1.8.4         munsell_0.4.3     
-## [19] gtable_0.2.0       cellranger_1.1.0   rvest_0.3.2       
-## [22] psych_1.8.4        evaluate_0.10.1    labeling_0.3      
-## [25] knitr_1.20         parallel_3.5.0     broom_0.4.4       
-## [28] Rcpp_0.12.17       scales_0.5.0.9000  backports_1.1.2   
-## [31] jsonlite_1.5       mnormt_1.5-5       hms_0.4.2         
-## [34] digest_0.6.15      stringi_1.2.2      grid_3.5.0        
-## [37] rprojroot_1.3-2    cli_1.0.0          tools_3.5.0       
-## [40] lazyeval_0.2.1     crayon_1.3.4       pkgconfig_2.0.1   
-## [43] xml2_1.2.0         lubridate_1.7.4    assertthat_0.2.0  
-## [46] rmarkdown_1.9      httr_1.3.1         rstudioapi_0.7    
-## [49] R6_2.2.2           nlme_3.1-137       compiler_3.5.0
+##  [1] Rcpp_0.12.19     cellranger_1.1.0 pillar_1.3.0     compiler_3.5.1  
+##  [5] plyr_1.8.4       bindr_0.1.1      tools_3.5.1      digest_0.6.17   
+##  [9] lubridate_1.7.4  jsonlite_1.5     evaluate_0.11    nlme_3.1-137    
+## [13] gtable_0.2.0     lattice_0.20-35  pkgconfig_2.0.2  rlang_0.2.2     
+## [17] cli_1.0.1        rstudioapi_0.8   yaml_2.2.0       haven_1.1.2     
+## [21] withr_2.1.2      xml2_1.2.0       httr_1.3.1       knitr_1.20      
+## [25] hms_0.4.2        rprojroot_1.3-2  grid_3.5.1       tidyselect_0.2.4
+## [29] glue_1.3.0       R6_2.2.2         readxl_1.1.0     rmarkdown_1.10  
+## [33] modelr_0.1.2     backports_1.1.2  scales_1.0.0     htmltools_0.3.6 
+## [37] rvest_0.3.2      assertthat_0.2.0 colorspace_1.3-2 labeling_0.3    
+## [41] stringi_1.2.4    lazyeval_0.2.1   munsell_0.5.0    broom_0.5.0     
+## [45] crayon_1.3.4
 ```

@@ -2,7 +2,7 @@
 title: "Supplement 2"
 subtitle: "Experiment 1 -- Group-level summary of measures of central tendency"
 author: "Tory Madden and Peter Kamerman"
-date: "16 Jul 2018"
+date: "04 Oct 2018"
 output: 
   html_document:
     keep_md: true
@@ -285,9 +285,9 @@ sessionInfo()
 ```
 
 ```
-## R version 3.5.0 (2018-04-23)
+## R version 3.5.1 (2018-07-02)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.5
+## Running under: macOS  10.14
 ## 
 ## Matrix products: default
 ## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
@@ -300,27 +300,27 @@ sessionInfo()
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] bindrcpp_0.2.2   kableExtra_0.9.0 ggridges_0.5.0   forcats_0.3.0   
+##  [1] bindrcpp_0.2.2   kableExtra_0.9.0 ggridges_0.5.1   forcats_0.3.0   
 ##  [5] stringr_1.3.1    dplyr_0.7.6      purrr_0.2.5      readr_1.1.1     
 ##  [9] tidyr_0.8.1      tibble_1.4.2     ggplot2_3.0.0    tidyverse_1.2.1 
 ## [13] magrittr_1.5    
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_0.2.4  reshape2_1.4.3    haven_1.1.2      
-##  [4] lattice_0.20-35   colorspace_1.3-2  viridisLite_0.3.0
-##  [7] htmltools_0.3.6   yaml_2.1.19       rlang_0.2.1      
-## [10] pillar_1.2.3      foreign_0.8-70    glue_1.2.0       
-## [13] withr_2.1.2       modelr_0.1.2      readxl_1.1.0     
-## [16] bindr_0.1.1       plyr_1.8.4        munsell_0.5.0    
-## [19] gtable_0.2.0      cellranger_1.1.0  rvest_0.3.2      
-## [22] psych_1.8.4       evaluate_0.10.1   knitr_1.20       
-## [25] parallel_3.5.0    highr_0.7         broom_0.4.5      
-## [28] Rcpp_0.12.17      scales_0.5.0.9000 backports_1.1.2  
-## [31] jsonlite_1.5      mnormt_1.5-5      hms_0.4.2        
-## [34] digest_0.6.15     stringi_1.2.3     grid_3.5.0       
-## [37] rprojroot_1.3-2   cli_1.0.0         tools_3.5.0      
-## [40] lazyeval_0.2.1    crayon_1.3.4      pkgconfig_2.0.1  
-## [43] xml2_1.2.0        lubridate_1.7.4   assertthat_0.2.0 
-## [46] rmarkdown_1.10    httr_1.3.1        rstudioapi_0.7   
-## [49] R6_2.2.2          nlme_3.1-137      compiler_3.5.0
+##  [1] tidyselect_0.2.4  haven_1.1.2       lattice_0.20-35  
+##  [4] colorspace_1.3-2  htmltools_0.3.6   viridisLite_0.3.0
+##  [7] yaml_2.2.0        rlang_0.2.2       pillar_1.3.0     
+## [10] foreign_0.8-71    glue_1.3.0        withr_2.1.2      
+## [13] modelr_0.1.2      readxl_1.1.0      bindr_0.1.1      
+## [16] plyr_1.8.4        munsell_0.5.0     gtable_0.2.0     
+## [19] cellranger_1.1.0  rvest_0.3.2       psych_1.8.4      
+## [22] evaluate_0.11     knitr_1.20        parallel_3.5.1   
+## [25] highr_0.7         broom_0.5.0       Rcpp_0.12.19     
+## [28] scales_1.0.0      backports_1.1.2   jsonlite_1.5     
+## [31] mnormt_1.5-5      hms_0.4.2         digest_0.6.17    
+## [34] stringi_1.2.4     grid_3.5.1        rprojroot_1.3-2  
+## [37] cli_1.0.1         tools_3.5.1       lazyeval_0.2.1   
+## [40] crayon_1.3.4      pkgconfig_2.0.2   xml2_1.2.0       
+## [43] lubridate_1.7.4   assertthat_0.2.0  rmarkdown_1.10   
+## [46] httr_1.3.1        rstudioapi_0.8    R6_2.2.2         
+## [49] nlme_3.1-137      compiler_3.5.1
 ```
