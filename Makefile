@@ -1,8 +1,8 @@
 # Create directories if required
 $(shell mkdir -p data-cleaned figures outputs outputs/figures/)
 
-# Move externally generared figures to appropriate folder
-$(shell cp supplementary-files/*.pdf figures/)
+# Move externally generated figures to appropriate folder
+$(shell cp data/*.pdf figures/)
 
 # Dummy outputs
 DATA_A = 	data-cleaned/SPARS_A.csv \
@@ -14,10 +14,10 @@ DATA_B = 	data-cleaned/SPARS_B.csv \
 1A = 	outputs/1A-participant-descriptive-data.md \
 		outputs/1A-participant-descriptive-data.html
 
-2Ai = 	outputs/suppl_02_2A_central-tendency-summary.md \
+2Aa = 	outputs/suppl_02_2A_central-tendency-summary.md \
 		outputs/suppl_02_2A_central-tendency-summary.html
 
-2Aii = 	outputs/suppl_03_2A-central-tendency.md \
+2Ab = 	outputs/suppl_03_2A-central-tendency.md \
 		outputs/suppl_03_2A-central-tendency.html
 
 3A = 	outputs/suppl_04_3A-order-effects.md \
@@ -53,8 +53,7 @@ DATA_B = 	data-cleaned/SPARS_B.csv \
 2B = 	outputs/suppl_13_2B-scale-agreement.md \
 		outputs/suppl_13_2B-scale-agreement.html
 
-3B = 	outputs/suppl_01_3B-instructions-for-participants.md \
-		outputs/suppl_01_3B-instructions-for-participants.html
+3B = 	outputs/suppl_01_3B-instructions-for-participants.html
 
 .PHONY: all
 
