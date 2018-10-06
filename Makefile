@@ -63,7 +63,7 @@ all: 	$(DATA_A) $(DATA_B) $(1A) $(2Ai) $(2Aii) $(3A) \
 
 # Clean
 clean:
-	rm -rfv outputs/ data-cleaned/
+	rm -rfv figures/ outputs/ data-cleaned/
 
 # Generate data
 data-cleaned/SPARS_A.csv data-cleaned/SPARS_A.rds: \
