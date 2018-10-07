@@ -17,7 +17,6 @@ All inputs (root directory) and outputs (_/outputs_) prefixed with _suppl\_\*\*\
 
 ## Run the analysis scripts
 
-
 For reproducibility, we have created a [_Docker_](https://www.docker.com) image with the _R_ environment required to run the _SPARS_ data analysis scripts. The image is built using the [_rocker/verse_](https://hub.docker.com/r/rocker/verse/) image of [_base R_](https://cran.r-project.org/) _v3.5.1_, and includes [_RStudio server_](https://www.rstudio.com/products/rstudio/#Server), the [_TinyTex_](https://yihui.name/tinytex/) Latex distribution, the [_tidyverse_](https://www.tidyverse.org/) suite of R packages (with dependencies), and several R packages (with dependencies) that are required to run the markdown scripts in [_SPARS_](https://github.com/kamermanpr/SPARS). CRAN packages were installed from [_MRAN_](https://mran.microsoft.com/timemachine) using the 2018-10-03 snapshot for _R v3.5.1_. The only package installed from GitHub (_thomasp85/patchwork_) was locked to the 22 September 2018 commit: [_fd7958bae3e7a1e30237c751952e412a0a1d1242_](https://github.com/thomasp85/patchwork/tree/fd7958bae3e7a1e30237c751952e412a0a1d1242).
 
 ### Details
@@ -55,7 +54,7 @@ You need to have _Docker_ installed on your computer. To do so, go to [_docker.c
 
 #### Download the latest image
 
-Enter: `docker pull kamermanpr/docker-spars:v1.1.1`
+Enter: `docker pull kamermanpr/docker-spars:v1.1.2`
 
 #### Download the repository
 
@@ -63,7 +62,7 @@ Download the compressed _zip_ file from _GitHub_ ([_kamermanpr/SPARS_](https://g
 
 #### Run the container
 
-Enter: `docker run --name spars -d -p 8787:8787 -e USER=user -e PASSWORD=password kamermanpr/docker-spars:v1.1.1`
+Enter: `docker run --name spars -d -p 8787:8787 -e USER=user -e PASSWORD=password kamermanpr/docker-spars:v1.1.2`
 
 #### Login to RStudio Server
 
@@ -104,4 +103,4 @@ To run individual RMarkdown scripts (_\*.Rmd_ files)
 
 #### Shutting down
 
-Once done, log out of _RStudio_ and enter the following into a terminal to stop the _Docker_ container: `docker stop spars`. If you then want to remove the container, enter: `docker rm spars`. If you also want to remove the _Docker_ image you downloaded, enter: `docker rmi kamermanpr/docker-spars:v1.1.1`
+Once done, log out of _RStudio_ and enter the following into a terminal to stop the _Docker_ container: `docker stop spars`. If you then want to remove the container, enter: `docker rm spars`. If you also want to remove the _Docker_ image you downloaded, enter: `docker rmi kamermanpr/docker-spars:v1.1.2`
