@@ -35,6 +35,38 @@ data %<>%
          pcs_rumination = Rumin, # PCS
          pcs_helplessness = Helplessn) # PCS
 
+## Fix trial number issues for the following:
+## ID05, ID06, ID12, ID15
+
+### ID05
+trial_n <- c(1:24, 27:45, 53:66, 79:95)
+ID05 <- data %>%
+    filter(PID == 'ID05') %>%
+    mutate(trial_number = trial_n)
+
+### ID06
+trial_n <- c(1:25, 27:51, 53:77, 79:101)
+ID06 <- data %>%
+    filter(PID == 'ID06') %>%
+    mutate(trial_number = trial_n)
+
+### ID12
+trial_n <- c(1:23, 27:51, 53:73, 79:100)
+ID12 <- data %>%
+    filter(PID == 'ID12') %>%
+    mutate(trial_number = trial_n)
+
+### ID15
+trial_n <- 1:104
+ID15 <- data %>%
+    filter(PID == 'ID15') %>%
+    mutate(trial_number = trial_n)
+
+## Add them back
+data %<>%
+    filter(PID != 'ID05' & PID != 'ID06' & PID != 'ID12' & PID != 'ID15') %>%
+    bind_rows(ID05, ID06, ID12, ID15)
+
 ## Add block_order
 data %<>%
   mutate(block_order = case_when(
