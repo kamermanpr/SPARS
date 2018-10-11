@@ -2,7 +2,7 @@
 title: "SPARS trial A"
 subtitle: "Diagnostics for the best-fit linear mixed model of the SPARS stimulus-response relationship"
 author: "Peter Kamerman and Tory Madden"
-date: "04 October 2018"
+date: "11 October 2018"
 output: 
   html_document:
     keep_md: true

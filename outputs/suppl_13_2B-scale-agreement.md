@@ -2,7 +2,7 @@
 title: "Supplement 13"
 subtitle: "Experiment 2 -- Agreement between the SPARS and the pain NRS/SRS"
 author: "Peter Kamerman and Tory Madden"
-date: "04 October 2018"
+date: "11 October 2018"
 output: 
   html_document:
     keep_md: true

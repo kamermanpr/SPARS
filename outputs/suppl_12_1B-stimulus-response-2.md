@@ -2,7 +2,7 @@
 title: "Supplement 12"
 subtitle: "Experiment 2 -- Descriptive plots of the stimulus-response relationship for the SPARS, SRS, and pain NRS"
 author: "Peter Kamerman and Tory Madden"
-date: "04 October 2018"
+date: "11 October 2018"
 output: 
   html_document:
     keep_md: true

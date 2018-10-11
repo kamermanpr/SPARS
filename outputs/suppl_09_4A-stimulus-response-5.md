@@ -2,7 +2,7 @@
 title: "Supplement 9"
 subtitle: "Experiment 1 -- Sensitivity of the SPARS to changes in stimulus intensity"
 author: "Peter Kamerman"
-date: "04 Oct 2018"
+date: "11 Oct 2018"
 output: 
   html_document:
     keep_md: true
@@ -135,7 +135,7 @@ data_scale %>%
     theme(legend.position = 'top')
 ```
 
-<img src="figures/suppl_09_4A-stimulus-response-5/exploratory_plots-1.png" width="3500" style="display: block; margin: auto;" />
+<img src="figures/suppl_09_4A-stimulus-response-5/exploratory_plots-1.png" width="672" style="display: block; margin: auto;" />
 
 ```r
 ## Publication plot

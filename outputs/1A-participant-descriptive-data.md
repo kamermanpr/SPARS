@@ -2,7 +2,7 @@
 title: "SPARS"
 subtitle: "Experiment 1 -- Participant descriptive statistics"
 author: "Peter Kamerman"
-date: "04 Oct 2018"
+date: "11 Oct 2018"
 output: 
   html_document:
     keep_md: true
@@ -64,12 +64,12 @@ head(data)
 ## # A tibble: 6 x 19
 ##   PID   block block_order trial_number intensity intensity_char rating
 ##   <chr> <chr>       <dbl>        <dbl>     <dbl> <chr>           <dbl>
-## 1 ID01  A               1            1      3.75 3.75              -10
-## 2 ID01  A               1            2      1.5  1.50              -40
-## 3 ID01  A               1            3      3.25 3.25              -10
-## 4 ID01  A               1            4      1.5  1.50              -25
-## 5 ID01  A               1            5      3    3.00              -20
-## 6 ID01  A               1            6      2.75 2.75              -25
+## 1 ID01  C               1            1      3.75 3.75              -10
+## 2 ID01  C               1            2      1.5  1.50              -40
+## 3 ID01  C               1            3      3.25 3.25              -10
+## 4 ID01  C               1            4      1.5  1.50              -25
+## 5 ID01  C               1            5      3    3.00              -20
+## 6 ID01  C               1            6      2.75 2.75              -25
 ## # ... with 12 more variables: rating_positive <dbl>, EDA <dbl>, age <dbl>,
 ## #   sex <dbl>, panas_positive <dbl>, panas_negative <dbl>,
 ## #   dass42_depression <dbl>, dass42_anxiety <dbl>, dass42_stress <dbl>,
@@ -84,12 +84,12 @@ tail(data)
 ## # A tibble: 6 x 19
 ##   PID   block block_order trial_number intensity intensity_char rating
 ##   <chr> <chr>       <dbl>        <dbl>     <dbl> <chr>           <dbl>
-## 1 ID19  C               4           99      2    2.00              -25
-## 2 ID19  C               4          100      3.25 3.25               -3
-## 3 ID19  C               4          101      3.5  3.50               -8
-## 4 ID19  C               4          102      1.5  1.50              -17
-## 5 ID19  C               4          103      1.5  1.50               -7
-## 6 ID19  C               4          104      2.75 2.75               -8
+## 1 ID15  B               4           99      2.5  2.50              -40
+## 2 ID15  B               4          100      2.5  2.50              -20
+## 3 ID15  B               4          101      2.75 2.75              -25
+## 4 ID15  B               4          102      4    4.00               15
+## 5 ID15  B               4          103      1.75 1.75              -50
+## 6 ID15  B               4          104      3    3.00              -20
 ## # ... with 12 more variables: rating_positive <dbl>, EDA <dbl>, age <dbl>,
 ## #   sex <dbl>, panas_positive <dbl>, panas_negative <dbl>,
 ## #   dass42_depression <dbl>, dass42_anxiety <dbl>, dass42_stress <dbl>,
@@ -104,7 +104,7 @@ glimpse(data)
 ## Observations: 1,927
 ## Variables: 19
 ## $ PID               <chr> "ID01", "ID01", "ID01", "ID01", "ID01", "ID0...
-## $ block             <chr> "A", "A", "A", "A", "A", "A", "A", "A", "A",...
+## $ block             <chr> "C", "C", "C", "C", "C", "C", "C", "C", "C",...
 ## $ block_order       <dbl> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,...
 ## $ trial_number      <dbl> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 1...
 ## $ intensity         <dbl> 3.75, 1.50, 3.25, 1.50, 3.00, 2.75, 1.00, 2....
@@ -151,21 +151,21 @@ data
 ##  2 ID02     20     1             34             11                3
 ##  3 ID03     19     1             22             12                3
 ##  4 ID04     21     2             17             10                0
-##  5 ID05     25     2             17             10                0
-##  6 ID06     22     2             30             10                0
-##  7 ID07     27     1             33             10                1
-##  8 ID08     24     2             23             11                0
-##  9 ID09     26     2             26             13                6
-## 10 ID10     20     2             24             10                0
-## 11 ID11     24     2             18             11                1
-## 12 ID12     18     2             29             10               18
-## 13 ID13     25     2             34             10                4
-## 14 ID14     29     2             24             14                7
-## 15 ID15     24     1             25             12                2
-## 16 ID16     30     2             29             16                5
-## 17 ID17     24     1             25             12                2
-## 18 ID18     31     1             24             10                7
-## 19 ID19     22     1             19             14               13
+##  5 ID07     27     1             33             10                1
+##  6 ID08     24     2             23             11                0
+##  7 ID09     26     2             26             13                6
+##  8 ID10     20     2             24             10                0
+##  9 ID11     24     2             18             11                1
+## 10 ID13     25     2             34             10                4
+## 11 ID14     29     2             24             14                7
+## 12 ID16     30     2             29             16                5
+## 13 ID17     24     1             25             12                2
+## 14 ID18     31     1             24             10                7
+## 15 ID19     22     1             19             14               13
+## 16 ID05     25     2             17             10                0
+## 17 ID06     22     2             30             10                0
+## 18 ID12     18     2             29             10               18
+## 19 ID15     24     1             25             12                2
 ## # ... with 5 more variables: dass42_anxiety <dbl>, dass42_stress <dbl>,
 ## #   pcs_magnification <dbl>, pcs_rumination <dbl>, pcs_helplessness <dbl>
 ```
@@ -201,7 +201,7 @@ Table: Summary table of age in years
 
  Mean   Median       IQR     Range
 -----  -------  --------  --------
- 23.4       24   21 - 25   18 - 31
+ 23.7       24   21 - 26   18 - 31
 
 ```r
 # Plot
@@ -310,10 +310,10 @@ Table: Summary table of PCS total and subscale scores
 
                      Mean   Median       IQR    Range
 ------------------  -----  -------  --------  -------
-pcs_helplessness      5.8      5.0     4 - 9   0 - 11
-pcs_magnification     3.5      3.5     1 - 6    0 - 9
-pcs_rumination        6.7      7.0     4 - 9   0 - 13
-pcs_total            16.1     15.5   10 - 23   1 - 31
+pcs_helplessness      6.1      6.0     4 - 9   0 - 11
+pcs_magnification     3.7      4.0     1 - 6    0 - 9
+pcs_rumination        7.2      7.5    4 - 10   0 - 13
+pcs_total            16.9     17.5   12 - 25   1 - 31
 
 ```r
 # Plot
@@ -437,8 +437,8 @@ Table: Summary table of PANAS subscale scores
 
 Affect      Median       IQR     Range
 ---------  -------  --------  --------
-Negative      10.5   10 - 12   10 - 14
-Positive      24.5   22 - 30   17 - 36
+Negative        11   10 - 12   10 - 16
+Positive        25   23 - 30   17 - 36
 
 ```r
 # Plot
@@ -497,11 +497,11 @@ data %>%
 
 Table: Summary table of DASS-42 dimension scores
 
-Dimension     Median     IQR    Range
------------  -------  ------  -------
-anxiety          1.5   0 - 4   0 - 10
-depression       2.0   0 - 6   0 - 18
-stress           5.0   1 - 8   0 - 24
+Dimension     Median      IQR    Range
+-----------  -------  -------  -------
+anxiety          2.0    0 - 6   0 - 10
+depression       2.5    0 - 6   0 - 18
+stress           6.0   2 - 12   0 - 24
 
 ```r
 # Process plots

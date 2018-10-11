@@ -2,7 +2,7 @@
 title: "Supplement 10"
 subtitle: "Experiment 1 -- Rating variance in the SPARS"
 author: "Peter Kamerman"
-date: "04 Oct 2018"
+date: "11 Oct 2018"
 output: 
   html_document:
     keep_md: true
