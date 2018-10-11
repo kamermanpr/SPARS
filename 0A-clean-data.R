@@ -36,27 +36,22 @@ data %<>%
          pcs_helplessness = Helplessn) # PCS
 
 ## Fix trial number issues for the following:
-## ID05, ID06, ID12, ID15
-
-### ID05
+## ID05
 trial_n <- c(1:24, 27:45, 53:66, 79:95)
 ID05 <- data %>%
     filter(PID == 'ID05') %>%
     mutate(trial_number = trial_n)
-
-### ID06
+## ID06
 trial_n <- c(1:25, 27:51, 53:77, 79:101)
 ID06 <- data %>%
     filter(PID == 'ID06') %>%
     mutate(trial_number = trial_n)
-
-### ID12
+## ID12
 trial_n <- c(1:23, 27:51, 53:73, 79:100)
 ID12 <- data %>%
     filter(PID == 'ID12') %>%
     mutate(trial_number = trial_n)
-
-### ID15
+## ID15
 trial_n <- 1:104
 ID15 <- data %>%
     filter(PID == 'ID15') %>%
@@ -64,8 +59,10 @@ ID15 <- data %>%
 
 ## Add them back
 data %<>%
-    filter(PID != 'ID05' & PID != 'ID06' & PID != 'ID12' & PID != 'ID15') %>%
-    bind_rows(ID05, ID06, ID12, ID15)
+    filter(PID != 'ID05' & PID != 'ID06' &
+               PID != 'ID12' & PID != 'ID15') %>%
+    bind_rows(ID05, ID06,
+              ID12, ID15)
 
 ## Add block_order
 data %<>%
@@ -91,16 +88,54 @@ blocks <- data %>%
   ungroup()
 
 ### Inspect unique blocks
-#### Remove incomplete cases
-##### Remove ID05 (only three blocks)
-##### Remove ID06 (incomplete fourth block)
-##### Remove ID12 (incomplete third block)
-##### Remove ID15 (only one block)
-blocks %<>%
-  filter(!PID %in% c('ID05', 'ID06', 'ID12'))
-blocks_unique <- unique(blocks$stimulus_order)
-length(blocks_unique)
-blocks_unique
+### Block A: "3.00, 2.25, 4.00, 3.25, 2.75, 2.25, 2.75, 4.00, 2.75, 1.00, 2.25,
+###           3.00, 1.75, 1.25, 2.25, 3.00, 2.50, 1.75, 2.75, 2.00, 4.00, 1.00,
+###           3.25, 2.50, 1.25, 3.00"
+### Block B: "3.75, 3.75, 3.25, 2.75, 2.00, 2.25, 1.00, 3.25, 2.00, 1.75, 3.50,
+###           2.50, 2.50, 2.50, 1.25, 1.25, 2.25, 2.00, 3.50, 2.00, 2.50, 2.50,
+###           2.75, 4.00, 1.75, 3.00"
+### Block C: "3.75, 1.50, 3.25, 1.50, 3.00, 2.75, 1.00, 2.25, 1.25, 1.75, 3.75,
+###           3.50, 1.25, 1.00, 3.50, 3.75, 4.00, 3.50, 3.00, 3.50, 1.75, 3.25,
+###           2.50, 1.25, 1.50, 3.75"
+### Block D: "1.50, 3.75, 1.25, 1.75, 3.50, 2.00, 4.00, 2.25, 4.00, 1.50, 1.00,
+###           4.00, 3.25, 1.00, 1.50, 3.75, 3.00, 1.00, 2.00, 1.75, 2.00, 3.25,
+###           3.50, 1.50, 1.50, 2.75"
+
+#### Complete blocks
+blocks_complete <- blocks %>%
+    # Remove incomplete blocks
+    filter(!PID %in% c('ID05', 'ID06', 'ID12'))
+
+unique_complete <- unique(blocks_complete$stimulus_order)
+
+#### Incomplete blocks
+blocks_incomplete <- blocks %>%
+    # Remove incomplete blocks
+    filter(PID %in% c('ID05', 'ID06', 'ID12'))
+
+unique_incomplete <- unique(blocks_incomplete$stimulus_order)
+
+### Find incomplete blocks that best match complete blocks
+#### ID05
+adist(x = unique_incomplete[1:4], y = unique_complete, partial = TRUE)
+unique_incomplete[1]; unique_complete[4] # A
+unique_incomplete[2]; unique_complete[3] # D
+unique_incomplete[3]; unique_complete[1] # C
+unique_incomplete[4]; unique_complete[2] # B
+
+#### ID06
+adist(x = unique_incomplete[5:8], y = unique_complete, partial = TRUE)
+unique_incomplete[5]; unique_complete[4] # A
+unique_incomplete[6]; unique_complete[3] # D
+unique_incomplete[7]; unique_complete[1] # C
+unique_incomplete[8]; unique_complete[2] # B
+
+#### ID12
+adist(x = unique_incomplete[9:12], y = unique_complete, partial = TRUE)
+unique_incomplete[9]; unique_complete[2]  # B
+unique_incomplete[10]; unique_complete[3] # D
+unique_incomplete[11]; unique_complete[4] # A
+unique_incomplete[12]; unique_complete[1] # C
 
 # Merge 'blocks' back into data
 data %<>%
@@ -109,11 +144,22 @@ data %<>%
 # Classify similar blocks across participants
 data %<>%
   mutate(block = case_when(
-    str_detect(stimulus_order, pattern = blocks_unique[[1]]) ~ 'A',
-    str_detect(stimulus_order, pattern = blocks_unique[[2]]) ~ 'B',
-    str_detect(stimulus_order, pattern = blocks_unique[[3]]) ~ 'C',
-    str_detect(stimulus_order, pattern = blocks_unique[[4]]) ~ 'D',
-    TRUE ~ 'Other'
+      str_detect(stimulus_order, pattern = unique_complete[[4]]) ~ 'A',
+      str_detect(stimulus_order, pattern = unique_incomplete[[1]]) ~ 'A',
+      str_detect(stimulus_order, pattern = unique_incomplete[[5]]) ~ 'A',
+      str_detect(stimulus_order, pattern = unique_incomplete[[11]]) ~ 'A',
+      str_detect(stimulus_order, pattern = unique_complete[[2]]) ~ 'B',
+      str_detect(stimulus_order, pattern = unique_incomplete[[4]]) ~ 'B',
+      str_detect(stimulus_order, pattern = unique_incomplete[[8]]) ~ 'B',
+      str_detect(stimulus_order, pattern = unique_incomplete[[9]]) ~ 'B',
+      str_detect(stimulus_order, pattern = unique_complete[[1]]) ~ 'C',
+      str_detect(stimulus_order, pattern = unique_incomplete[[3]]) ~ 'C',
+      str_detect(stimulus_order, pattern = unique_incomplete[[7]]) ~ 'C',
+      str_detect(stimulus_order, pattern = unique_incomplete[[12]]) ~ 'C',
+      str_detect(stimulus_order, pattern = unique_complete[[3]]) ~ 'D',
+      str_detect(stimulus_order, pattern = unique_incomplete[[2]]) ~ 'D',
+      str_detect(stimulus_order, pattern = unique_incomplete[[6]]) ~ 'D',
+      str_detect(stimulus_order, pattern = unique_incomplete[[10]]) ~ 'D'
   ))
 
 ## Make intensity class character
