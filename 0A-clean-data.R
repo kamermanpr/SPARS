@@ -177,6 +177,10 @@ data %<>%
          dass42_depression, dass42_anxiety, dass42_stress, pcs_magnification,
          pcs_rumination, pcs_helplessness)
 
+## Sort PID order
+data %<>%
+    arrange(PID, block, block_order, trial_number)
+
 # Save outputs
 write_rds(x = data,
           path = 'data-cleaned/SPARS_A.rds')
