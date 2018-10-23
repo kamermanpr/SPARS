@@ -1,7 +1,7 @@
 # The Sensation and Pain Rating Scale (SPARS)
 
 ## Bibliometric information
-
+Madden VJ, Kamerman P, Bellan V, Catley MJ, Russek LN, Camfferman D, Moseley GL:. Analysis scripts and supplementary files: Was that painful or non-painful? The Sensation and Pain Rating Scale (SPARS) performs well in the experimental context. _Journal of Pain_ \[in press\].
 
 ## Abstract
 
