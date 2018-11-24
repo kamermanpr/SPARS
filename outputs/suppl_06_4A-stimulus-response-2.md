@@ -2,7 +2,7 @@
 title: "Supplement 6"
 subtitle: "Experiment 1 -- Modelling the SPARS stimulus-response relationship"
 author: "Peter Kamerman and Tory Madden"
-date: "11 October 2018"
+date: "24 November 2018"
 output: 
   html_document:
     keep_md: true
@@ -518,11 +518,11 @@ summary(qmm)
 ## tau = 0.025
 ## 
 ## Fixed effects:
-##                        Value Std. Error lower bound upper bound  Pr(>|t|)
-## (Intercept)         -36.3724    23.9336    -84.4688      11.724   0.13501
-## poly(intensity, 3)1 204.7079    19.6716    165.1764     244.239 5.278e-14
-## poly(intensity, 3)2  11.5495    20.4934    -29.6335      52.732   0.57562
-## poly(intensity, 3)3  26.7629    13.9758     -1.3226      54.848   0.06135
+##                         Value Std. Error lower bound upper bound  Pr(>|t|)
+## (Intercept)         -36.37236   28.47494   -93.59490      20.850   0.20750
+## poly(intensity, 3)1 204.70791   21.00843   162.48989     246.926 4.726e-13
+## poly(intensity, 3)2  11.54948   20.66549   -29.97939      53.078   0.57879
+## poly(intensity, 3)3  26.76290   13.56231    -0.49159      54.017   0.05411
 ##                        
 ## (Intercept)            
 ## poly(intensity, 3)1 ***
@@ -535,10 +535,10 @@ summary(qmm)
 ## 
 ## Fixed effects:
 ##                         Value Std. Error lower bound upper bound  Pr(>|t|)
-## (Intercept)         -16.06242    7.51161   -31.15758     -0.9673  0.037501
-## poly(intensity, 3)1 205.06628   19.87093   165.13415    244.9984 7.004e-14
-## poly(intensity, 3)2   0.84314   12.03201   -23.33609     25.0224  0.944420
-## poly(intensity, 3)3  21.92427    7.09095     7.67446     36.1741  0.003278
+## (Intercept)         -16.06242    6.98679   -30.10290      -2.022  0.025810
+## poly(intensity, 3)1 205.06628   19.63261   165.61308     244.519 4.648e-14
+## poly(intensity, 3)2   0.84314   11.57555   -22.41881      24.105  0.942232
+## poly(intensity, 3)3  21.92427    8.16283     5.52045      38.328  0.009847
 ##                        
 ## (Intercept)         *  
 ## poly(intensity, 3)1 ***
@@ -551,15 +551,15 @@ summary(qmm)
 ## 
 ## Fixed effects:
 ##                        Value Std. Error lower bound upper bound  Pr(>|t|)
-## (Intercept)           3.2873    10.1006    -17.0106      23.585  0.746222
-## poly(intensity, 3)1 204.0394    19.9780    163.8921     244.187 9.947e-14
-## poly(intensity, 3)2   2.2389    11.5418    -20.9554      25.433  0.846996
-## poly(intensity, 3)3  22.1176     6.9798      8.0911      36.144  0.002637
+## (Intercept)           3.2873     6.8684    -10.5154      17.090   0.63435
+## poly(intensity, 3)1 204.0394    19.9537    163.9409     244.138 9.548e-14
+## poly(intensity, 3)2   2.2389    11.0376    -19.9421      24.420   0.84010
+## poly(intensity, 3)3  22.1176     8.2936      5.4510      38.784   0.01035
 ##                        
 ## (Intercept)            
 ## poly(intensity, 3)1 ***
 ## poly(intensity, 3)2    
-## poly(intensity, 3)3 ** 
+## poly(intensity, 3)3 *  
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -567,10 +567,10 @@ summary(qmm)
 ## 
 ## Fixed effects:
 ##                        Value Std. Error lower bound upper bound  Pr(>|t|)
-## (Intercept)          19.0218     7.6450      3.6585      34.385  0.016291
-## poly(intensity, 3)1 203.2674    20.2280    162.6177     243.917 1.712e-13
-## poly(intensity, 3)2   5.9630    11.8555    -17.8614      29.788  0.617235
-## poly(intensity, 3)3  22.6834     7.0778      8.4601      36.907  0.002379
+## (Intercept)          19.0215     8.0774      2.7894      35.254  0.022577
+## poly(intensity, 3)1 203.2674    20.1555    162.7635     243.771 1.519e-13
+## poly(intensity, 3)2   5.9631    10.6953    -15.5300      27.456  0.579696
+## poly(intensity, 3)3  22.6834     8.4599      5.6827      39.684  0.009965
 ##                        
 ## (Intercept)         *  
 ## poly(intensity, 3)1 ***
@@ -582,13 +582,13 @@ summary(qmm)
 ## tau = 0.975
 ## 
 ## Fixed effects:
-##                        Value Std. Error lower bound upper bound  Pr(>|t|)
-## (Intercept)          22.0604     7.9110      6.1627      37.958  0.007517
-## poly(intensity, 3)1 188.9824    23.5238    141.7096     236.255 1.697e-10
-## poly(intensity, 3)2  22.3598    15.2147     -8.2153      52.935  0.148057
-## poly(intensity, 3)3  12.1005     7.4783     -2.9277      27.129  0.112065
+##                         Value Std. Error lower bound upper bound Pr(>|t|)
+## (Intercept)          22.06042   10.49209     0.97576      43.145  0.04066
+## poly(intensity, 3)1 188.98239   19.34271   150.11175     227.853 4.33e-13
+## poly(intensity, 3)2  22.35978   14.46886    -6.71648      51.436  0.12869
+## poly(intensity, 3)3  12.10052   10.62313    -9.24745      33.449  0.26021
 ##                        
-## (Intercept)         ** 
+## (Intercept)         *  
 ## poly(intensity, 3)1 ***
 ## poly(intensity, 3)2    
 ## poly(intensity, 3)3    
@@ -737,21 +737,26 @@ sessionInfo()
 
 ```
 ## R version 3.5.1 (2018-07-02)
-## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS  10.14
+## Platform: x86_64-pc-linux-gnu (64-bit)
+## Running under: Debian GNU/Linux 9 (stretch)
 ## 
 ## Matrix products: default
-## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+## BLAS: /usr/lib/openblas-base/libblas.so.3
+## LAPACK: /usr/lib/libopenblasp-r0.2.19.so
 ## 
 ## locale:
-## [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
+##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=C             
+##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] bindrcpp_0.2.2  ggeffects_0.5.0 car_3.0-2       carData_3.0-2  
+##  [1] bindrcpp_0.2.2  ggeffects_0.5.0 car_3.0-2       carData_3.0-1  
 ##  [5] sjPlot_2.6.0    HLMdiag_0.3.1   lqmm_1.5.4      lme4_1.1-18-1  
 ##  [9] Matrix_1.2-14   forcats_0.3.0   stringr_1.3.1   dplyr_0.7.6    
 ## [13] purrr_0.2.5     readr_1.1.1     tidyr_0.8.1     tibble_1.4.2   
@@ -759,34 +764,34 @@ sessionInfo()
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] TH.data_1.0-9      minqa_1.2.4        colorspace_1.3-2  
-##  [4] modeltools_0.2-22  rio_0.5.10         ggridges_0.5.1    
-##  [7] sjlabelled_1.0.14  rprojroot_1.3-2    estimability_1.3  
-## [10] snakecase_0.9.2    rstudioapi_0.8     glmmTMB_0.2.2.0   
+##  [4] modeltools_0.2-22  rio_0.5.10         ggridges_0.5.0    
+##  [7] sjlabelled_1.0.13  rprojroot_1.3-2    estimability_1.3  
+## [10] snakecase_0.9.2    rstudioapi_0.7     glmmTMB_0.2.2.0   
 ## [13] mvtnorm_1.0-8      lubridate_1.7.4    coin_1.2-2        
 ## [16] xml2_1.2.0         codetools_0.2-15   splines_3.5.1     
-## [19] mnormt_1.5-5       knitr_1.20         sjmisc_2.7.5      
+## [19] mnormt_1.5-5       knitr_1.20         sjmisc_2.7.4      
 ## [22] effects_4.0-3      bayesplot_1.6.0    jsonlite_1.5      
-## [25] nloptr_1.2.1       pbkrtest_0.4-7     broom_0.5.0       
-## [28] compiler_3.5.1     httr_1.3.1         sjstats_0.17.1    
-## [31] emmeans_1.2.4      backports_1.1.2    assertthat_0.2.0  
-## [34] lazyeval_0.2.1     survey_3.33-2      cli_1.0.1         
+## [25] nloptr_1.0.4       pbkrtest_0.4-7     broom_0.5.0       
+## [28] compiler_3.5.1     httr_1.3.1         sjstats_0.17.0    
+## [31] emmeans_1.2.3      backports_1.1.2    assertthat_0.2.0  
+## [34] lazyeval_0.2.1     survey_3.33-2      cli_1.0.0         
 ## [37] htmltools_0.3.6    tools_3.5.1        SparseGrid_0.8.2  
-## [40] coda_0.19-1        gtable_0.2.0       glue_1.3.0        
-## [43] reshape2_1.4.3     Rcpp_0.12.19       cellranger_1.1.0  
-## [46] nlme_3.1-137       psych_1.8.4        openxlsx_4.1.0    
-## [49] rvest_0.3.2        stringdist_0.9.5.1 MASS_7.3-50       
-## [52] zoo_1.8-4          scales_1.0.0       hms_0.4.2         
-## [55] parallel_3.5.1     sandwich_2.5-0     pwr_1.2-2         
-## [58] TMB_1.7.14         yaml_2.2.0         curl_3.2          
-## [61] stringi_1.2.4      highr_0.7          zip_1.0.0         
-## [64] rlang_0.2.2        pkgconfig_2.0.2    evaluate_0.11     
-## [67] lattice_0.20-35    prediction_0.3.6   bindr_0.1.1       
-## [70] labeling_0.3       tidyselect_0.2.4   plyr_1.8.4        
-## [73] R6_2.2.2           multcomp_1.4-8     RLRsim_3.1-3      
-## [76] pillar_1.3.0       haven_1.1.2        foreign_0.8-71    
-## [79] withr_2.1.2        mgcv_1.8-24        abind_1.4-5       
-## [82] survival_2.42-6    nnet_7.3-12        modelr_0.1.2      
-## [85] crayon_1.3.4       rmarkdown_1.10     grid_3.5.1        
-## [88] readxl_1.1.0       data.table_1.11.8  digest_0.6.17     
-## [91] xtable_1.8-3       stats4_3.5.1       munsell_0.5.0
+## [40] gtable_0.2.0       glue_1.3.0         reshape2_1.4.3    
+## [43] Rcpp_0.12.18       cellranger_1.1.0   nlme_3.1-137      
+## [46] psych_1.8.4        openxlsx_4.1.0     rvest_0.3.2       
+## [49] stringdist_0.9.5.1 MASS_7.3-50        zoo_1.8-3         
+## [52] scales_1.0.0       hms_0.4.2          parallel_3.5.1    
+## [55] sandwich_2.5-0     pwr_1.2-2          TMB_1.7.14        
+## [58] yaml_2.2.0         curl_3.2           stringi_1.2.4     
+## [61] highr_0.7          zip_1.0.0          rlang_0.2.2       
+## [64] pkgconfig_2.0.2    evaluate_0.11      lattice_0.20-35   
+## [67] prediction_0.3.6   bindr_0.1.1        labeling_0.3      
+## [70] tidyselect_0.2.4   plyr_1.8.4         R6_2.2.2          
+## [73] multcomp_1.4-8     RLRsim_3.1-3       pillar_1.3.0      
+## [76] haven_1.1.2        foreign_0.8-70     withr_2.1.2       
+## [79] mgcv_1.8-24        abind_1.4-5        survival_2.42-3   
+## [82] nnet_7.3-12        modelr_0.1.2       crayon_1.3.4      
+## [85] rmarkdown_1.10     grid_3.5.1         readxl_1.1.0      
+## [88] data.table_1.11.4  digest_0.6.16      xtable_1.8-3      
+## [91] stats4_3.5.1       munsell_0.5.0
 ```

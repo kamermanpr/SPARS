@@ -2,7 +2,7 @@
 title: "New figure 4 for revised manuscript"
 subtitle: "Experiment 1 -- Descriptive plot of the SPARS stimulus-response relationship"
 author: "Peter Kamerman and Tory Madden"
-date: "11 October 2018"
+date: "24 November 2018"
 output:
   html_document:
     keep_md: true
@@ -39,14 +39,14 @@ glimpse(data)
 ## Observations: 1,927
 ## Variables: 19
 ## $ PID               <chr> "ID01", "ID01", "ID01", "ID01", "ID01", "ID0...
-## $ block             <chr> "C", "C", "C", "C", "C", "C", "C", "C", "C",...
-## $ block_order       <dbl> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,...
-## $ trial_number      <dbl> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 1...
-## $ intensity         <dbl> 3.75, 1.50, 3.25, 1.50, 3.00, 2.75, 1.00, 2....
-## $ intensity_char    <chr> "3.75", "1.50", "3.25", "1.50", "3.00", "2.7...
-## $ rating            <dbl> -10, -40, -10, -25, -20, -25, -40, 2, -40, -...
-## $ rating_positive   <dbl> 40, 10, 40, 25, 30, 25, 10, 52, 10, 40, 54, ...
-## $ EDA               <dbl> 18315.239, 13904.177, 11543.449, 20542.834, ...
+## $ block             <chr> "A", "A", "A", "A", "A", "A", "A", "A", "A",...
+## $ block_order       <dbl> 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,...
+## $ trial_number      <dbl> 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, ...
+## $ intensity         <dbl> 3.00, 2.25, 4.00, 3.25, 2.75, 2.25, 2.75, 4....
+## $ intensity_char    <chr> "3.00", "2.25", "4.00", "3.25", "2.75", "2.2...
+## $ rating            <dbl> -40, -25, 10, 2, -10, -25, -20, 10, -25, -50...
+## $ rating_positive   <dbl> 10, 25, 60, 52, 40, 25, 30, 60, 25, 0, 25, 3...
+## $ EDA               <dbl> 75270.55, 43838.67, 35967.67, 26720.61, 1931...
 ## $ age               <dbl> 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, ...
 ## $ sex               <dbl> 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,...
 ## $ panas_positive    <dbl> 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, ...
@@ -208,15 +208,20 @@ ggsave(filename = 'figures/figure_4.pdf',
     
     ```
     ## R version 3.5.1 (2018-07-02)
-    ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-    ## Running under: macOS  10.14
+    ## Platform: x86_64-pc-linux-gnu (64-bit)
+    ## Running under: Debian GNU/Linux 9 (stretch)
     ## 
     ## Matrix products: default
-    ## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
-    ## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+    ## BLAS: /usr/lib/openblas-base/libblas.so.3
+    ## LAPACK: /usr/lib/libopenblasp-r0.2.19.so
     ## 
     ## locale:
-    ## [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
+    ##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+    ##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+    ##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=C             
+    ##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+    ##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+    ## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
     ## 
     ## attached base packages:
     ## [1] stats     graphics  grDevices utils     datasets  methods   base     
@@ -229,30 +234,30 @@ ggsave(filename = 'figures/figure_4.pdf',
     ## 
     ## loaded via a namespace (and not attached):
     ##  [1] nlme_3.1-137       lubridate_1.7.4    httr_1.3.1        
-    ##  [4] rprojroot_1.3-2    numDeriv_2016.8-1  TMB_1.7.14        
-    ##  [7] tools_3.5.1        backports_1.1.2    R6_2.2.2          
-    ## [10] sjlabelled_1.0.14  lazyeval_0.2.1     colorspace_1.3-2  
+    ##  [4] rprojroot_1.3-2    numDeriv_2016.8-1  tools_3.5.1       
+    ##  [7] TMB_1.7.14         backports_1.1.2    R6_2.2.2          
+    ## [10] sjlabelled_1.0.13  lazyeval_0.2.1     colorspace_1.3-2  
     ## [13] nnet_7.3-12        withr_2.1.2        tidyselect_0.2.4  
-    ## [16] emmeans_1.2.4      compiler_3.5.1     cli_1.0.1         
+    ## [16] emmeans_1.2.3      compiler_3.5.1     cli_1.0.0         
     ## [19] rvest_0.3.2        xml2_1.2.0         sandwich_2.5-0    
     ## [22] effects_4.0-3      scales_1.0.0       mvtnorm_1.0-8     
-    ## [25] ggridges_0.5.1     digest_0.6.17      minqa_1.2.4       
+    ## [25] ggridges_0.5.0     digest_0.6.16      minqa_1.2.4       
     ## [28] rmarkdown_1.10     stringdist_0.9.5.1 pkgconfig_2.0.2   
     ## [31] htmltools_0.3.6    pwr_1.2-2          rlang_0.2.2       
-    ## [34] readxl_1.1.0       rstudioapi_0.8     bindr_0.1.1       
-    ## [37] zoo_1.8-4          jsonlite_1.5       modeltools_0.2-22 
-    ## [40] bayesplot_1.6.0    Rcpp_0.12.19       munsell_0.5.0     
+    ## [34] readxl_1.1.0       rstudioapi_0.7     bindr_0.1.1       
+    ## [37] zoo_1.8-3          jsonlite_1.5       modeltools_0.2-22 
+    ## [40] bayesplot_1.6.0    Rcpp_0.12.18       munsell_0.5.0     
     ## [43] prediction_0.3.6   stringi_1.2.4      multcomp_1.4-8    
-    ## [46] yaml_2.2.0         snakecase_0.9.2    carData_3.0-2     
+    ## [46] yaml_2.2.0         snakecase_0.9.2    carData_3.0-1     
     ## [49] MASS_7.3-50        plyr_1.8.4         grid_3.5.1        
-    ## [52] parallel_3.5.1     sjmisc_2.7.5       crayon_1.3.4      
+    ## [52] parallel_3.5.1     sjmisc_2.7.4       crayon_1.3.4      
     ## [55] lattice_0.20-35    haven_1.1.2        splines_3.5.1     
-    ## [58] sjstats_0.17.1     hms_0.4.2          knitr_1.20        
+    ## [58] sjstats_0.17.0     hms_0.4.2          knitr_1.20        
     ## [61] pillar_1.3.0       estimability_1.3   codetools_0.2-15  
     ## [64] stats4_3.5.1       glue_1.3.0         evaluate_0.11     
-    ## [67] data.table_1.11.8  modelr_0.1.2       nloptr_1.2.1      
+    ## [67] data.table_1.11.4  modelr_0.1.2       nloptr_1.0.4      
     ## [70] cellranger_1.1.0   gtable_0.2.0       assertthat_0.2.0  
     ## [73] coin_1.2-2         xtable_1.8-3       broom_0.5.0       
-    ## [76] survey_3.33-2      coda_0.19-1        survival_2.42-6   
-    ## [79] glmmTMB_0.2.2.0    TH.data_1.0-9
+    ## [76] survey_3.33-2      survival_2.42-3    glmmTMB_0.2.2.0   
+    ## [79] TH.data_1.0-9
     ```

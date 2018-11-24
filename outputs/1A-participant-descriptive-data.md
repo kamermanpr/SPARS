@@ -2,7 +2,7 @@
 title: "SPARS"
 subtitle: "Experiment 1 -- Participant descriptive statistics"
 author: "Peter Kamerman"
-date: "11 Oct 2018"
+date: "24 Nov 2018"
 output: 
   html_document:
     keep_md: true
@@ -64,12 +64,12 @@ head(data)
 ## # A tibble: 6 x 19
 ##   PID   block block_order trial_number intensity intensity_char rating
 ##   <chr> <chr>       <dbl>        <dbl>     <dbl> <chr>           <dbl>
-## 1 ID01  C               1            1      3.75 3.75              -10
-## 2 ID01  C               1            2      1.5  1.50              -40
-## 3 ID01  C               1            3      3.25 3.25              -10
-## 4 ID01  C               1            4      1.5  1.50              -25
-## 5 ID01  C               1            5      3    3.00              -20
-## 6 ID01  C               1            6      2.75 2.75              -25
+## 1 ID01  A               4           79      3    3.00              -40
+## 2 ID01  A               4           80      2.25 2.25              -25
+## 3 ID01  A               4           81      4    4.00               10
+## 4 ID01  A               4           82      3.25 3.25                2
+## 5 ID01  A               4           83      2.75 2.75              -10
+## 6 ID01  A               4           84      2.25 2.25              -25
 ## # ... with 12 more variables: rating_positive <dbl>, EDA <dbl>, age <dbl>,
 ## #   sex <dbl>, panas_positive <dbl>, panas_negative <dbl>,
 ## #   dass42_depression <dbl>, dass42_anxiety <dbl>, dass42_stress <dbl>,
@@ -84,12 +84,12 @@ tail(data)
 ## # A tibble: 6 x 19
 ##   PID   block block_order trial_number intensity intensity_char rating
 ##   <chr> <chr>       <dbl>        <dbl>     <dbl> <chr>           <dbl>
-## 1 ID15  B               4           99      2.5  2.50              -40
-## 2 ID15  B               4          100      2.5  2.50              -20
-## 3 ID15  B               4          101      2.75 2.75              -25
-## 4 ID15  B               4          102      4    4.00               15
-## 5 ID15  B               4          103      1.75 1.75              -50
-## 6 ID15  B               4          104      3    3.00              -20
+## 1 ID19  D               4           99      2    2.00              -25
+## 2 ID19  D               4          100      3.25 3.25               -3
+## 3 ID19  D               4          101      3.5  3.50               -8
+## 4 ID19  D               4          102      1.5  1.50              -17
+## 5 ID19  D               4          103      1.5  1.50               -7
+## 6 ID19  D               4          104      2.75 2.75               -8
 ## # ... with 12 more variables: rating_positive <dbl>, EDA <dbl>, age <dbl>,
 ## #   sex <dbl>, panas_positive <dbl>, panas_negative <dbl>,
 ## #   dass42_depression <dbl>, dass42_anxiety <dbl>, dass42_stress <dbl>,
@@ -104,14 +104,14 @@ glimpse(data)
 ## Observations: 1,927
 ## Variables: 19
 ## $ PID               <chr> "ID01", "ID01", "ID01", "ID01", "ID01", "ID0...
-## $ block             <chr> "C", "C", "C", "C", "C", "C", "C", "C", "C",...
-## $ block_order       <dbl> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,...
-## $ trial_number      <dbl> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 1...
-## $ intensity         <dbl> 3.75, 1.50, 3.25, 1.50, 3.00, 2.75, 1.00, 2....
-## $ intensity_char    <chr> "3.75", "1.50", "3.25", "1.50", "3.00", "2.7...
-## $ rating            <dbl> -10, -40, -10, -25, -20, -25, -40, 2, -40, -...
-## $ rating_positive   <dbl> 40, 10, 40, 25, 30, 25, 10, 52, 10, 40, 54, ...
-## $ EDA               <dbl> 18315.239, 13904.177, 11543.449, 20542.834, ...
+## $ block             <chr> "A", "A", "A", "A", "A", "A", "A", "A", "A",...
+## $ block_order       <dbl> 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,...
+## $ trial_number      <dbl> 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, ...
+## $ intensity         <dbl> 3.00, 2.25, 4.00, 3.25, 2.75, 2.25, 2.75, 4....
+## $ intensity_char    <chr> "3.00", "2.25", "4.00", "3.25", "2.75", "2.2...
+## $ rating            <dbl> -40, -25, 10, 2, -10, -25, -20, 10, -25, -50...
+## $ rating_positive   <dbl> 10, 25, 60, 52, 40, 25, 30, 60, 25, 0, 25, 3...
+## $ EDA               <dbl> 75270.55, 43838.67, 35967.67, 26720.61, 1931...
 ## $ age               <dbl> 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, ...
 ## $ sex               <dbl> 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,...
 ## $ panas_positive    <dbl> 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, ...
@@ -151,21 +151,21 @@ data
 ##  2 ID02     20     1             34             11                3
 ##  3 ID03     19     1             22             12                3
 ##  4 ID04     21     2             17             10                0
-##  5 ID07     27     1             33             10                1
-##  6 ID08     24     2             23             11                0
-##  7 ID09     26     2             26             13                6
-##  8 ID10     20     2             24             10                0
-##  9 ID11     24     2             18             11                1
-## 10 ID13     25     2             34             10                4
-## 11 ID14     29     2             24             14                7
-## 12 ID16     30     2             29             16                5
-## 13 ID17     24     1             25             12                2
-## 14 ID18     31     1             24             10                7
-## 15 ID19     22     1             19             14               13
-## 16 ID05     25     2             17             10                0
-## 17 ID06     22     2             30             10                0
-## 18 ID12     18     2             29             10               18
-## 19 ID15     24     1             25             12                2
+##  5 ID05     25     2             17             10                0
+##  6 ID06     22     2             30             10                0
+##  7 ID07     27     1             33             10                1
+##  8 ID08     24     2             23             11                0
+##  9 ID09     26     2             26             13                6
+## 10 ID10     20     2             24             10                0
+## 11 ID11     24     2             18             11                1
+## 12 ID12     18     2             29             10               18
+## 13 ID13     25     2             34             10                4
+## 14 ID14     29     2             24             14                7
+## 15 ID15     24     1             25             12                2
+## 16 ID16     30     2             29             16                5
+## 17 ID17     24     1             25             12                2
+## 18 ID18     31     1             24             10                7
+## 19 ID19     22     1             19             14               13
 ## # ... with 5 more variables: dass42_anxiety <dbl>, dass42_stress <dbl>,
 ## #   pcs_magnification <dbl>, pcs_rumination <dbl>, pcs_helplessness <dbl>
 ```
@@ -201,7 +201,7 @@ Table: Summary table of age in years
 
  Mean   Median       IQR     Range
 -----  -------  --------  --------
- 23.7       24   21 - 26   18 - 31
+ 23.4       24   21 - 25   18 - 31
 
 ```r
 # Plot
@@ -310,10 +310,10 @@ Table: Summary table of PCS total and subscale scores
 
                      Mean   Median       IQR    Range
 ------------------  -----  -------  --------  -------
-pcs_helplessness      6.1      6.0     4 - 9   0 - 11
-pcs_magnification     3.7      4.0     1 - 6    0 - 9
-pcs_rumination        7.2      7.5    4 - 10   0 - 13
-pcs_total            16.9     17.5   12 - 25   1 - 31
+pcs_helplessness      5.8      5.0     4 - 9   0 - 11
+pcs_magnification     3.5      3.5     1 - 6    0 - 9
+pcs_rumination        6.7      7.0     4 - 9   0 - 13
+pcs_total            16.1     15.5   10 - 23   1 - 31
 
 ```r
 # Plot
@@ -437,8 +437,8 @@ Table: Summary table of PANAS subscale scores
 
 Affect      Median       IQR     Range
 ---------  -------  --------  --------
-Negative        11   10 - 12   10 - 16
-Positive        25   23 - 30   17 - 36
+Negative      10.5   10 - 12   10 - 14
+Positive      24.5   22 - 30   17 - 36
 
 ```r
 # Plot
@@ -497,11 +497,11 @@ data %>%
 
 Table: Summary table of DASS-42 dimension scores
 
-Dimension     Median      IQR    Range
------------  -------  -------  -------
-anxiety          2.0    0 - 6   0 - 10
-depression       2.5    0 - 6   0 - 18
-stress           6.0   2 - 12   0 - 24
+Dimension     Median     IQR    Range
+-----------  -------  ------  -------
+anxiety          1.5   0 - 4   0 - 10
+depression       2.0   0 - 6   0 - 18
+stress           5.0   1 - 8   0 - 24
 
 ```r
 # Process plots
@@ -584,15 +584,20 @@ sessionInfo()
 
 ```
 ## R version 3.5.1 (2018-07-02)
-## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS  10.14
+## Platform: x86_64-pc-linux-gnu (64-bit)
+## Running under: Debian GNU/Linux 9 (stretch)
 ## 
 ## Matrix products: default
-## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+## BLAS: /usr/lib/openblas-base/libblas.so.3
+## LAPACK: /usr/lib/libopenblasp-r0.2.19.so
 ## 
 ## locale:
-## [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
+##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=C             
+##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
@@ -609,10 +614,10 @@ sessionInfo()
 ## [13] readxl_1.1.0     bindr_0.1.1      plyr_1.8.4       munsell_0.5.0   
 ## [17] gtable_0.2.0     cellranger_1.1.0 rvest_0.3.2      evaluate_0.11   
 ## [21] labeling_0.3     knitr_1.20       fansi_0.3.0      highr_0.7       
-## [25] broom_0.5.0      Rcpp_0.12.19     scales_1.0.0     backports_1.1.2 
-## [29] jsonlite_1.5     hms_0.4.2        digest_0.6.17    stringi_1.2.4   
-## [33] grid_3.5.1       rprojroot_1.3-2  cli_1.0.1        tools_3.5.1     
+## [25] broom_0.5.0      Rcpp_0.12.18     scales_1.0.0     backports_1.1.2 
+## [29] jsonlite_1.5     hms_0.4.2        digest_0.6.16    stringi_1.2.4   
+## [33] grid_3.5.1       rprojroot_1.3-2  cli_1.0.0        tools_3.5.1     
 ## [37] lazyeval_0.2.1   crayon_1.3.4     pkgconfig_2.0.2  xml2_1.2.0      
 ## [41] lubridate_1.7.4  assertthat_0.2.0 rmarkdown_1.10   httr_1.3.1      
-## [45] rstudioapi_0.8   R6_2.2.2         nlme_3.1-137     compiler_3.5.1
+## [45] rstudioapi_0.7   R6_2.2.2         nlme_3.1-137     compiler_3.5.1
 ```

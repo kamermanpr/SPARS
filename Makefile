@@ -88,7 +88,7 @@ data/nrs.png \
 data/srs.png
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"
 
-outputs/suppl_02_2A-central-tendency-summary.html outputs/suppl_02_2A-central-tendency-summary.md: \
+outputs/suppl_02_2A_central-tendency-summary.html outputs/suppl_02_2A_central-tendency-summary.md: \
 suppl_02_2A-central-tendency-summary.Rmd \
 data-cleaned/SPARS_A.rds
 	Rscript -e "rmarkdown::render('$<', output_dir = 'outputs/')"

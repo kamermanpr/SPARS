@@ -2,7 +2,7 @@
 title: "Supplement 4"
 subtitle: "Experiment 1 -- Effect of stimulus order and blocking on SPARS rating"
 author: "Peter Kamerman"
-date: "18 Oct 2018"
+date: "24 Nov 2018"
 output: 
   html_document:
     keep_md: true
@@ -277,15 +277,20 @@ Visual inspection of the figures shows the loess curve (grey curve) oscillating 
 
 ```
 ## R version 3.5.1 (2018-07-02)
-## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS  10.14
+## Platform: x86_64-pc-linux-gnu (64-bit)
+## Running under: Debian GNU/Linux 9 (stretch)
 ## 
 ## Matrix products: default
-## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+## BLAS: /usr/lib/openblas-base/libblas.so.3
+## LAPACK: /usr/lib/libopenblasp-r0.2.19.so
 ## 
 ## locale:
-## [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
+##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=C             
+##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
@@ -299,20 +304,20 @@ Visual inspection of the figures shows the loess curve (grey curve) oscillating 
 ## loaded via a namespace (and not attached):
 ##  [1] tidyselect_0.2.4  splines_3.5.1     haven_1.1.2      
 ##  [4] lattice_0.20-35   colorspace_1.3-2  htmltools_0.3.6  
-##  [7] yaml_2.2.0        rlang_0.2.2       nloptr_1.2.1     
+##  [7] yaml_2.2.0        rlang_0.2.2       nloptr_1.0.4     
 ## [10] pillar_1.3.0      glue_1.3.0        withr_2.1.2      
 ## [13] modelr_0.1.2      readxl_1.1.0      bindr_0.1.1      
-## [16] plyr_1.8.4        robustbase_0.93-3 munsell_0.5.0    
+## [16] plyr_1.8.4        robustbase_0.93-2 munsell_0.5.0    
 ## [19] gtable_0.2.0      cellranger_1.1.0  rvest_0.3.2      
 ## [22] codetools_0.2-15  evaluate_0.11     labeling_0.3     
 ## [25] knitr_1.20        DEoptimR_1.0-8    broom_0.5.0      
-## [28] Rcpp_0.12.19      xtable_1.8-3      scales_1.0.0     
-## [31] backports_1.1.2   jsonlite_1.5      fastGHQuad_1.0   
-## [34] hms_0.4.2         digest_0.6.17     stringi_1.2.4    
-## [37] grid_3.5.1        rprojroot_1.3-2   cli_1.0.1        
+## [28] Rcpp_0.12.18      xtable_1.8-3      scales_1.0.0     
+## [31] backports_1.1.2   jsonlite_1.5      fastGHQuad_0.2   
+## [34] hms_0.4.2         digest_0.6.16     stringi_1.2.4    
+## [37] grid_3.5.1        rprojroot_1.3-2   cli_1.0.0        
 ## [40] tools_3.5.1       lazyeval_0.2.1    crayon_1.3.4     
 ## [43] pkgconfig_2.0.2   MASS_7.3-50       xml2_1.2.0       
 ## [46] lubridate_1.7.4   assertthat_0.2.0  minqa_1.2.4      
-## [49] rmarkdown_1.10    httr_1.3.1        rstudioapi_0.8   
+## [49] rmarkdown_1.10    httr_1.3.1        rstudioapi_0.7   
 ## [52] R6_2.2.2          nlme_3.1-137      compiler_3.5.1
 ```

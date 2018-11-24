@@ -2,7 +2,7 @@
 title: "Supplement 9"
 subtitle: "Experiment 1 -- Sensitivity of the SPARS to changes in stimulus intensity"
 author: "Peter Kamerman"
-date: "11 Oct 2018"
+date: "24 Nov 2018"
 output: 
   html_document:
     keep_md: true
@@ -275,31 +275,31 @@ summary(scale_lmm)
 ## 
 ## Scaled residuals: 
 ##     Min      1Q  Median      3Q     Max 
-## -4.3441 -0.6419  0.0219  0.6425  3.9253 
+## -4.2631 -0.6422  0.0132  0.6522  3.8558 
 ## 
 ## Random effects:
 ##  Groups   Name        Variance Std.Dev.
 ##  PID      (Intercept)   0.0     0.00   
-##  Residual             226.9    15.06   
-## Number of obs: 1778, groups: PID, 19
+##  Residual             232.8    15.26   
+## Number of obs: 1789, groups: PID, 19
 ## 
 ## Fixed effects:
 ##                                    Estimate Std. Error t value
-## (Intercept)                          1.5932     0.9628   1.655
-## intensity_delta                     13.8459     0.7199  19.233
-## change_directionup                  -1.8224     1.4222  -1.281
-## intensity_delta:change_directionup  -0.9675     1.0292  -0.940
+## (Intercept)                          1.8809     0.9712   1.937
+## intensity_delta                     14.1475     0.7171  19.729
+## change_directionup                  -1.6309     1.4269  -1.143
+## intensity_delta:change_directionup  -1.4151     1.0304  -1.373
 ## 
 ## Correlation of Fixed Effects:
 ##             (Intr) intns_ chng_d
-## intnsty_dlt  0.850              
-## chng_drctnp -0.677 -0.575       
-## intnsty_d:_ -0.594 -0.699 -0.051
+## intnsty_dlt  0.848              
+## chng_drctnp -0.681 -0.577       
+## intnsty_d:_ -0.590 -0.696 -0.051
 ## 
 ## Robustness weights for the residuals: 
-##  1397 weights are ~= 1. The remaining 381 ones are summarized as
+##  1416 weights are ~= 1. The remaining 373 ones are summarized as
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   0.310   0.584   0.749   0.740   0.906   0.999 
+##   0.315   0.585   0.739   0.739   0.901   0.999 
 ## 
 ## Robustness weights for the random effects: 
 ##  All 19 weights are ~= 1.
@@ -325,10 +325,10 @@ Table: Interaction model: Wald 95% confidence intervals of fixed effects
 
                                            2.5 %       97.5 %
 -----------------------------------  -----------  -----------
-(Intercept)                           -0.2939063    3.4802539
-intensity_delta                       12.4348856   15.2568704
-change_directionup                    -4.6098420    0.9651317
-intensity_delta:change_directionup    -2.9847235    1.0497943
+(Intercept)                           -0.0226197    3.7843721
+intensity_delta                       12.7420347   15.5529405
+change_directionup                    -4.4276617    1.1658267
+intensity_delta:change_directionup    -3.4345943    0.6043071
 
 ```r
 ## Without interaction
@@ -342,29 +342,29 @@ summary(scale_lmm2)
 ## 
 ## Scaled residuals: 
 ##     Min      1Q  Median      3Q     Max 
-## -4.3861 -0.6245  0.0396  0.6267  3.9241 
+## -4.3212 -0.6286  0.0315  0.6683  3.8525 
 ## 
 ## Random effects:
 ##  Groups   Name        Variance Std.Dev.
 ##  PID      (Intercept)   0.0     0.00   
-##  Residual             226.8    15.06   
-## Number of obs: 1778, groups: PID, 19
+##  Residual             232.7    15.25   
+## Number of obs: 1789, groups: PID, 19
 ## 
 ## Fixed effects:
 ##                    Estimate Std. Error t value
-## (Intercept)          1.0767     0.7740   1.391
-## intensity_delta     13.3467     0.5143  25.951
-## change_directionup  -1.8502     1.4198  -1.303
+## (Intercept)          1.1289     0.7839    1.44
+## intensity_delta     13.4273     0.5148   26.08
+## change_directionup  -1.6806     1.4247   -1.18
 ## 
 ## Correlation of Fixed Effects:
 ##             (Intr) intns_
-## intnsty_dlt  0.755       
-## chng_drctnp -0.881 -0.856
+## intnsty_dlt  0.754       
+## chng_drctnp -0.882 -0.854
 ## 
 ## Robustness weights for the residuals: 
-##  1397 weights are ~= 1. The remaining 381 ones are summarized as
+##  1407 weights are ~= 1. The remaining 382 ones are summarized as
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   0.307   0.583   0.742   0.740   0.905   0.998 
+##   0.311   0.580   0.757   0.744   0.912   0.999 
 ## 
 ## Robustness weights for the random effects: 
 ##  All 19 weights are ~= 1.
@@ -388,11 +388,11 @@ knitr::kable(ci_main,
 
 Table: Main effects model: Wald 95% confidence intervals of fixed effects
 
-                           2.5 %       97.5 %
--------------------  -----------  -----------
-(Intercept)           -0.4403447    2.5938338
-intensity_delta       12.3386421   14.3546592
-change_directionup    -4.6329263    0.9325214
+                           2.5 %      97.5 %
+-------------------  -----------  ----------
+(Intercept)           -0.4075402    2.665404
+intensity_delta       12.4183089   14.436217
+change_directionup    -4.4728418    1.111722
 
 ```r
 ## Compare the models
@@ -534,15 +534,20 @@ sessionInfo()
 
 ```
 ## R version 3.5.1 (2018-07-02)
-## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS  10.14
+## Platform: x86_64-pc-linux-gnu (64-bit)
+## Running under: Debian GNU/Linux 9 (stretch)
 ## 
 ## Matrix products: default
-## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+## BLAS: /usr/lib/openblas-base/libblas.so.3
+## LAPACK: /usr/lib/libopenblasp-r0.2.19.so
 ## 
 ## locale:
-## [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
+##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=C             
+##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
@@ -559,31 +564,31 @@ sessionInfo()
 ##  [1] nlme_3.1-137       lubridate_1.7.4    httr_1.3.1        
 ##  [4] rprojroot_1.3-2    numDeriv_2016.8-1  TMB_1.7.14        
 ##  [7] tools_3.5.1        backports_1.1.2    R6_2.2.2          
-## [10] sjlabelled_1.0.14  lazyeval_0.2.1     colorspace_1.3-2  
+## [10] sjlabelled_1.0.13  lazyeval_0.2.1     colorspace_1.3-2  
 ## [13] nnet_7.3-12        withr_2.1.2        mnormt_1.5-5      
-## [16] tidyselect_0.2.4   emmeans_1.2.4      compiler_3.5.1    
-## [19] cli_1.0.1          rvest_0.3.2        xml2_1.2.0        
+## [16] tidyselect_0.2.4   emmeans_1.2.3      compiler_3.5.1    
+## [19] cli_1.0.0          rvest_0.3.2        xml2_1.2.0        
 ## [22] sandwich_2.5-0     labeling_0.3       effects_4.0-3     
 ## [25] scales_1.0.0       psych_1.8.4        DEoptimR_1.0-8    
-## [28] mvtnorm_1.0-8      robustbase_0.93-3  ggridges_0.5.1    
-## [31] digest_0.6.17      foreign_0.8-71     minqa_1.2.4       
+## [28] mvtnorm_1.0-8      robustbase_0.93-2  ggridges_0.5.0    
+## [31] digest_0.6.16      foreign_0.8-70     minqa_1.2.4       
 ## [34] rmarkdown_1.10     stringdist_0.9.5.1 pkgconfig_2.0.2   
 ## [37] htmltools_0.3.6    highr_0.7          pwr_1.2-2         
-## [40] rlang_0.2.2        readxl_1.1.0       rstudioapi_0.8    
-## [43] bindr_0.1.1        zoo_1.8-4          jsonlite_1.5      
-## [46] modeltools_0.2-22  bayesplot_1.6.0    Rcpp_0.12.19      
-## [49] munsell_0.5.0      prediction_0.3.6   fastGHQuad_1.0    
+## [40] rlang_0.2.2        readxl_1.1.0       rstudioapi_0.7    
+## [43] bindr_0.1.1        zoo_1.8-3          jsonlite_1.5      
+## [46] modeltools_0.2-22  bayesplot_1.6.0    Rcpp_0.12.18      
+## [49] munsell_0.5.0      prediction_0.3.6   fastGHQuad_0.2    
 ## [52] stringi_1.2.4      multcomp_1.4-8     yaml_2.2.0        
-## [55] snakecase_0.9.2    carData_3.0-2      MASS_7.3-50       
+## [55] snakecase_0.9.2    carData_3.0-1      MASS_7.3-50       
 ## [58] plyr_1.8.4         grid_3.5.1         parallel_3.5.1    
-## [61] sjmisc_2.7.5       crayon_1.3.4       lattice_0.20-35   
+## [61] sjmisc_2.7.4       crayon_1.3.4       lattice_0.20-35   
 ## [64] ggeffects_0.5.0    haven_1.1.2        splines_3.5.1     
-## [67] sjstats_0.17.1     hms_0.4.2          knitr_1.20        
+## [67] sjstats_0.17.0     hms_0.4.2          knitr_1.20        
 ## [70] pillar_1.3.0       estimability_1.3   codetools_0.2-15  
 ## [73] stats4_3.5.1       glue_1.3.0         evaluate_0.11     
-## [76] data.table_1.11.8  modelr_0.1.2       nloptr_1.2.1      
+## [76] data.table_1.11.4  modelr_0.1.2       nloptr_1.0.4      
 ## [79] cellranger_1.1.0   gtable_0.2.0       assertthat_0.2.0  
 ## [82] coin_1.2-2         xtable_1.8-3       broom_0.5.0       
-## [85] survey_3.33-2      coda_0.19-1        viridisLite_0.3.0 
-## [88] survival_2.42-6    glmmTMB_0.2.2.0    TH.data_1.0-9
+## [85] survey_3.33-2      viridisLite_0.3.0  survival_2.42-3   
+## [88] glmmTMB_0.2.2.0    TH.data_1.0-9
 ```
