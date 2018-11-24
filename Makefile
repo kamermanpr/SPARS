@@ -57,7 +57,7 @@ DATA_B = 	data-cleaned/SPARS_B.csv \
 
 .PHONY: all
 
-all: 	$(DATA_A) $(DATA_B) $(1A) $(2Ai) $(2Aii) $(3A) \
+all: 	$(DATA_A) $(DATA_B) $(1A) $(2Aa) $(2Ab) $(3A) \
 		$(4A1) $(4A2) $(4A3) $(4A4) $(4A5) $(4A6) $(4A7) \
 		$(1B1) $(1B2) $(2B) $(3B)
 
